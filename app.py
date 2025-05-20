@@ -1,7 +1,12 @@
 import streamlit as st
 import requests
-from db import setup_db, save_prompt_to_db, seed_original_prompts, SessionLocal, PromptEntry
+from db import setup_db, save_prompt_to_db, seed_original_prompts, SessionLocal, PromptEntry, seed_prompt_variants
 import urllib.parse
+
+
+setup_db()
+seed_original_prompts()
+seed_prompt_variants()
 
 # ----------- PAGE CONFIG ------------
 st.set_page_config(page_title="Differentiate Resource", layout="centered")
@@ -11,8 +16,6 @@ query_params = st.query_params
 preloaded_category = query_params.get("category", [None])[0]
 preloaded_prompt = query_params.get("prompt", [None])[0]
 
-setup_db()
-seed_original_prompts()
 
 
 # ----------- STYLING ------------
@@ -59,10 +62,9 @@ prompt_templates = {
     "Tiered": "You are creating a tiered version of this resource for a mixed-ability classroom. Provide:\n1. A simplified version\n2. A standard version\n3. A challenge version\n\n{}",
     "Sentence Starters": "You are helping students develop structured responses. Rewrite this worksheet to include sentence starters or writing frames for each question.\n\n{}",
 }
-
 # ----------- UI ELEMENTS ------------
 st.markdown("<div class='title-text'>🧠 Differentiate Resource</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle-text'>Paste your lesson content below and select one or more learning needs to instantly adapt it.</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle-text'>Paste your lesson content below and choose your differentiation type and prompting strategy.</div>", unsafe_allow_html=True)
 
 subject_text = st.text_area(
     "Lesson Content / Worksheet", 
@@ -71,12 +73,75 @@ subject_text = st.text_area(
     value=preloaded_prompt if preloaded_prompt else ""
 )
 
-options = st.multiselect(
-    "Select differentiation needs:",
-    list(prompt_templates.keys()),
-    default=[preloaded_category] if preloaded_category else [],
-    help="Choose one or more support types to adapt the content accordingly."
-)
+# --- Differentiation type (one only for now)
+category = st.selectbox("Select Differentiation Need:", list(prompt_templates.keys()))
+
+# --- Strategy options from DB
+session = SessionLocal()
+variant_prompts = session.query(PromptEntry).filter(
+    PromptEntry.category == category,
+    PromptEntry.edited == False,
+    PromptEntry.feedback_comment.like("Technique:%")
+).all()
+session.close()
+
+# --- Show strategies
+if variant_prompts:
+    technique_options = [
+        p.feedback_comment.replace("Technique: ", "") for p in variant_prompts
+    ]
+    selected_technique = st.selectbox("Choose Prompting Strategy:", technique_options)
+    base_prompt_text = next(
+        (p.prompt_text for p in variant_prompts if selected_technique in p.feedback_comment),
+        prompt_templates[category]  # fallback
+    )
+else:
+    selected_technique = "Default Template"
+    base_prompt_text = prompt_templates[category]
+
+# Final prompt after replacing the placeholder
+final_prompt = base_prompt_text.replace("[PASTE WORKSHEET HERE]", subject_text)
+
+# ----------- SUBMIT ACTION ------------
+if st.button("✨ Generate Differentiated Version"):
+    if not subject_text.strip():
+        st.warning("Please enter some lesson content.")
+    else:
+        with st.spinner(f"Generating {category} using {selected_technique} strategy..."):
+
+            # Save prompt to DB
+            save_prompt_to_db(
+                category=category,
+                prompt_text=final_prompt,
+                edited=True
+            )
+
+            # Call LLM
+            response = requests.post(
+                "https://your-llm-api.com/generate",
+                json={"prompt": final_prompt}
+            )
+            generated_text = response.json().get("text", "[No output returned]")
+
+            # Show result
+            st.markdown(f"### {category} – Strategy: {selected_technique}")
+            st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+
+            # Rating & Feedback
+            st.markdown("#### 💬 Rate this output")
+            rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{category}")
+            feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{category}")
+
+            if st.button(f"💾 Save Feedback for {category}"):
+                save_prompt_to_db(
+                    category=category,
+                    prompt_text=final_prompt,
+                    edited=True,
+                    rating=rating,
+                    feedback_comment=feedback
+                )
+                st.success("✅ Feedback saved!")
+
 
 # ----------- SUBMIT ACTION ------------
 if st.button("✨ Generate Differentiated Versions"):

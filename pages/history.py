@@ -1,9 +1,10 @@
 import streamlit as st
-from db import setup_db, seed_original_prompts, SessionLocal, PromptEntry
+from db import setup_db, seed_original_prompts, SessionLocal, PromptEntry, seed_prompt_variants
 import urllib.parse
 
 setup_db()
 seed_original_prompts()
+seed_prompt_variants()
 
 st.set_page_config(page_title="Prompt History", layout="wide")
 st.title("📚 Prompt History & Reuse")

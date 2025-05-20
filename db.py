@@ -69,3 +69,59 @@ def seed_original_prompts():
 
     session.commit()
     session.close()
+
+def seed_prompt_variants():
+    session = SessionLocal()
+
+    # Check if variants already exist
+    existing = session.query(PromptEntry).filter(PromptEntry.edited == False).all()
+    techniques_seeded = any("Technique:" in p.prompt_text for p in existing)
+    if techniques_seeded:
+        session.close()
+        return
+
+    # New variant prompts by technique
+    prompt_variants = [
+        {
+            "category": "Simplified",
+            "technique": "Role-Based",
+            "prompt_text": "Technique: Role-Based\n\nAct as a literacy support assistant for a student with a reading age of 9. Your job is to simplify this worksheet so it's accessible, without removing any core learning. Use plain language, short sentences, and direct instructions. Keep the task engaging and age-appropriate.\n\n[PASTE WORKSHEET HERE]"
+        },
+        {
+            "category": "Simplified",
+            "technique": "Explicit Constraints",
+            "prompt_text": "Technique: Explicit Constraints\n\nRewrite the following resource using:\n- Maximum sentence length: 10 words\n- No technical terms unless defined\n- Simple structure: step-by-step or bullet points\n\nMake it suitable for learners with low reading ages while keeping the key educational content intact.\n\n[PASTE WORKSHEET HERE]"
+        },
+        {
+            "category": "Challenge Extension",
+            "technique": "Chain-of-Thought",
+            "prompt_text": "Technique: Chain-of-Thought\n\nYou're creating an extension task for high-attaining students. First, identify the core concept of the worksheet. Then, create one open-ended question that requires critical thinking, and one creative application task that connects it to the real world.\n\nOutput each of these with a heading:\n- Concept Summary\n- Challenge Question\n- Creative Application\n\n[PASTE WORKSHEET HERE]"
+        },
+        {
+            "category": "Challenge Extension",
+            "technique": "Few-Shot",
+            "prompt_text": "Technique: Few-Shot\n\nHere are some examples of extending a standard worksheet:\n\n**Original Task:** Match animal names with their habitats.  \n**Extension:** Research one animal's habitat and present how climate change affects it.\n\n**Original Task:** Solve 5 addition problems.  \n**Extension:** Create a real-life scenario using addition and explain it to a classmate.\n\nNow apply this to the following worksheet to create a challenge task for advanced learners:\n\n[PASTE WORKSHEET HERE]"
+        },
+        {
+            "category": "Scaffolded",
+            "technique": "Persona + Structure",
+            "prompt_text": "Technique: Persona + Structure\n\nYou are an EAL support teacher. Adapt this worksheet for a learner who needs support with sentence structure and vocabulary. \n\nFor each question or instruction, provide:\n1. A sentence starter\n2. A list of 3 key vocabulary words with definitions\n3. A visual support suggestion (if applicable)\n\n[PASTE WORKSHEET HERE]"
+        },
+        {
+            "category": "Scaffolded",
+            "technique": "Instruction-Tuned",
+            "prompt_text": "Technique: Instruction-Tuned\n\nTask: Add sentence starters and vocabulary scaffolds to this worksheet to support EAL learners.\n\nRequirements:\n- Use a friendly, clear tone\n- Keep the original task intact\n- Include definitions for any challenging words\n\n[PASTE WORKSHEET HERE]"
+        }
+    ]
+
+    for p in prompt_variants:
+        session.add(PromptEntry(
+            category=p["category"],
+            prompt_text=p["prompt_text"],
+            edited=False,
+            rating=None,
+            feedback_comment=f"Technique: {p['technique']}"
+        ))
+
+    session.commit()
+    session.close()
