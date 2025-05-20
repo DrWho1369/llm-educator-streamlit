@@ -1,5 +1,9 @@
 import streamlit as st
 import requests
+from db import setup_db, save_prompt_to_db
+
+setup_db()
+
 
 # ----------- PAGE CONFIG ------------
 st.set_page_config(page_title="Differentiate Resource", layout="centered")
@@ -71,7 +75,13 @@ if st.button("✨ Generate Differentiated Versions"):
         for opt in options:
             with st.spinner(f"Generating {opt} version..."):
                 prompt = prompt_templates[opt].format(subject_text)
-
+                
+                # Save the edited/generated prompt to the database
+                save_prompt_to_db(
+                    category=opt,
+                    prompt_text=prompt,
+                    edited=True
+                )
                 # --- Replace with your LLM API ---
                 # Example placeholder response
                 response = requests.post(
@@ -83,3 +93,48 @@ if st.button("✨ Generate Differentiated Versions"):
 
                 st.markdown(f"### {opt} Version")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+                # Let user rate & give feedback
+                st.markdown("#### 💬 Rate this output")
+                rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{opt}")
+                feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{opt}")
+
+                if st.button(f"💾 Save Feedback for {opt}"):
+                    save_prompt_to_db(
+                        category=opt,
+                        prompt_text=prompt,
+                        edited=True,
+                        rating=rating,
+                        feedback_comment=feedback
+                    )
+                    st.success("✅ Feedback saved!")
+
+import pandas as pd
+from io import StringIO
+
+def download_prompt_csv():
+    session = SessionLocal()
+    prompts = session.query(PromptEntry).all()
+    session.close()
+
+    # Convert to DataFrame
+    df = pd.DataFrame([{
+        "Category": p.category,
+        "Prompt Text": p.prompt_text,
+        "Edited": p.edited,
+        "Rating": p.rating,
+        "Feedback": p.feedback_comment,
+        "Created At": p.created_at.strftime('%Y-%m-%d %H:%M:%S')
+    } for p in prompts])
+
+    csv = StringIO()
+    df.to_csv(csv, index=False)
+    return csv.getvalue()
+
+csv_data = download_prompt_csv()
+
+st.download_button(
+    label="⬇️ Download All Prompts as CSV",
+    data=csv_data,
+    file_name='differentiated_prompts.csv',
+    mime='text/csv'
+)
