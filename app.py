@@ -132,7 +132,7 @@ if task == "Differentiate This":
             with st.spinner(f"Generating {task_name} using {selected_technique} strategy..."):
                 save_prompt_to_db(task_name=task_name, prompt_text=final_prompt, edited=True)
 
-                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+                response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown(f"### {task_name} – Strategy: {selected_technique}")
@@ -226,7 +226,7 @@ elif task == "Generate Lesson Plan + Resources":
                     edited=True
                 )
 
-                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+                response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown("### 📋 Lesson Plan Output")
@@ -288,7 +288,7 @@ elif task == "Parent Comms Assistant":
                 edited=True
             )
 
-            response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+            response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
             generated_text = response.json().get("text", "[No output returned]")
 
             st.markdown("### ✉️ Suggested Message to Parent")
@@ -352,7 +352,7 @@ elif task == "Convert to MCQ":
                     edited=True
                 )
 
-                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+                response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown("### 🧪 Generated MCQs")
@@ -407,7 +407,7 @@ elif task == "Convert to Flashcards":
             with st.spinner("Generating flashcards..."):
                 save_prompt_to_db("Convert to Flashcards", final_prompt, edited=True)
 
-                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+                response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown("### 📇 Flashcards")
@@ -455,7 +455,7 @@ elif task == "Convert to Group Task":
             with st.spinner("Generating group activity..."):
                 save_prompt_to_db("Convert to Group Task", final_prompt, edited=True)
 
-                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
+                response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown("### 🤝 Group Activity Output")
