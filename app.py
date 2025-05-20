@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from db import setup_db, save_prompt_to_db
+from db import setup_db, save_prompt_to_db, SessionLocal, PromptEntry
 
 setup_db()
 
