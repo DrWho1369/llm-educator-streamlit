@@ -19,9 +19,8 @@ seed_group_task_variants()
 # ----------- PAGE CONFIG ------------
 st.set_page_config(page_title="Differentiate Resource", layout="centered")
 
-# Handle incoming query params
 query_params = st.query_params
-preloaded_category = query_params.get("category", [None])[0]
+preloaded_task_name = query_params.get("task_name", [None])[0]
 preloaded_prompt = query_params.get("prompt", [None])[0]
 
 
@@ -86,104 +85,80 @@ prompt_templates = {
 }
 
 # ----------- UI: MAIN FORM ------------
-
 if task == "Differentiate This":
-    st.markdown("<div class='title-text'>🧠 Differentiate Resource</div>", unsafe_allow_html=True)
+    st.markdown("<div class='title-text'>\U0001F9E0 Differentiate Resource</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle-text'>Paste your lesson content below and choose your differentiation type and prompting strategy.</div>", unsafe_allow_html=True)
 
     subject_text = st.text_area(
-        "Lesson Content / Worksheet", 
-        height=250, 
-        placeholder="Paste your worksheet, question, or task content here...", 
+        "Lesson Content / Worksheet",
+        height=250,
+        placeholder="Paste your worksheet, question, or task content here...",
         value=preloaded_prompt if preloaded_prompt else ""
     )
 
-    category = st.selectbox("What do your students need help with?", list(prompt_templates.keys()))
+    task_name = st.selectbox("What do your students need help with?", list(prompt_templates.keys()))
 
-    # Explanation of strategy purpose
     st.markdown("""
     **How should the Prompt be adapted to the content?**  
     Each strategy uses a different approach to tailoring the prompt — e.g., role-based, few-shot, scaffolded.
     """)
 
-    # ----------- STRATEGY SELECTION FROM DB ------------
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == category,
+        PromptEntry.task_name == task_name,
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
     session.close()
 
     if variant_prompts:
-        technique_options = [
-            p.feedback_comment.replace("Technique: ", "") for p in variant_prompts
-        ]
+        technique_options = [p.feedback_comment.replace("Technique: ", "") for p in variant_prompts]
         selected_technique = st.selectbox("Choose Prompting Strategy:", technique_options)
         base_prompt_text = next(
             (p.prompt_text for p in variant_prompts if selected_technique in p.feedback_comment),
-            prompt_templates[category]  # fallback
+            prompt_templates[task_name]
         )
     else:
         selected_technique = "Default Template"
-        base_prompt_text = prompt_templates[category]
+        base_prompt_text = prompt_templates[task_name]
 
-
-    # ----------- PROMPT PREVIEW AND EDIT ------------
     raw_prompt = base_prompt_text.replace("[PASTE WORKSHEET HERE]", subject_text)
-    final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=raw_prompt, height=250)
+    final_prompt = st.text_area("\U0001F50D Preview & Edit Prompt to be Sent to the AI", value=raw_prompt, height=250)
 
-
-    # ----------- SUBMIT ACTION ------------
-    if st.button("✨ Generate Differentiated Version"):
+    if st.button("\u2728 Generate Differentiated Version"):
         if not subject_text.strip():
             st.warning("Please enter some lesson content.")
         else:
-            with st.spinner(f"Generating {category} using {selected_technique} strategy..."):
+            with st.spinner(f"Generating {task_name} using {selected_technique} strategy..."):
+                save_prompt_to_db(task_name=task_name, prompt_text=final_prompt, edited=True)
 
-                # Save prompt to DB
-                save_prompt_to_db(
-                    category=category,
-                    prompt_text=final_prompt,
-                    edited=True
-                )
-
-                # Call LLM
-                response = requests.post(
-                    "https://your-llm-api.com/generate",
-                    json={"prompt": final_prompt}
-                )
+                response = requests.post("https://your-llm-api.com/generate", json={"prompt": final_prompt})
                 generated_text = response.json().get("text", "[No output returned]")
 
-                # Show result
-                st.markdown(f"### {category} – Strategy: {selected_technique}")
+                st.markdown(f"### {task_name} – Strategy: {selected_technique}")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-                # Rating & Feedback
-                st.markdown("#### 💬 Rate this output")
-                rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{category}")
-                feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{category}")
+                st.markdown("#### \U0001F4AC Rate this output")
+                rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{task_name}")
+                feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{task_name}")
 
-                if st.button(f"💾 Save Feedback for {category}"):
+                if st.button(f"\U0001F4BE Save Feedback for {task_name}"):
                     save_prompt_to_db(
-                        category=category,
+                        task_name=task_name,
                         prompt_text=final_prompt,
                         edited=True,
                         rating=rating,
                         feedback_comment=feedback
                     )
-                    st.success("✅ Feedback saved!")
+                    st.success("\u2705 Feedback saved!")
 
-
-    # ----------- DOWNLOAD PROMPT LOG ------------
     def download_prompt_csv():
         session = SessionLocal()
         prompts = session.query(PromptEntry).all()
         session.close()
 
-        # Convert to DataFrame
         df = pd.DataFrame([{
-            "Category": p.category,
+            "Task": p.task_name,
             "Prompt Text": p.prompt_text,
             "Edited": p.edited,
             "Rating": p.rating,
@@ -196,13 +171,13 @@ if task == "Differentiate This":
         return csv.getvalue()
 
     csv_data = download_prompt_csv()
-
     st.download_button(
-        label="⬇️ Download All Prompts as CSV",
+        label="\u2B07\uFE0F Download All Prompts as CSV",
         data=csv_data,
         file_name='differentiated_prompts.csv',
         mime='text/csv'
     )
+
 
 elif task == "Generate Lesson Plan + Resources":
     st.markdown("### 🧑‍🏫 Generate a Lesson Plan + Supporting Materials")
@@ -215,7 +190,7 @@ elif task == "Generate Lesson Plan + Resources":
     # -- Fetch prompt variants for this task --
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == "Generate Lesson Plan + Resources",
+        PromptEntry.task_name == "Generate Lesson Plan + Resources",
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
@@ -246,7 +221,7 @@ elif task == "Generate Lesson Plan + Resources":
         else:
             with st.spinner("Generating lesson plan..."):
                 save_prompt_to_db(
-                    category="Generate Lesson Plan + Resources",
+                    task_name="Generate Lesson Plan + Resources",
                     prompt_text=final_prompt,
                     edited=True
                 )
@@ -263,7 +238,7 @@ elif task == "Generate Lesson Plan + Resources":
 
                 if st.button("💾 Save Feedback for Lesson Plan"):
                     save_prompt_to_db(
-                        category="Generate Lesson Plan + Resources",
+                        task_name="Generate Lesson Plan + Resources",
                         prompt_text=final_prompt,
                         edited=True,
                         rating=rating,
@@ -281,7 +256,7 @@ elif task == "Parent Comms Assistant":
     # --- Load prompt strategies for this task ---
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == "Parent Comms Assistant",
+        PromptEntry.task_name == "Parent Comms Assistant",
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
@@ -308,7 +283,7 @@ elif task == "Parent Comms Assistant":
     if st.button("✨ Generate Message"):
         with st.spinner("Creating message..."):
             save_prompt_to_db(
-                category="Parent Comms Assistant",
+                task_name="Parent Comms Assistant",
                 prompt_text=final_prompt,
                 edited=True
             )
@@ -325,7 +300,7 @@ elif task == "Parent Comms Assistant":
 
             if st.button("💾 Save Feedback for Parent Message"):
                 save_prompt_to_db(
-                    category="Parent Comms Assistant",
+                    task_name="Parent Comms Assistant",
                     prompt_text=final_prompt,
                     edited=True,
                     rating=rating,
@@ -343,7 +318,7 @@ elif task == "Convert to MCQ":
     # --- Load MCQ prompt variants from DB ---
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == "Convert to MCQ",
+        PromptEntry.task_name == "Convert to MCQ",
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
@@ -372,7 +347,7 @@ elif task == "Convert to MCQ":
         else:
             with st.spinner("Generating MCQs..."):
                 save_prompt_to_db(
-                    category="Convert to MCQ",
+                    task_name="Convert to MCQ",
                     prompt_text=final_prompt,
                     edited=True
                 )
@@ -389,7 +364,7 @@ elif task == "Convert to MCQ":
 
                 if st.button("💾 Save Feedback for MCQs"):
                     save_prompt_to_db(
-                        category="Convert to MCQ",
+                        task_name="Convert to MCQ",
                         prompt_text=final_prompt,
                         edited=True,
                         rating=rating,
@@ -405,7 +380,7 @@ elif task == "Convert to Flashcards":
     # --- Load prompt strategies for flashcard task ---
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == "Convert to Flashcards",
+        PromptEntry.task_name == "Convert to Flashcards",
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
@@ -453,7 +428,7 @@ elif task == "Convert to Group Task":
 
     session = SessionLocal()
     variant_prompts = session.query(PromptEntry).filter(
-        PromptEntry.category == "Convert to Group Task",
+        PromptEntry.task_name == "Convert to Group Task",
         PromptEntry.edited == False,
         PromptEntry.feedback_comment.like("Technique:%")
     ).all()
