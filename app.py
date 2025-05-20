@@ -74,7 +74,13 @@ subject_text = st.text_area(
 )
 
 # --- Differentiation type (one only for now)
-category = st.selectbox("Select Differentiation Need:", list(prompt_templates.keys()))
+category = st.selectbox("What do your students need help with?", list(prompt_templates.keys()))
+
+st.markdown("""
+**What is this doing?**  
+First, choose the type of support your students need (e.g., simplified task, scaffolded version).  
+Then, choose how the AI will adapt the resource — using different prompting strategies (like role-based or few-shot prompting).
+""")
 
 # --- Strategy options from DB
 session = SessionLocal()
@@ -99,8 +105,15 @@ else:
     selected_technique = "Default Template"
     base_prompt_text = prompt_templates[category]
 
-# Final prompt after replacing the placeholder
-final_prompt = base_prompt_text.replace("[PASTE WORKSHEET HERE]", subject_text)
+# Final prompt after inserting worksheet
+raw_prompt = base_prompt_text.replace("[PASTE WORKSHEET HERE]", subject_text)
+
+# Let user preview/edit the prompt
+final_prompt = st.text_area(
+    label="🔍 Preview & Edit Prompt to be Sent to the AI",
+    value=raw_prompt,
+    height=250
+)
 
 # ----------- SUBMIT ACTION ------------
 if st.button("✨ Generate Differentiated Version"):
@@ -142,49 +155,6 @@ if st.button("✨ Generate Differentiated Version"):
                 )
                 st.success("✅ Feedback saved!")
 
-
-# ----------- SUBMIT ACTION ------------
-if st.button("✨ Generate Differentiated Versions"):
-    if not subject_text.strip():
-        st.warning("Please enter some lesson content.")
-    elif not options:
-        st.warning("Please select at least one differentiation type.")
-    else:
-        for opt in options:
-            with st.spinner(f"Generating {opt} version..."):
-                prompt = prompt_templates[opt].format(subject_text)
-                
-                # Save the edited/generated prompt to the database
-                save_prompt_to_db(
-                    category=opt,
-                    prompt_text=prompt,
-                    edited=True
-                )
-                # --- Replace with your LLM API ---
-                # Example placeholder response
-                response = requests.post(
-                    "https://your-llm-api.com/generate",
-                    json={"prompt": prompt}
-                )
-                generated_text = response.json().get("text", "[No output returned]")
-                # ---------------------------------
-
-                st.markdown(f"### {opt} Version")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
-                # Let user rate & give feedback
-                st.markdown("#### 💬 Rate this output")
-                rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{opt}")
-                feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{opt}")
-
-                if st.button(f"💾 Save Feedback for {opt}"):
-                    save_prompt_to_db(
-                        category=opt,
-                        prompt_text=prompt,
-                        edited=True,
-                        rating=rating,
-                        feedback_comment=feedback
-                    )
-                    st.success("✅ Feedback saved!")
 
 import pandas as pd
 from io import StringIO
