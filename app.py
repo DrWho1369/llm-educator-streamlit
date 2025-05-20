@@ -3,17 +3,17 @@ import requests
 from db import setup_db, save_prompt_to_db, seed_original_prompts, SessionLocal, PromptEntry
 import urllib.parse
 
+# ----------- PAGE CONFIG ------------
+st.set_page_config(page_title="Differentiate Resource", layout="centered")
+
 # Handle incoming query params
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 preloaded_category = query_params.get("category", [None])[0]
 preloaded_prompt = query_params.get("prompt", [None])[0]
 
 setup_db()
 seed_original_prompts()
 
-
-# ----------- PAGE CONFIG ------------
-st.set_page_config(page_title="Differentiate Resource", layout="centered")
 
 # ----------- STYLING ------------
 st.markdown("""
