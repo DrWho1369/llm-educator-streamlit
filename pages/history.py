@@ -1,7 +1,8 @@
 import streamlit as st
-from db import setup_db, SessionLocal, PromptEntry
+from db import setup_db, seed_original_prompts, SessionLocal, PromptEntry
 
 setup_db()
+seed_original_prompts()
 
 st.set_page_config(page_title="Prompt History", layout="wide")
 st.title("📚 Prompt History & Reuse")
@@ -18,19 +19,25 @@ with st.sidebar:
 query = session.query(PromptEntry)
 if category_filter != "All":
     query = query.filter(PromptEntry.category == category_filter)
-query = query.filter(PromptEntry.rating >= min_rating).order_by(PromptEntry.created_at.desc())
+query = query.filter((PromptEntry.rating >= min_rating) | (PromptEntry.rating == None))
+query = query.order_by(PromptEntry.created_at.desc())
 
 results = query.all()
 
+
 st.markdown(f"### Showing {len(results)} prompts")
 for entry in results:
-    st.markdown(f"---")
-    st.markdown(f"**🗂️ Category:** {entry.category}")
+    st.markdown("---")
+    badge = "🌱 Original" if not entry.edited else "✏️ Edited"
+    st.markdown(f"**🗂️ Category:** {entry.category} &nbsp;&nbsp;&nbsp;&nbsp;{badge}")
     st.markdown(f"**🕒 Created:** {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-    st.markdown(f"**⭐ Rating:** {entry.rating or '—'}")
+    if entry.rating:
+        st.markdown(f"**⭐ Rating:** {entry.rating}")
     if entry.feedback_comment:
         st.markdown(f"**💬 Feedback:** {entry.feedback_comment}")
     st.code(entry.prompt_text, language="markdown")
-    st.button("📋 Copy this prompt", key=f"copy_{entry.id}")
+
+    # 👇 Add button to pass prompt to app via query params
+    st.link_button("🧪 Try this in App", f"/?category={entry.category}&prompt={entry.prompt_text}", key=f"try_{entry.id}")
 
 session.close()

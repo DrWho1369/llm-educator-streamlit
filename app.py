@@ -1,8 +1,15 @@
 import streamlit as st
 import requests
-from db import setup_db, save_prompt_to_db, SessionLocal, PromptEntry
+from db import setup_db, save_prompt_to_db, seed_original_prompts, SessionLocal, PromptEntry
+import urllib.parse
+
+# Handle incoming query params
+query_params = st.experimental_get_query_params()
+preloaded_category = query_params.get("category", [None])[0]
+preloaded_prompt = query_params.get("prompt", [None])[0]
 
 setup_db()
+seed_original_prompts()
 
 
 # ----------- PAGE CONFIG ------------
@@ -57,11 +64,17 @@ prompt_templates = {
 st.markdown("<div class='title-text'>🧠 Differentiate Resource</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle-text'>Paste your lesson content below and select one or more learning needs to instantly adapt it.</div>", unsafe_allow_html=True)
 
-subject_text = st.text_area("Lesson Content / Worksheet", height=250, placeholder="Paste your worksheet, question, or task content here...")
+subject_text = st.text_area(
+    "Lesson Content / Worksheet", 
+    height=250, 
+    placeholder="Paste your worksheet, question, or task content here...", 
+    value=preloaded_prompt if preloaded_prompt else ""
+)
 
 options = st.multiselect(
     "Select differentiation needs:",
     list(prompt_templates.keys()),
+    default=[preloaded_category] if preloaded_category else [],
     help="Choose one or more support types to adapt the content accordingly."
 )
 
