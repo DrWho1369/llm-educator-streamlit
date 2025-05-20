@@ -133,6 +133,8 @@ if task == "Differentiate This":
                 save_prompt_to_db(task_name=task_name, prompt_text=final_prompt, edited=True)
 
                 response = requests.post("http://18.171.171.212:8080", json={"prompt": final_prompt})
+                st.write("Raw response:", response.text)
+
                 generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown(f"### {task_name} – Strategy: {selected_technique}")
