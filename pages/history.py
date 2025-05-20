@@ -25,7 +25,6 @@ query = query.order_by(PromptEntry.created_at.desc())
 
 results = query.all()
 
-
 st.markdown(f"### Showing {len(results)} prompts")
 for entry in results:
     st.markdown("---")
@@ -36,16 +35,17 @@ for entry in results:
         st.markdown(f"**⭐ Rating:** {entry.rating}")
     if entry.feedback_comment:
         st.markdown(f"**💬 Feedback:** {entry.feedback_comment}")
-    st.code(entry.prompt_text, language="markdown")
 
-    # 👇 Add button to pass prompt to app via query params
-    encoded_category = urllib.parse.quote(entry.category)
-    encoded_prompt = urllib.parse.quote(entry.prompt_text)
+    # Show truncated version in UI (for readability)
+    display_text = entry.prompt_text[:500] + "..." if len(entry.prompt_text) > 500 else entry.prompt_text
+    st.code(display_text, language="markdown")
 
-    st.link_button(
-        "🧪 Try this in App",
-        f"/?category={encoded_category}&prompt={encoded_prompt}",
-        key=f"try_{entry.id}"
-    )
+    # Use a button to update query params instead of encoding long prompt into a URL
+    if st.button(f"🧪 Try in App: {entry.category}", key=f"try_{entry.id}"):
+        st.query_params.update({
+            "category": entry.category,
+            "prompt": entry.prompt_text
+        })
+        st.success("🔁 Head to the Home page to use this prompt!")
 
 session.close()
