@@ -1,5 +1,6 @@
 import streamlit as st
 from db import setup_db, seed_original_prompts, SessionLocal, PromptEntry
+import urllib.parse
 
 setup_db()
 seed_original_prompts()
@@ -38,6 +39,13 @@ for entry in results:
     st.code(entry.prompt_text, language="markdown")
 
     # 👇 Add button to pass prompt to app via query params
-    st.link_button("🧪 Try this in App", f"/?category={entry.category}&prompt={entry.prompt_text}", key=f"try_{entry.id}")
+    encoded_category = urllib.parse.quote(entry.category)
+    encoded_prompt = urllib.parse.quote(entry.prompt_text)
+
+    st.link_button(
+        "🧪 Try this in App",
+        f"/?category={encoded_category}&prompt={encoded_prompt}",
+        key=f"try_{entry.id}"
+    )
 
 session.close()
