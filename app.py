@@ -23,6 +23,26 @@ query_params = st.query_params
 preloaded_task_name = query_params.get("task_name", [None])[0]
 preloaded_prompt = query_params.get("prompt", [None])[0]
 
+def download_prompt_csv():
+            session = SessionLocal()
+            prompts = session.query(PromptEntry).all()
+            session.close()
+
+            df = pd.DataFrame([{
+                "Task": p.task_name,
+                "Prompt Text": p.prompt_text,
+                "Edited": p.edited,
+                "Rating": p.rating,
+                "Feedback": p.feedback_comment,
+                "Created At": p.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            } for p in prompts])
+
+            csv = StringIO()
+            df.to_csv(csv, index=False)
+            return csv.getvalue()
+
+        
+
 
 # ----------- STYLING ------------
 st.markdown("""
@@ -88,6 +108,7 @@ prompt_templates = {
 
 # ----------- UI: MAIN FORM ------------
 if task == "Differentiate This":
+
     st.markdown("<div class='title-text'>Differentiate Resource</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle-text'>Paste your lesson content below and choose your differentiation type and prompting strategy.</div>", unsafe_allow_html=True)
 
@@ -127,6 +148,12 @@ if task == "Differentiate This":
     wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
+    # Maintain generation state
+    if "diff_generated" not in st.session_state:
+        st.session_state["diff_generated"] = False
+    if "diff_output" not in st.session_state:
+        st.session_state["diff_output"] = ""
+
     if st.button("\u2728 Generate Differentiated Version"):
         if not subject_text.strip():
             st.warning("Please enter some lesson content.")
@@ -151,52 +178,33 @@ if task == "Differentiate This":
                     st.code(response.text)
                     generated_text = "[No output returned]"
 
+                # Store result in session
+                st.session_state["diff_output"] = generated_text
+                st.session_state["diff_generated"] = True
 
-                st.markdown(f"### {task_name} – Strategy: {selected_technique}")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+    if st.session_state["diff_generated"]:
+        st.markdown(f"### {task_name} – Strategy: {selected_technique}")
+        st.markdown(f"<div class='prompt-box'>{st.session_state['diff_output']}</div>", unsafe_allow_html=True)
 
-                st.markdown("#### \U0001F4AC Rate this output")
-                rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{task_name}")
-                feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{task_name}")
+        st.markdown("#### \U0001F4AC Rate this output")
+        rating = st.slider("How helpful was this version?", 1, 5, key=f"rating_{task_name}")
+        feedback = st.text_area("Any comments or suggestions?", key=f"feedback_{task_name}")
 
-                if st.button(f"\U0001F4BE Save Feedback for {task_name}"):
-                    save_prompt_to_db(
-                        task_name=task_name,
-                        prompt_text=final_prompt,
-                        edited=True,
-                        rating=rating,
-                        feedback_comment=feedback
-                    )
-                    st.success("\u2705 Feedback saved!")
+        if st.button(f"\U0001F4BE Save Feedback for {task_name}"):
+            save_prompt_to_db(
+                task_name=task_name,
+                prompt_text=final_prompt,
+                edited=True,
+                rating=rating,
+                feedback_comment=feedback
+            )
+            st.success("\u2705 Feedback saved!")
 
-    def download_prompt_csv():
-        session = SessionLocal()
-        prompts = session.query(PromptEntry).all()
-        session.close()
-
-        df = pd.DataFrame([{
-            "Task": p.task_name,
-            "Prompt Text": p.prompt_text,
-            "Edited": p.edited,
-            "Rating": p.rating,
-            "Feedback": p.feedback_comment,
-            "Created At": p.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        } for p in prompts])
-
-        csv = StringIO()
-        df.to_csv(csv, index=False)
-        return csv.getvalue()
-
-    csv_data = download_prompt_csv()
-    st.download_button(
-        label="\u2B07\uFE0F Download All Prompts as CSV",
-        data=csv_data,
-        file_name='differentiated_prompts.csv',
-        mime='text/csv'
-    )
+        
 
 
 elif task == "Generate Lesson Plan + Resources":
+
     st.markdown("###Generate a Lesson Plan + Supporting Materials")
 
     topic = st.text_input("🧠 Topic", placeholder="e.g. Photosynthesis")
@@ -233,6 +241,12 @@ elif task == "Generate Lesson Plan + Resources":
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
+    # Maintain generation state
+    if "lesson_generated" not in st.session_state:
+        st.session_state["lesson_generated"] = False
+    if "lesson_output" not in st.session_state:
+        st.session_state["lesson_output"] = ""
+
     if st.button("✨ Generate Lesson Plan"):
         if not topic.strip():
             st.warning("Please enter a topic.")
@@ -260,25 +274,29 @@ elif task == "Generate Lesson Plan + Resources":
                     st.code(response.text)
                     generated_text = "[No output returned]"
 
+                st.session_state["lesson_output"] = generated_text
+                st.session_state["lesson_generated"] = True
 
-                st.markdown("### 📋 Lesson Plan Output")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+    if st.session_state["lesson_generated"]:
+        st.markdown("### 📋 Lesson Plan Output")
+        st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-                st.markdown("#### 💬 Rate this output")
-                rating = st.slider("How helpful was this lesson plan?", 1, 5, key="rating_lesson")
-                feedback = st.text_area("Any comments or suggestions?", key="feedback_lesson")
+        st.markdown("#### 💬 Rate this output")
+        rating = st.slider("How helpful was this lesson plan?", 1, 5, key="rating_lesson")
+        feedback = st.text_area("Any comments or suggestions?", key="feedback_lesson")
 
-                if st.button("💾 Save Feedback for Lesson Plan"):
-                    save_prompt_to_db(
-                        task_name="Generate Lesson Plan + Resources",
-                        prompt_text=final_prompt,
-                        edited=True,
-                        rating=rating,
-                        feedback_comment=feedback
-                    )
-                    st.success("✅ Feedback saved!")
+        if st.button("💾 Save Feedback for Lesson Plan"):
+            save_prompt_to_db(
+                task_name="Generate Lesson Plan + Resources",
+                prompt_text=final_prompt,
+                edited=True,
+                rating=rating,
+                feedback_comment=feedback
+            )
+            st.success("✅ Feedback saved!")
 
 elif task == "Parent Comms Assistant":
+
     st.markdown("###Generate a Parent Communication Message")
 
     concern = st.selectbox("📌 What’s the communication about?", ["Praise", "Missed Homework", "Behaviour Issue", "General Update"])
@@ -314,6 +332,12 @@ elif task == "Parent Comms Assistant":
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
+    # Maintain generation state
+    if "parent_generated" not in st.session_state:
+        st.session_state["parent_generated"] = False
+    if "parent_output" not in st.session_state:
+        st.session_state["parent_output"] = ""
+
     if st.button("✨ Generate Message"):
         with st.spinner("Creating message..."):
             save_prompt_to_db(
@@ -337,25 +361,29 @@ elif task == "Parent Comms Assistant":
                 st.code(response.text)
                 generated_text = "[No output returned]"
 
+            st.session_state["parent_output"] = generated_text
+            st.session_state["parent_generated"] = True
 
-            st.markdown("### ✉️ Suggested Message to Parent")
-            st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+    if st.session_state["parent_generated"]:
+        st.markdown("### ✉️ Suggested Message to Parent")
+        st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-            st.markdown("#### 💬 Rate this output")
-            rating = st.slider("How helpful was this message?", 1, 5, key="rating_parent")
-            feedback = st.text_area("Any comments or suggestions?", key="feedback_parent")
+        st.markdown("#### 💬 Rate this output")
+        rating = st.slider("How helpful was this message?", 1, 5, key="rating_parent")
+        feedback = st.text_area("Any comments or suggestions?", key="feedback_parent")
 
-            if st.button("💾 Save Feedback for Parent Message"):
-                save_prompt_to_db(
-                    task_name="Parent Comms Assistant",
-                    prompt_text=final_prompt,
-                    edited=True,
-                    rating=rating,
-                    feedback_comment=feedback
-                )
-                st.success("✅ Feedback saved!")
+        if st.button("💾 Save Feedback for Parent Message"):
+            save_prompt_to_db(
+                task_name="Parent Comms Assistant",
+                prompt_text=final_prompt,
+                edited=True,
+                rating=rating,
+                feedback_comment=feedback
+            )
+            st.success("✅ Feedback saved!")
 
 elif task == "Convert to MCQ":
+
     st.markdown("###Convert Resource into Multiple-Choice Questions")
 
     mcq_text = st.text_area("📄 Paste Your Resource", height=250, placeholder="e.g. a passage, worksheet, or topic summary")
@@ -386,6 +414,11 @@ elif task == "Convert to MCQ":
     wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
+    # Maintain generation state
+    if "mcq_generated" not in st.session_state:
+        st.session_state["mcq_generated"] = False
+    if "mcq_output" not in st.session_state:
+        st.session_state["mcq_output"] = ""
 
     if st.button("✨ Generate MCQs"):
         if not mcq_text.strip():
@@ -414,25 +447,29 @@ elif task == "Convert to MCQ":
                     st.code(response.text)
                     generated_text = "[No output returned]"
 
+                st.session_state["mcq_output"] = generated_text
+                st.session_state["mcq_generated"] = True
 
-                st.markdown("### 🧪 Generated MCQs")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+    if st.session_state["mcq_generated"]:
+        st.markdown("### 🧪 Generated MCQs")
+        st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-                st.markdown("#### 💬 Rate this output")
-                rating = st.slider("How helpful were the MCQs?", 1, 5, key="rating_mcq")
-                feedback = st.text_area("Any comments or suggestions?", key="feedback_mcq")
+        st.markdown("#### 💬 Rate this output")
+        rating = st.slider("How helpful were the MCQs?", 1, 5, key="rating_mcq")
+        feedback = st.text_area("Any comments or suggestions?", key="feedback_mcq")
 
-                if st.button("💾 Save Feedback for MCQs"):
-                    save_prompt_to_db(
-                        task_name="Convert to MCQ",
-                        prompt_text=final_prompt,
-                        edited=True,
-                        rating=rating,
-                        feedback_comment=feedback
-                    )
-                    st.success("✅ Feedback saved!")
+        if st.button("💾 Save Feedback for MCQs"):
+            save_prompt_to_db(
+                task_name="Convert to MCQ",
+                prompt_text=final_prompt,
+                edited=True,
+                rating=rating,
+                feedback_comment=feedback
+            )
+            st.success("✅ Feedback saved!")
 
 elif task == "Convert to Flashcards":
+
     st.markdown("###Convert Resource into Flashcards")
 
     flashcard_text = st.text_area("📄 Paste Your Resource", height=250, placeholder="e.g. topic summary, glossary, article")
@@ -459,6 +496,12 @@ elif task == "Convert to Flashcards":
 
     wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
+    
+    # Maintain generation state
+    if "flashcards_generated" not in st.session_state:
+        st.session_state["flashcards_generated"] = False
+    if "flashcard_output" not in st.session_state:
+        st.session_state["flashcard_output"] = ""
 
     if st.button("✨ Generate Flashcards"):
         if not flashcard_text.strip():
@@ -483,18 +526,23 @@ elif task == "Convert to Flashcards":
                     st.code(response.text)
                     generated_text = "[No output returned]"
 
-                st.markdown("### 📇 Flashcards")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+                st.session_state["flashcard_output"] = generated_text
+                st.session_state["flashcards_generated"] = True
 
-                rating = st.slider("How helpful were the flashcards?", 1, 5, key="rating_flash")
-                feedback = st.text_area("Any comments or suggestions?", key="feedback_flash")
+    if st.session_state["flashcards_generated"]:
+        st.markdown("### 📇 Flashcards")
+        st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-                if st.button("💾 Save Feedback for Flashcards"):
-                    save_prompt_to_db("Convert to Flashcards", final_prompt, edited=True, rating=rating, feedback_comment=feedback)
-                    st.success("✅ Feedback saved!")
+        rating = st.slider("How helpful were the flashcards?", 1, 5, key="rating_flash")
+        feedback = st.text_area("Any comments or suggestions?", key="feedback_flash")
+
+        if st.button("💾 Save Feedback for Flashcards"):
+            save_prompt_to_db("Convert to Flashcards", final_prompt, edited=True, rating=rating, feedback_comment=feedback)
+            st.success("✅ Feedback saved!")
 
 
 elif task == "Convert to Group Task":
+
     st.markdown("###Convert Resource into a Group Task")
 
     group_text = st.text_area("📄 Paste Resource", height=250, placeholder="e.g. article, worksheet, problem prompt")
@@ -521,6 +569,12 @@ elif task == "Convert to Group Task":
     wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt", value=wrapped_prompt, height=250)
 
+    # Maintain generation state
+    if "group_generated" not in st.session_state:
+        st.session_state["group_generated"] = False
+    if "group_output" not in st.session_state:
+        st.session_state["group_output"] = ""
+
     if st.button("✨ Generate Group Task"):
         if not group_text.strip():
             st.warning("Please paste a resource.")
@@ -544,12 +598,27 @@ elif task == "Convert to Group Task":
                     st.code(response.text)
                     generated_text = "[No output returned]"
 
-                st.markdown("### 🤝 Group Activity Output")
-                st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
+                st.session_state["group_output"] = generated_text
+                st.session_state["group_generated"] = True
 
-                rating = st.slider("How useful is this task?", 1, 5, key="rating_group")
-                feedback = st.text_area("Any comments or suggestions?", key="feedback_group")
+    if st.session_state["group_generated"]:
+        st.markdown("### 🤝 Group Activity Output")
+        st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
 
-                if st.button("💾 Save Feedback for Group Task"):
-                    save_prompt_to_db("Convert to Group Task", final_prompt, edited=True, rating=rating, feedback_comment=feedback)
-                    st.success("✅ Feedback saved!")
+        rating = st.slider("How useful is this task?", 1, 5, key="rating_group")
+        feedback = st.text_area("Any comments or suggestions?", key="feedback_group")
+
+        if st.button("💾 Save Feedback for Group Task"):
+            save_prompt_to_db("Convert to Group Task", final_prompt, edited=True, rating=rating, feedback_comment=feedback)
+            st.success("✅ Feedback saved!")
+
+
+# ----------- GLOBAL: Download CSV Button ------------
+csv_data = download_prompt_csv()
+st.download_button(
+    label="⬇️ Download All Prompts as CSV",
+    data=csv_data,
+    file_name='prompt_history.csv',
+    mime='text/csv'
+)
+
