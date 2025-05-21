@@ -4,6 +4,15 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 
+def wrap_prompt(role_instruction: str, subject_content: str) -> str:
+    return f"""<role>
+{role_instruction.strip()}
+</role>
+
+<subject>
+{subject_content.strip()}
+</subject>"""
+
 # --- DATABASE CONFIG ---
 DB_FILE = "prompt_history.db"
 engine = create_engine(f"sqlite:///{DB_FILE}", connect_args={"check_same_thread": False})
@@ -39,14 +48,7 @@ def save_prompt_to_db(task_name, prompt_text, edited, rating=None, feedback_comm
     session.commit()
     session.close()
 
-def wrap_prompt(role_instruction: str, subject_content: str) -> str:
-    return f"""<role>
-{role_instruction.strip()}
-</role>
 
-<subject>
-{subject_content.strip()}
-</subject>"""
 
 def seed_original_prompts():
     session = SessionLocal()
