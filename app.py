@@ -132,10 +132,23 @@ if task == "Differentiate This":
             with st.spinner(f"Generating {task_name} using {selected_technique} strategy..."):
                 save_prompt_to_db(task_name=task_name, prompt_text=final_prompt, edited=True)
 
-                response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
                 st.write("Raw response:", response.text)
+                response = requests.post(
+                    "http://18.171.171.212:8080/v1/chat/completions",
+                    json={
+                        "messages": [
+                            {"role": "system", "content": "You are a helpful teaching assistant."},
+                            {"role": "user", "content": final_prompt}
+                        ]
+                    }
+                )
+                try:
+                    generated_text = response.json()["choices"][0]["message"]["content"]
+                except Exception as e:
+                    st.error(f"❌ Could not parse API response: {e}")
+                    st.code(response.text)
+                    generated_text = "[No output returned]"
 
-                generated_text = response.json().get("text", "[No output returned]")
 
                 st.markdown(f"### {task_name} – Strategy: {selected_technique}")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
@@ -228,8 +241,22 @@ elif task == "Generate Lesson Plan + Resources":
                     edited=True
                 )
 
-                response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
-                generated_text = response.json().get("text", "[No output returned]")
+                response = requests.post(
+                    "http://18.171.171.212:8080/v1/chat/completions",
+                    json={
+                        "messages": [
+                            {"role": "system", "content": "You are a helpful teaching assistant."},
+                            {"role": "user", "content": final_prompt}
+                        ]
+                    }
+                )
+                try:
+                    generated_text = response.json()["choices"][0]["message"]["content"]
+                except Exception as e:
+                    st.error(f"❌ Could not parse API response: {e}")
+                    st.code(response.text)
+                    generated_text = "[No output returned]"
+
 
                 st.markdown("### 📋 Lesson Plan Output")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
@@ -289,9 +316,22 @@ elif task == "Parent Comms Assistant":
                 prompt_text=final_prompt,
                 edited=True
             )
+            response = requests.post(
+                "http://18.171.171.212:8080/v1/chat/completions",
+                json={
+                    "messages": [
+                        {"role": "system", "content": "You are a helpful teaching assistant."},
+                        {"role": "user", "content": final_prompt}
+                    ]
+                }
+            )
+            try:
+                generated_text = response.json()["choices"][0]["message"]["content"]
+            except Exception as e:
+                st.error(f"❌ Could not parse API response: {e}")
+                st.code(response.text)
+                generated_text = "[No output returned]"
 
-            response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
-            generated_text = response.json().get("text", "[No output returned]")
 
             st.markdown("### ✉️ Suggested Message to Parent")
             st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
@@ -354,8 +394,22 @@ elif task == "Convert to MCQ":
                     edited=True
                 )
 
-                response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
-                generated_text = response.json().get("text", "[No output returned]")
+                response = requests.post(
+                    "http://18.171.171.212:8080/v1/chat/completions",
+                    json={
+                        "messages": [
+                            {"role": "system", "content": "You are a helpful teaching assistant."},
+                            {"role": "user", "content": final_prompt}
+                        ]
+                    }
+                )
+                try:
+                    generated_text = response.json()["choices"][0]["message"]["content"]
+                except Exception as e:
+                    st.error(f"❌ Could not parse API response: {e}")
+                    st.code(response.text)
+                    generated_text = "[No output returned]"
+
 
                 st.markdown("### 🧪 Generated MCQs")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
@@ -409,8 +463,21 @@ elif task == "Convert to Flashcards":
             with st.spinner("Generating flashcards..."):
                 save_prompt_to_db("Convert to Flashcards", final_prompt, edited=True)
 
-                response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
-                generated_text = response.json().get("text", "[No output returned]")
+                response = requests.post(
+                    "http://18.171.171.212:8080/v1/chat/completions",
+                    json={
+                        "messages": [
+                            {"role": "system", "content": "You are a helpful teaching assistant."},
+                            {"role": "user", "content": final_prompt}
+                        ]
+                    }
+                )
+                try:
+                    generated_text = response.json()["choices"][0]["message"]["content"]
+                except Exception as e:
+                    st.error(f"❌ Could not parse API response: {e}")
+                    st.code(response.text)
+                    generated_text = "[No output returned]"
 
                 st.markdown("### 📇 Flashcards")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
@@ -457,8 +524,21 @@ elif task == "Convert to Group Task":
             with st.spinner("Generating group activity..."):
                 save_prompt_to_db("Convert to Group Task", final_prompt, edited=True)
 
-                response = requests.post("http://18.171.171.212:8080/v1/chat/completions", json={"prompt": final_prompt})
-                generated_text = response.json().get("text", "[No output returned]")
+                response = requests.post(
+                    "http://18.171.171.212:8080/v1/chat/completions",
+                    json={
+                        "messages": [
+                            {"role": "system", "content": "You are a helpful teaching assistant."},
+                            {"role": "user", "content": final_prompt}
+                        ]
+                    }
+                )
+                try:
+                    generated_text = response.json()["choices"][0]["message"]["content"]
+                except Exception as e:
+                    st.error(f"❌ Could not parse API response: {e}")
+                    st.code(response.text)
+                    generated_text = "[No output returned]"
 
                 st.markdown("### 🤝 Group Activity Output")
                 st.markdown(f"<div class='prompt-box'>{generated_text}</div>", unsafe_allow_html=True)
