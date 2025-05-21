@@ -50,6 +50,7 @@ st.markdown("""
         border-radius: 8px;
         margin-top: 1.5rem;
         white-space: pre-wrap;
+        color: #2c3e50;
     }
     .stMultiSelect>div>div>div {
         background-color: #ecf0f1;
