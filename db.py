@@ -4,14 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 
-def wrap_prompt(role_instruction: str, subject_content: str) -> str:
-    return f"""<role>
-{role_instruction.strip()}
-</role>
 
-<subject>
-{subject_content.strip()}
-</subject>"""
 
 # --- DATABASE CONFIG ---
 DB_FILE = "prompt_history.db"
@@ -58,14 +51,60 @@ def seed_original_prompts():
         session.close()
         return  # Already seeded
 
+    
     base_prompts = {
-        "Simplified": wrap_prompt("You are a teacher simplifying lesson content for a student with a reading age of 9 years. Rewrite the following resource using simpler vocabulary, shorter sentences, and clear structure while preserving meaning and core knowledge."),
-        "Challenge Extension": wrap_prompt("You are a gifted and talented coordinator. Extend the following task to provide a greater challenge for high-attaining students. Add one open-ended question, and one creative application or real-world connection."),
-        "EAL Support": wrap_prompt("You are an EAL support specialist. Modify the following resource to include sentence starters and a glossary of key terms with definitions in simple English."),
-        "SEND Support": wrap_prompt("You are a SEND teacher. Adapt this activity for students with moderate learning difficulties. Break the task into small, guided steps and use supportive language."),
-        "Dyslexia-Friendly": wrap_prompt("You are supporting students with dyslexia. Rewrite the following resource using short sentences and high-frequency words. Present content in readable chunks."),
-        "Tiered": wrap_prompt("You are creating a tiered version of this resource for a mixed-ability classroom. Provide:\n1. A simplified version\n2. A standard version\n3. A challenge version."),
-        "Sentence Starters": wrap_prompt("You are helping students develop structured responses. Rewrite this worksheet to include sentence starters or writing frames for each question.")
+        "Simplified": """<role>
+You are a teacher simplifying lesson content for a student with a reading age of 9 years. Rewrite the following resource using simpler vocabulary, shorter sentences, and clear structure while preserving meaning and core knowledge.
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "Challenge Extension": """<role>
+You are a gifted and talented coordinator. Extend the following task to provide a greater challenge for high-attaining students. Add one open-ended question, and one creative application or real-world connection.
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "EAL Support": """<role>
+You are an EAL support specialist. Modify the following resource to include sentence starters and a glossary of key terms with definitions in simple English.
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "SEND Support": """<role>
+You are a SEND teacher. Adapt this activity for students with moderate learning difficulties. Break the task into small, guided steps and use supportive language.
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "Dyslexia-Friendly": """<role>
+You are supporting students with dyslexia. Rewrite the following resource using short sentences and high-frequency words. Present content in readable chunks.
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "Tiered": """<role>
+You are creating a tiered version of this resource for a mixed-ability classroom. Provide:
+1. A simplified version
+2. A standard version
+3. A challenge version
+</role>
+
+<subject>
+{text}
+</subject>""",
+        "Sentence Starters": """<role>
+You are helping students develop structured responses. Rewrite this worksheet to include sentence starters or writing frames for each question.
+</role>
+
+<subject>
+{text}
+</subject>"""
     }
 
     for category, prompt_text in base_prompts.items():
@@ -96,32 +135,108 @@ def seed_prompt_variants():
         {
             "category": "Simplified",
             "technique": "Role-Based",
-            "prompt_text": wrap_prompt("Technique: Role-Based\n\nAct as a literacy support assistant for a student with a reading age of 9. Your job is to simplify this worksheet so it's accessible, without removing any core learning. Use plain language, short sentences, and direct instructions. Keep the task engaging and age-appropriate.\n\n")
+            "prompt_text": """Technique: Role-Based
+
+<role>
+Act as a literacy support assistant for a student with a reading age of 9. Your job is to simplify this worksheet so it's accessible, without removing any core learning. Use plain language, short sentences, and direct instructions. Keep the task engaging and age-appropriate.
+</role>
+
+<subject>
+{text}
+</subject>"""
         },
         {
             "category": "Simplified",
             "technique": "Explicit Constraints",
-            "prompt_text": wrap_prompt("Technique: Explicit Constraints\n\nRewrite the following resource using:\n- Maximum sentence length: 10 words\n- No technical terms unless defined\n- Simple structure: step-by-step or bullet points\n\nMake it suitable for learners with low reading ages while keeping the key educational content intact.\n\n")
+            "prompt_text": """Technique: Explicit Constraints
+
+<role>
+Rewrite the following resource using:
+- Maximum sentence length: 10 words
+- No technical terms unless defined
+- Simple structure: step-by-step or bullet points
+
+Make it suitable for learners with low reading ages while keeping the key educational content intact.
+</role>
+
+<subject>
+{text}
+</subject>"""
         },
         {
             "category": "Challenge Extension",
             "technique": "Chain-of-Thought",
-            "prompt_text": wrap_prompt("Technique: Chain-of-Thought\n\nYou're creating an extension task for high-attaining students. First, identify the core concept of the worksheet. Then, create one open-ended question that requires critical thinking, and one creative application task that connects it to the real world.\n\nOutput each of these with a heading:\n- Concept Summary\n- Challenge Question\n- Creative Application\n\n")
+            "prompt_text": """Technique: Chain-of-Thought
+
+<role>
+You're creating an extension task for high-attaining students. First, identify the core concept of the worksheet. Then, create one open-ended question that requires critical thinking, and one creative application task that connects it to the real world.
+
+Output each of these with a heading:
+- Concept Summary
+- Challenge Question
+- Creative Application
+</role>
+
+<subject>
+{text}
+</subject>"""
         },
         {
             "category": "Challenge Extension",
             "technique": "Few-Shot",
-            "prompt_text": wrap_prompt("Technique: Few-Shot\n\nHere are some examples of extending a standard worksheet:\n\n**Original Task:** Match animal names with their habitats.  \n**Extension:** Research one animal's habitat and present how climate change affects it.\n\n**Original Task:** Solve 5 addition problems.  \n**Extension:** Create a real-life scenario using addition and explain it to a classmate.\n\nNow apply this to the following worksheet to create a challenge task for advanced learners:\n\n")
+            "prompt_text": """Technique: Few-Shot
+
+<role>
+Here are some examples of extending a standard worksheet:
+
+**Original Task:** Match animal names with their habitats.  
+**Extension:** Research one animal's habitat and present how climate change affects it.
+
+**Original Task:** Solve 5 addition problems.  
+**Extension:** Create a real-life scenario using addition and explain it to a classmate.
+
+Now apply this to the following worksheet to create a challenge task for advanced learners:
+</role>
+
+<subject>
+{text}
+</subject>"""
         },
         {
             "category": "Scaffolded",
             "technique": "Persona + Structure",
-            "prompt_text": wrap_prompt("Technique: Persona + Structure\n\nYou are an EAL support teacher. Adapt this worksheet for a learner who needs support with sentence structure and vocabulary. \n\nFor each question or instruction, provide:\n1. A sentence starter\n2. A list of 3 key vocabulary words with definitions\n3. A visual support suggestion (if applicable)\n\n")
+            "prompt_text": """Technique: Persona + Structure
+
+<role>
+You are an EAL support teacher. Adapt this worksheet for a learner who needs support with sentence structure and vocabulary. 
+
+For each question or instruction, provide:
+1. A sentence starter
+2. A list of 3 key vocabulary words with definitions
+3. A visual support suggestion (if applicable)
+</role>
+
+<subject>
+{text}
+</subject>"""
         },
         {
             "category": "Scaffolded",
             "technique": "Instruction-Tuned",
-            "prompt_text": wrap_prompt("Technique: Instruction-Tuned\n\nTask: Add sentence starters and vocabulary scaffolds to this worksheet to support EAL learners.\n\nRequirements:\n- Use a friendly, clear tone\n- Keep the original task intact\n- Include definitions for any challenging words\n\n")
+            "prompt_text": """Technique: Instruction-Tuned
+
+<role>
+Task: Add sentence starters and vocabulary scaffolds to this worksheet to support EAL learners.
+
+Requirements:
+- Use a friendly, clear tone
+- Keep the original task intact
+- Include definitions for any challenging words
+</role>
+
+<subject>
+{text}
+</subject>"""
         }
     ]
 
