@@ -39,6 +39,14 @@ def save_prompt_to_db(task_name, prompt_text, edited, rating=None, feedback_comm
     session.commit()
     session.close()
 
+def wrap_prompt(role_instruction: str, subject_content: str) -> str:
+    return f"""<role>
+{role_instruction.strip()}
+</role>
+
+<subject>
+{subject_content.strip()}
+</subject>"""
 
 def seed_original_prompts():
     session = SessionLocal()
@@ -49,13 +57,13 @@ def seed_original_prompts():
         return  # Already seeded
 
     base_prompts = {
-        "Simplified": "You are a teacher simplifying lesson content for a student with a reading age of 9 years. Rewrite the following resource using simpler vocabulary, shorter sentences, and clear structure while preserving meaning and core knowledge.",
-        "Challenge Extension": "You are a gifted and talented coordinator. Extend the following task to provide a greater challenge for high-attaining students. Add one open-ended question, and one creative application or real-world connection.",
-        "EAL Support": "You are an EAL support specialist. Modify the following resource to include sentence starters and a glossary of key terms with definitions in simple English.",
-        "SEND Support": "You are a SEND teacher. Adapt this activity for students with moderate learning difficulties. Break the task into small, guided steps and use supportive language.",
-        "Dyslexia-Friendly": "You are supporting students with dyslexia. Rewrite the following resource using short sentences and high-frequency words. Present content in readable chunks.",
-        "Tiered": "You are creating a tiered version of this resource for a mixed-ability classroom. Provide:\n1. A simplified version\n2. A standard version\n3. A challenge version.",
-        "Sentence Starters": "You are helping students develop structured responses. Rewrite this worksheet to include sentence starters or writing frames for each question."
+        "Simplified": wrap_prompt("You are a teacher simplifying lesson content for a student with a reading age of 9 years. Rewrite the following resource using simpler vocabulary, shorter sentences, and clear structure while preserving meaning and core knowledge."),
+        "Challenge Extension": wrap_prompt("You are a gifted and talented coordinator. Extend the following task to provide a greater challenge for high-attaining students. Add one open-ended question, and one creative application or real-world connection."),
+        "EAL Support": wrap_prompt("You are an EAL support specialist. Modify the following resource to include sentence starters and a glossary of key terms with definitions in simple English."),
+        "SEND Support": wrap_prompt("You are a SEND teacher. Adapt this activity for students with moderate learning difficulties. Break the task into small, guided steps and use supportive language."),
+        "Dyslexia-Friendly": wrap_prompt("You are supporting students with dyslexia. Rewrite the following resource using short sentences and high-frequency words. Present content in readable chunks."),
+        "Tiered": wrap_prompt("You are creating a tiered version of this resource for a mixed-ability classroom. Provide:\n1. A simplified version\n2. A standard version\n3. A challenge version."),
+        "Sentence Starters": wrap_prompt("You are helping students develop structured responses. Rewrite this worksheet to include sentence starters or writing frames for each question.")
     }
 
     for category, prompt_text in base_prompts.items():
@@ -86,32 +94,32 @@ def seed_prompt_variants():
         {
             "category": "Simplified",
             "technique": "Role-Based",
-            "prompt_text": "Technique: Role-Based\n\nAct as a literacy support assistant for a student with a reading age of 9. Your job is to simplify this worksheet so it's accessible, without removing any core learning. Use plain language, short sentences, and direct instructions. Keep the task engaging and age-appropriate.\n\n"
+            "prompt_text": wrap_prompt("Technique: Role-Based\n\nAct as a literacy support assistant for a student with a reading age of 9. Your job is to simplify this worksheet so it's accessible, without removing any core learning. Use plain language, short sentences, and direct instructions. Keep the task engaging and age-appropriate.\n\n")
         },
         {
             "category": "Simplified",
             "technique": "Explicit Constraints",
-            "prompt_text": "Technique: Explicit Constraints\n\nRewrite the following resource using:\n- Maximum sentence length: 10 words\n- No technical terms unless defined\n- Simple structure: step-by-step or bullet points\n\nMake it suitable for learners with low reading ages while keeping the key educational content intact.\n\n"
+            "prompt_text": wrap_prompt("Technique: Explicit Constraints\n\nRewrite the following resource using:\n- Maximum sentence length: 10 words\n- No technical terms unless defined\n- Simple structure: step-by-step or bullet points\n\nMake it suitable for learners with low reading ages while keeping the key educational content intact.\n\n")
         },
         {
             "category": "Challenge Extension",
             "technique": "Chain-of-Thought",
-            "prompt_text": "Technique: Chain-of-Thought\n\nYou're creating an extension task for high-attaining students. First, identify the core concept of the worksheet. Then, create one open-ended question that requires critical thinking, and one creative application task that connects it to the real world.\n\nOutput each of these with a heading:\n- Concept Summary\n- Challenge Question\n- Creative Application\n\n"
+            "prompt_text": wrap_prompt("Technique: Chain-of-Thought\n\nYou're creating an extension task for high-attaining students. First, identify the core concept of the worksheet. Then, create one open-ended question that requires critical thinking, and one creative application task that connects it to the real world.\n\nOutput each of these with a heading:\n- Concept Summary\n- Challenge Question\n- Creative Application\n\n")
         },
         {
             "category": "Challenge Extension",
             "technique": "Few-Shot",
-            "prompt_text": "Technique: Few-Shot\n\nHere are some examples of extending a standard worksheet:\n\n**Original Task:** Match animal names with their habitats.  \n**Extension:** Research one animal's habitat and present how climate change affects it.\n\n**Original Task:** Solve 5 addition problems.  \n**Extension:** Create a real-life scenario using addition and explain it to a classmate.\n\nNow apply this to the following worksheet to create a challenge task for advanced learners:\n\n"
+            "prompt_text": wrap_prompt("Technique: Few-Shot\n\nHere are some examples of extending a standard worksheet:\n\n**Original Task:** Match animal names with their habitats.  \n**Extension:** Research one animal's habitat and present how climate change affects it.\n\n**Original Task:** Solve 5 addition problems.  \n**Extension:** Create a real-life scenario using addition and explain it to a classmate.\n\nNow apply this to the following worksheet to create a challenge task for advanced learners:\n\n")
         },
         {
             "category": "Scaffolded",
             "technique": "Persona + Structure",
-            "prompt_text": "Technique: Persona + Structure\n\nYou are an EAL support teacher. Adapt this worksheet for a learner who needs support with sentence structure and vocabulary. \n\nFor each question or instruction, provide:\n1. A sentence starter\n2. A list of 3 key vocabulary words with definitions\n3. A visual support suggestion (if applicable)\n\n"
+            "prompt_text": wrap_prompt("Technique: Persona + Structure\n\nYou are an EAL support teacher. Adapt this worksheet for a learner who needs support with sentence structure and vocabulary. \n\nFor each question or instruction, provide:\n1. A sentence starter\n2. A list of 3 key vocabulary words with definitions\n3. A visual support suggestion (if applicable)\n\n")
         },
         {
             "category": "Scaffolded",
             "technique": "Instruction-Tuned",
-            "prompt_text": "Technique: Instruction-Tuned\n\nTask: Add sentence starters and vocabulary scaffolds to this worksheet to support EAL learners.\n\nRequirements:\n- Use a friendly, clear tone\n- Keep the original task intact\n- Include definitions for any challenging words\n\n"
+            "prompt_text": wrap_prompt("Technique: Instruction-Tuned\n\nTask: Add sentence starters and vocabulary scaffolds to this worksheet to support EAL learners.\n\nRequirements:\n- Use a friendly, clear tone\n- Keep the original task intact\n- Include definitions for any challenging words\n\n")
         }
     ]
 
@@ -141,67 +149,85 @@ def seed_lesson_plan_variants():
             "technique": "Role-Based",
             "prompt_text": """Technique: Role-Based
 
-You are a highly experienced secondary school teacher. Create a detailed lesson plan on the topic of "{topic}" for {year_group}, lasting {duration} minutes. Use the chapter text provided to help structure the lesson. Your output should include:
+<role>
+You are a highly experienced secondary school teacher. Create a detailed lesson plan for the given topic, year group, and lesson duration. Your output should include:
 
-1. Learning objectives
-2. Suggested lesson structure (starter, main, plenary)
-3. Key concepts to cover
-4. Differentiated activities (support/challenge)
+1. Learning objectives  
+2. Suggested lesson structure (starter, main, plenary)  
+3. Key concepts to cover  
+4. Differentiated activities (support/challenge)  
 5. Assessment for learning (AFL) ideas
+</role>
 
-Chapter content:
-{chapter_text}"""
+<subject>
+Topic: {topic}  
+Year Group: {year_group}  
+Duration: {duration} minutes  
+
+Chapter content:  
+{chapter_text}
+</subject>"""
         },
         {
             "technique": "Few-Shot",
             "prompt_text": """Technique: Few-Shot
 
-Here is an example lesson plan:
+<role>
+Use the following example format to generate a lesson plan.
 
+Example:  
 Topic: Fractions  
 Year Group: Year 4  
 Duration: 45 minutes  
 Objectives: Understand halves and quarters.  
 Structure:  
 - Starter: Pizza fraction activity  
-- Main: Colouring shapes to represent fractions  
+- Main: Colouring shapes  
 - Plenary: Quiz and discussion  
-Differentiation: Use physical blocks for support, extra challenge problems  
+Differentiation: Use blocks for support, challenge problems  
 AFL: Exit ticket quiz  
 
-Now, create a lesson plan for:
+Now create a lesson plan using this structure.
+</role>
 
+<subject>
 Topic: {topic}  
 Year Group: {year_group}  
 Duration: {duration} minutes  
 
-Chapter content:
-{chapter_text}"""
+Chapter content:  
+{chapter_text}
+</subject>"""
         },
         {
             "technique": "Format-Constrained",
             "prompt_text": """Technique: Format-Constrained
 
-Generate a lesson plan using the following structure:
+<role>
+Generate a lesson plan using the following markdown format:
 
-- **Topic**: {topic}  
-- **Year Group**: {year_group}  
-- **Duration**: {duration} minutes  
+- **Topic**:  
+- **Year Group**:  
+- **Duration**:  
 - **Learning Objectives**:  
-  (bullet points)
 - **Lesson Structure**:  
-  - Starter:  
-  - Main Activity:  
-  - Plenary:  
+  - Starter  
+  - Main  
+  - Plenary  
 - **Differentiation**:  
-  - Support:  
-  - Challenge:  
-- **AFL Opportunities**:  
-  (bullet points)
+  - Support  
+  - Challenge  
+- **AFL Opportunities**:
+</role>
 
-Use the chapter content to inform your decisions:
+<subject>
+Topic: {topic}  
+Year Group: {year_group}  
+Duration: {duration} minutes  
 
-{chapter_text}"""
+Chapter content:  
+{chapter_text}
+</subject>"""
         }
     ]
 
@@ -217,7 +243,6 @@ Use the chapter content to inform your decisions:
     session.commit()
     session.close()
 
-
 def seed_parent_comms_variants():
     session = SessionLocal()
 
@@ -231,27 +256,51 @@ def seed_parent_comms_variants():
             "technique": "Role-Based",
             "prompt_text": """Technique: Role-Based
 
-You are a professional teacher writing to a student's parents. Write a clear, polite message about the following concern: {concern}. Use a {tone} tone. Include any context provided here: {note}. Make it sound human, empathetic, and supportive of the student."""
+<role>
+You are a professional teacher writing to a student's parents. Write a clear, polite message about the following concern. Use the tone provided. Make it sound human, empathetic, and supportive of the student.
+</role>
+
+<subject>
+Concern: {concern}  
+Tone: {tone}  
+Context: {note}
+</subject>"""
         },
         {
             "technique": "Tone-Driven",
             "prompt_text": """Technique: Tone-Driven
 
-Compose a short message to a parent. Concern: {concern}. Use this tone: {tone}. Extra context: {note}. The message should be respectful, helpful, and actionable. End on a supportive note."""
+<role>
+Compose a short message to a parent. The message should be respectful, helpful, and actionable. End on a supportive note.
+</role>
+
+<subject>
+Concern: {concern}  
+Tone: {tone}  
+Extra context: {note}
+</subject>"""
         },
         {
             "technique": "Format-Constrained",
             "prompt_text": """Technique: Format-Constrained
 
-Write a message using this format:
+<role>
+Write a message using the following structure:
 
-- Greeting
-- Main concern: {concern}
-- Additional info: {note}
-- Clear next steps
-- Polite closing
+- Greeting  
+- Main concern  
+- Additional info  
+- Clear next steps  
+- Polite closing  
 
-Use a {tone} tone. Keep the message concise and appropriate for parents."""
+Use the tone provided. Keep the message concise and parent-appropriate.
+</role>
+
+<subject>
+Concern: {concern}  
+Tone: {tone}  
+Additional info: {note}
+</subject>"""
         }
     ]
 
@@ -281,34 +330,41 @@ def seed_mcq_variants():
             "technique": "Role-Based",
             "prompt_text": """Technique: Role-Based
 
-You are an experienced exam question writer. Based on the following resource, generate {num} multiple-choice questions that test understanding of the material. Each question should have:
+<role>
+You are an experienced exam question writer. Based on the resource provided, generate {num} multiple-choice questions that test understanding of the material. Each question should have:
 - A question stem
 - Four answer options
 - One clearly correct answer
+</role>
 
-Text:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Format-Constrained",
             "prompt_text": """Technique: Format-Constrained
 
+<role>
 Generate {num} multiple-choice questions in the following format:
 
-Q: [question]
+Q: [question]  
 A. Option 1  
 B. Option 2  
 C. Option 3  
 D. Option 4  
 Answer: [Correct Option Letter]
+</role>
 
-Use the content below:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Difficulty-Scaled",
             "prompt_text": """Technique: Difficulty-Scaled
 
+<role>
 Based on the text, generate {num} multiple-choice questions divided as:
 - Easy (1/3)
 - Medium (1/3)
@@ -318,9 +374,11 @@ For each question, provide:
 - Question
 - 4 answer options
 - Indicate the correct answer
+</role>
 
-Text:
-{text}"""
+<subject>
+{text}
+</subject>"""
         }
     ]
 
@@ -336,7 +394,6 @@ Text:
     session.commit()
     session.close()
 
-
 def seed_flashcard_variants():
     session = SessionLocal()
 
@@ -350,36 +407,45 @@ def seed_flashcard_variants():
             "technique": "QA-Pair Format",
             "prompt_text": """Technique: QA-Pair Format
 
+<role>
 Convert the following text into flashcards. Each flashcard should be in Q&A format:
 Q: [question]  
 A: [answer]
+</role>
 
-Text:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Definition-Driven",
             "prompt_text": """Technique: Definition-Driven
 
+<role>
 Extract key terms from the text and create flashcards using this format:
 
 Front: Term  
 Back: Simple definition
+</role>
 
-Text:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Cloze Deletion",
             "prompt_text": """Technique: Cloze Deletion
 
+<role>
 Turn the content into flashcards using the cloze deletion format (fill-in-the-blank). Example:
 
 Front: Photosynthesis occurs in the ______ of plant cells.  
 Back: chloroplasts
+</role>
 
-Text:
-{text}"""
+<subject>
+{text}
+</subject>"""
         }
     ]
 
@@ -409,33 +475,42 @@ def seed_group_task_variants():
             "technique": "Collaborative Role-Based",
             "prompt_text": """Technique: Collaborative Role-Based
 
+<role>
 Act as an instructional designer. Convert the content into a collaborative group activity suitable for classroom discussion. Provide:
 
 1. Group goal
 2. Instructions for each student role
 3. Materials needed
 4. Key learning outcomes
+</role>
 
-Content:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Inquiry-Based Learning",
             "prompt_text": """Technique: Inquiry-Based Learning
 
+<role>
 Design a group task based on the content that promotes inquiry and peer discussion. Include a guiding question and instructions for structured dialogue.
+</role>
 
-Content:
-{text}"""
+<subject>
+{text}
+</subject>"""
         },
         {
             "technique": "Scenario-Based",
             "prompt_text": """Technique: Scenario-Based
 
+<role>
 Create a scenario-based group activity where students must apply the knowledge from this resource in a real-world context. Include prompts for group roles and expected outcomes.
+</role>
 
-Content:
-{text}"""
+<subject>
+{text}
+</subject>"""
         }
     ]
 
@@ -450,3 +525,4 @@ Content:
 
     session.commit()
     session.close()
+

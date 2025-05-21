@@ -59,15 +59,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ----------- PROMPT WRAPPER ------------
-def wrap_prompt(role_instruction: str, subject_content: str) -> str:
-    return f"""<role>
-{role_instruction.strip()}
-</role>
-
-<subject>
-{subject_content.strip()}
-</subject>"""
 
 
 # ----------- MAIN TASK SELECTOR ------------
@@ -133,7 +124,7 @@ if task == "Differentiate This":
         selected_technique = "Default Template"
         base_prompt_text = prompt_templates[task_name]
 
-    wrapped_prompt = wrap_prompt(base_prompt_text, subject_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
     if st.button("\u2728 Generate Differentiated Version"):
@@ -238,7 +229,7 @@ elif task == "Generate Lesson Plan + Resources":
                                 .replace("{year_group}", year_group)\
                                 .replace("{duration}", str(duration))
     subject_text = lesson_text or "[No content provided]"
-    wrapped_prompt = wrap_prompt(role_text, subject_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
@@ -319,7 +310,7 @@ elif task == "Parent Comms Assistant":
                                 .replace("{tone}", tone)\
                                 .replace("{note}", extra_note or "[No extra context provided]")
     subject_text = concern  # or extra_note — use whichever makes sense
-    wrapped_prompt = wrap_prompt(role_text, subject_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
@@ -392,7 +383,7 @@ elif task == "Convert to MCQ":
         base_prompt_text = "Convert the following content into multiple-choice questions."
 
     role_text = base_prompt_text.replace("{num}", str(num_questions))
-    wrapped_prompt = wrap_prompt(role_text, mcq_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
 
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
@@ -466,7 +457,7 @@ elif task == "Convert to Flashcards":
         selected_technique = "Default Template"
         base_prompt_text = "Convert the following content into flashcards."
 
-    wrapped_prompt = wrap_prompt(base_prompt_text, flashcard_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt to be Sent to the AI", value=wrapped_prompt, height=250)
 
     if st.button("✨ Generate Flashcards"):
@@ -527,7 +518,7 @@ elif task == "Convert to Group Task":
         selected_technique = "Default Template"
         base_prompt_text = "Convert the content into a collaborative group task."
 
-    wrapped_prompt = wrap_prompt(base_prompt_text, group_text)
+    wrapped_prompt = base_prompt_text.replace("{text}", subject_text)
     final_prompt = st.text_area("🔍 Preview & Edit Prompt", value=wrapped_prompt, height=250)
 
     if st.button("✨ Generate Group Task"):
