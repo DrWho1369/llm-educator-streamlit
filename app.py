@@ -60,7 +60,7 @@ st.markdown("""
 
 
 # ----------- MAIN TASK SELECTOR ------------
-task = st.selectbox("🛠️ Choose a Teaching Task", [
+task = st.selectbox("Choose a Teaching Task", [
     "Differentiate This",
     "Generate Lesson Plan + Resources",
     "Parent Comms Assistant",
@@ -86,7 +86,7 @@ prompt_templates = {
 
 # ----------- UI: MAIN FORM ------------
 if task == "Differentiate This":
-    st.markdown("<div class='title-text'>\U0001F9E0 Differentiate Resource</div>", unsafe_allow_html=True)
+    st.markdown("<div class='title-text'>Differentiate Resource</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle-text'>Paste your lesson content below and choose your differentiation type and prompting strategy.</div>", unsafe_allow_html=True)
 
     subject_text = st.text_area(
@@ -182,7 +182,7 @@ if task == "Differentiate This":
 
 
 elif task == "Generate Lesson Plan + Resources":
-    st.markdown("### 🧑‍🏫 Generate a Lesson Plan + Supporting Materials")
+    st.markdown("###Generate a Lesson Plan + Supporting Materials")
 
     topic = st.text_input("🧠 Topic", placeholder="e.g. Photosynthesis")
     year_group = st.selectbox("📘 Year Group", [f"Year {i}" for i in range(1, 14)])
@@ -249,7 +249,7 @@ elif task == "Generate Lesson Plan + Resources":
                     st.success("✅ Feedback saved!")
 
 elif task == "Parent Comms Assistant":
-    st.markdown("### 🗣️ Generate a Parent Communication Message")
+    st.markdown("###Generate a Parent Communication Message")
 
     concern = st.selectbox("📌 What’s the communication about?", ["Praise", "Missed Homework", "Behaviour Issue", "General Update"])
     tone = st.selectbox("🎙️ Preferred Tone", ["Supportive", "Neutral", "Firm but Constructive"])
@@ -311,7 +311,7 @@ elif task == "Parent Comms Assistant":
                 st.success("✅ Feedback saved!")
 
 elif task == "Convert to MCQ":
-    st.markdown("### 📝 Convert Resource into Multiple-Choice Questions")
+    st.markdown("###Convert Resource into Multiple-Choice Questions")
 
     mcq_text = st.text_area("📄 Paste Your Resource", height=250, placeholder="e.g. a passage, worksheet, or topic summary")
 
@@ -375,7 +375,7 @@ elif task == "Convert to MCQ":
                     st.success("✅ Feedback saved!")
 
 elif task == "Convert to Flashcards":
-    st.markdown("### 🧠 Convert Resource into Flashcards")
+    st.markdown("###Convert Resource into Flashcards")
 
     flashcard_text = st.text_area("📄 Paste Your Resource", height=250, placeholder="e.g. topic summary, glossary, article")
 
@@ -424,7 +424,7 @@ elif task == "Convert to Flashcards":
 
 
 elif task == "Convert to Group Task":
-    st.markdown("### 🤝 Convert Resource into a Group Task")
+    st.markdown("###Convert Resource into a Group Task")
 
     group_text = st.text_area("📄 Paste Resource", height=250, placeholder="e.g. article, worksheet, problem prompt")
 
