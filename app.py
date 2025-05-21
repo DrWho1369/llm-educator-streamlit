@@ -132,7 +132,6 @@ if task == "Differentiate This":
             with st.spinner(f"Generating {task_name} using {selected_technique} strategy..."):
                 save_prompt_to_db(task_name=task_name, prompt_text=final_prompt, edited=True)
 
-                st.write("Raw response:", response.text)
                 response = requests.post(
                     "http://18.171.171.212:8080/v1/chat/completions",
                     json={
@@ -142,6 +141,8 @@ if task == "Differentiate This":
                         ]
                     }
                 )
+                st.write("Raw response:", response.text)
+
                 try:
                     generated_text = response.json()["choices"][0]["message"]["content"]
                 except Exception as e:
