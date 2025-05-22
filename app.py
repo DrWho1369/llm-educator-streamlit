@@ -41,28 +41,41 @@ Each version should follow this structure:
 
 Use only the content provided by the user as your base material. Do not fabricate unrelated facts.
 """,
-    "Plan & Print": """You are an experienced lesson planner creating a detailed teaching plan for the given topic, year group, and lesson duration (Role-based).
+    "Plan & Print": """You are an experienced teacher and curriculum designer. Your task is to create a slide-based lesson plan for the following topic. The output should read like the written content of a PowerPoint or Google Slides presentation.
+Year group = {year_group}
+Duration = {duration}
+Use this structure for each slide:
+- Slide Title
+- Slide Content (2–5 bullet points or short paragraphs)
+- [Optional: Teacher Notes or Activity Instructions]
 
-Use this structure:
-- Topic
-- Year group
-- Duration
-- Learning objectives (bullet points)
-- Lesson structure (starter, main, plenary)
-- Differentiation (support & challenge)
-- AFL (Assessment for Learning)
+Include 6–10 slides covering:
+1. Lesson Objectives  
+2. Hook or Starter Activity  
+3. Core Concept Explanation  
+4. Guided Practice or Worked Example  
+5. Student Activity Instructions  
+6. Recap / Exit Task  
+7. Optional Homework  
 
-Think step-by-step to ensure learning progression and engagement. Focus on clarity and practicality.
+Include at least one interactive task, such as a pair discussion, mini-quiz, or problem-solving question.
+
+Think through the instructional flow, making sure each slide builds understanding and keeps students engaged.
 
 Example:
-Topic: Fractions  
-Objectives: Understand halves and quarters  
-Structure:  
-• Starter: Pizza cutting  
-• Main: Colour shapes  
-• Plenary: Quick quiz  
+---
+**Slide 1 – Objectives**  
+- Understand the water cycle  
+- Identify key processes: evaporation, condensation, precipitation  
+- Explain each process with an example
 
-Return only the formatted plan.
+**Slide 2 – Hook: What's in a Raindrop?**  
+- Show image of storm cloud  
+- Ask: How does rain form?  
+- Quick pair discussion  
+---
+
+Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified. If year group or duration are not provided, assume a 45-minute lesson for Year 6 students. Return only the slide content as text.
 """,
     "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation, your task is to write a short parent message using the tone and context provided.
 
@@ -80,7 +93,7 @@ Examples:
 
 Return only the final message.
 """,
-    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions (Role-based). Based on the resource provided, create {num} MCQs to assess comprehension (Instruction-based).
+    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided, create {num_mcq} MCQs to assess comprehension.
 
 Each MCQ should follow this format:
 Q: [Question]
@@ -112,6 +125,18 @@ for i, label in enumerate(task_labels):
         btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
         if st.button(label, key=label):
             st.session_state["selected_task"] = label
+
+
+# Add task-specific inputs
+year_group = duration = num_mcq = None
+
+if run_lesson_plan:
+    year_group = st.selectbox("Year Group", [f"Year {i}" for i in range(1, 14)])
+    duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
+
+if run_mcq:
+    num_mcq = st.slider("Number of Questions", 1, 10, value=5)
+
 
 # --- Perform Prompt if Task Selected ---
 selected_task = st.session_state["selected_task"]
