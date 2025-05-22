@@ -6,7 +6,7 @@ st.title("Prompt Engineering Research")
 
 st.markdown("""
 ## Objective  
-This page presents deep research into prompt engineering strategies for improving LLM performance in education-focused tasks.  
+This page presents my research into prompt engineering strategies for improving LLM performance in education-focused tasks.  
 """)
 
 # --- Summary Section ---
