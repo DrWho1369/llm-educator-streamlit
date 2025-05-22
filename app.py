@@ -3,7 +3,7 @@ import requests
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
-st.title("🎓 Prompt Tester")
+st.title("OI-TA: AI-Powered Support for Educators")
 
 # --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
