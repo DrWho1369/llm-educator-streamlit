@@ -9,7 +9,10 @@ st.title("🎓 Prompt Tester")
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
 
-# --- User Input (Always visible) ---
+if "selected_subtask" not in st.session_state:
+    st.session_state["selected_subtask"] = None
+
+# --- User Input ---
 st.subheader("Paste Your Content")
 user_input = st.text_area("Lesson content, parent update, or material to convert:", height=250)
 
@@ -20,7 +23,7 @@ task_labels = [
     "Differentiate Resource",
     "Generate Parent Message",
     "Plan & Print",
-    "Convert to MCQ"
+    "Reformat & Repurpose Resource"
 ]
 
 system_prompts = {
@@ -115,6 +118,55 @@ D. 120°C
 Answer: B
 
 Return only the MCQs.
+""",
+ "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material below. Break the resource into essential knowledge chunks and convert them into Q&A pairs.
+
+Follow this step-by-step approach:
+1. Identify key facts, terms, or concepts that should be retained.
+2. For each, write a question that prompts recall or understanding.
+3. Provide a concise and accurate answer.
+4. Optionally use cloze-style (fill-in-the-blank) for variety.
+
+Apply this structure:
+**Q:** [Clear, focused question]  
+**A:** [Direct answer]
+
+Constraints:
+- Use only information provided by the user. Do not invent content.
+- Keep language age-appropriate but precise.
+- Limit each answer to 1–2 sentences max.
+
+Example flashcard:
+Q: What is photosynthesis?  
+A: It's the process by which green plants make food using sunlight.
+
+Return 8–12 flashcards. Clearly label each pair (Q/A).
+""",
+
+    "Create Group Discussion Tasks/Activities": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided. The goal is to spark thoughtful student dialogue and peer learning.
+
+Step-by-step reasoning:
+1. Extract the key concept or debate point from the material.
+2. Pose one or more open-ended discussion questions.
+3. Suggest clear roles or responsibilities for group members (e.g. facilitator, recorder, timekeeper).
+4. Provide instructions that encourage active participation and critical thinking.
+
+Use this format:
+**Task Title:**  
+**Overview:** [1–2 sentence explanation of the goal]  
+**Group Roles:** [3–4 roles with simple descriptions]  
+**Discussion Questions:** [1–3 questions]  
+**Instructions:**  
+- Step-by-step guidance on how to run the discussion  
+- Include time guidance (e.g. “5 mins discussion, 3 mins summary”)  
+- Encourage inclusive participation
+
+Constraints:
+- Use only the provided material
+- Make the activity achievable in 15–20 minutes
+- Avoid abstract questions unless clearly scaffolded
+
+Return the full activity as structured text.
 """
 }
 
@@ -125,11 +177,30 @@ for i, label in enumerate(task_labels):
         btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
         if st.button(label, key=label):
             st.session_state["selected_task"] = label
+            st.session_state["selected_subtask"] = None 
 
+# Handle Reformat & Repurpose subtasks
+selected_task = st.session_state["selected_task"]
+selected_subtask = st.session_state["selected_subtask"]
+
+
+if selected_task == "Reformat & Repurpose Resource":
+    st.markdown("#### 🔄 Choose how to repurpose the content:")
+    subtask_cols = st.columns(3)
+    with subtask_cols[0]:
+        if st.button("Convert to MCQ"):
+            st.session_state["selected_subtask"] = "Convert to MCQ"
+    with subtask_cols[1]:
+        if st.button("Convert to Flashcards"):
+            st.session_state["selected_subtask"] = "Convert to Flashcards"
+    with subtask_cols[2]:
+        if st.button("Group Discussion Task"):
+            st.session_state["selected_subtask"] = "Group Discussion Task"
+
+selected_subtask = st.session_state["selected_subtask"]
 
 # Add task-specific inputs
 year_group = duration = num_mcq = None
-
 if st.session_state["selected_task"] == "Plan & Print":
     year_group = st.selectbox("Age Category", [
         "Early Years / KS1 (4–7)",
@@ -141,28 +212,25 @@ if st.session_state["selected_task"] == "Plan & Print":
     ])
     duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
 
-if st.session_state["selected_task"] == "Convert to MCQ":
+if st.session_state["selected_task"] == "Reformat & Repurpose Resource" and st.session_state["selected_subtask"] == "Convert to MCQ":
     num_mcq = st.slider("Number of Questions", 1, 20, value=10)
 
 # --- Generation Button ---
 generate_now = st.button("🚀 Generate Output")
 
 # --- Perform Prompt if Task Selected ---
-selected_task = st.session_state["selected_task"]
-
-
 if selected_task and generate_now:
-    system_prompt = system_prompts[selected_task]
-    if selected_task == "Plan & Print":
+    task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
+    system_prompt = system_prompts[task_key]
+
+    if task_key == "Plan & Print":
         system_prompt = system_prompt.format(
             year_group=year_group if year_group else "Year 6",
             duration=duration if duration else 45
         )
+    elif task_key == "Convert to MCQ":
+        system_prompt = system_prompt.replace("{num_mcq}", str(num_mcq if num_mcq else 5))
 
-    if selected_task == "Convert to MCQ":
-        system_prompt = system_prompt.format(
-            num_mcq=num_mcq if num_mcq else 10
-        )
 
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
@@ -186,11 +254,10 @@ if selected_task and generate_now:
 
         st.markdown(f"### AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
-
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
-    st.markdown(f"### Prompt Sent to AI")
-    st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
+        st.markdown(f"### Prompt Sent to AI")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
 
 # --- Styling ---
 st.markdown("""
