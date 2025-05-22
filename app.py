@@ -10,11 +10,11 @@ if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
 
 # --- User Input (Always visible) ---
-st.subheader("📝 Paste Your Content")
+st.subheader("Paste Your Content")
 user_input = st.text_area("Lesson content, parent update, or material to convert:", height=250)
 
 # --- Task Selection Buttons ---
-st.subheader("🎯 Choose a Task")
+st.subheader("Choose a Task")
 
 task_labels = [
     "Differentiate Resource",
@@ -49,7 +49,7 @@ if selected_task:
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
     else:
-        with st.spinner(f"🔄 Generating output for: {selected_task}..."):
+        with st.spinner(f"Generating output for: {selected_task}..."):
             response = requests.post(
                 "http://18.171.171.212:8080/v1/chat/completions",
                 json={
@@ -66,10 +66,10 @@ if selected_task:
                 st.code(response.text)
                 output = "[No output returned]"
 
-        st.markdown(f"### 📤 AI Output")
+        st.markdown(f"###AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
 
-        st.download_button("📥 Copy/Download Output", data=output, file_name="output.txt")
+        st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
 # --- Styling ---
 st.markdown("""
