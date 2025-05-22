@@ -52,7 +52,7 @@ Use this structure (Format-constrained):
 - Differentiation (support & challenge)
 - AFL (Assessment for Learning)
 
-Think step-by-step to ensure learning progression and engagement (Chain-of-thought). Focus on clarity and practicality (Instruction-based).
+Think step-by-step to ensure learning progression and engagement. Focus on clarity and practicality.
 
 Example:
 Topic: Fractions  
@@ -61,24 +61,22 @@ Structure:
 • Starter: Pizza cutting  
 • Main: Colour shapes  
 • Plenary: Quick quiz  
-(Few-shot)
 
 Return only the formatted plan.
 """,
-    "Generate Parent Message": """You are a compassionate and professional school communications advisor (Role-based). Given the student's situation, your task is to write a short parent message using the tone and context provided (Instruction-based).
+    "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation, your task is to write a short parent message using the tone and context provided.
 
 Follow this structure:
 1. Greeting
 2. Main concern or praise
 3. Optional context
 4. Positive reinforcement and next step
-(Format-constrained)
 
-Think step-by-step about how to reassure, inform, and motivate the parent (Chain-of-thought). If tone is unclear, default to a supportive, respectful style.
+Think step-by-step about how to reassure, inform, and motivate the parent. If tone is unclear, default to a supportive, respectful style.
 
 Examples:
 • Praise → Highlight achievement, thank parents, suggest continuation.
-• Concern → Describe behaviour neutrally, offer solution, invite collaboration. (Few-shot)
+• Concern → Describe behaviour neutrally, offer solution, invite collaboration.
 
 Return only the final message.
 """,
@@ -92,7 +90,7 @@ C. Option 3
 D. Option 4  
 Answer: [Correct Option Letter]
 
-Use a mix of easy, medium, and hard questions to cover different cognitive levels (Chain-of-thought). Avoid ambiguous phrasing and ensure only one correct answer.
+Use a mix of easy, medium, and hard questions to cover different cognitive levels. Avoid ambiguous phrasing and ensure only one correct answer.
 
 Example:
 Q: What is the boiling point of water?  
@@ -100,7 +98,7 @@ A. 90°C
 B. 100°C  
 C. 110°C  
 D. 120°C  
-Answer: B (Few-shot)
+Answer: B
 
 Return only the MCQs.
 """
