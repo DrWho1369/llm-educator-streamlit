@@ -9,6 +9,9 @@ st.markdown("""
     Empowering every teacher, AI-Powered Support for Educators.
 </div>
 """, unsafe_allow_html=True)
+st.markdown("""
+    <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
+""", unsafe_allow_html=True)
 # --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
@@ -18,9 +21,12 @@ if "selected_subtask" not in st.session_state:
 
 # --- User Input ---
 st.subheader("Paste Your Content")
-user_input = st.text_area("Lesson content, parent update, or material to convert:", height=250)
+user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
 
 # --- Task Selection Buttons ---
+st.markdown("""
+    <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
+""", unsafe_allow_html=True)
 st.subheader("Choose a Task")
 
 task_labels = [
