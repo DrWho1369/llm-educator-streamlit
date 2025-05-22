@@ -247,21 +247,27 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
 #     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 # --- Generation Button ---
 # --- Generation Button with Custom Styling ---
+# --- Generation Button with Custom Styling ---
 generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 
-# Styling specifically for the generate button
+# Inject custom CSS for the button
 st.markdown("""
     <style>
-    button[data-testid="baseButton-secondary"][key="generate_btn"] {
+    /* Style specifically for the Generate Output button */
+    div.stButton > button[kind="secondary"][data-testid="baseButton-secondary"][key="generate_btn"] {
         background-color: #2ecc71 !important;
         color: white !important;
+        font-weight: bold !important;
         font-size: 1.1rem !important;
-        font-weight: bold;
-        padding: 0.6rem 1.2rem;
-        border-radius: 8px;
-        border: none;
-        margin-top: 1rem;
-        width: 100%;
+        border-radius: 8px !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease;
+    }
+    div.stButton > button[kind="secondary"][data-testid="baseButton-secondary"][key="generate_btn"]:hover {
+        background-color: #27ae60 !important;
     }
     </style>
 """, unsafe_allow_html=True)
