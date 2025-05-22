@@ -171,7 +171,7 @@ Return the full activity as structured text.
 }
 
 # Create button layout and track which was clicked
-cols = st.columns(2)
+cols = st.columns(4)
 for i, label in enumerate(task_labels):
     with cols[i % 2]:
         btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
@@ -201,7 +201,7 @@ selected_subtask = st.session_state["selected_subtask"]
 
 # Add task-specific inputs
 year_group = duration = num_mcq = None
-if st.session_state["selected_task"] == "Plan & Print":
+if st.session_state["selected_task"] == "Plan & Print" or "Reformat & Repurpose":
     year_group = st.selectbox("Age Category", [
         "Early Years / KS1 (4–7)",
         "Lower KS2 (7–9)",
@@ -216,7 +216,23 @@ if st.session_state["selected_task"] == "Reformat & Repurpose Resource" and st.s
     num_mcq = st.slider("Number of Questions", 1, 20, value=10)
 
 # --- Generation Button ---
-generate_now = st.button("🚀 Generate Output")
+generate_col = st.container()
+with generate_col:
+    st.markdown("""
+        <style>
+        .generate-btn button {
+            background-color: #2ecc71 !important;
+            color: white !important;
+            font-size: 1.1rem !important;
+            font-weight: bold;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
+    st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
 # --- Perform Prompt if Task Selected ---
 if selected_task and generate_now:
