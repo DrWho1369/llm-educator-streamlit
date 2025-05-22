@@ -137,12 +137,14 @@ if st.session_state["selected_task"] == "Plan & Print":
 if st.session_state["selected_task"] == "Convert to MCQ":
     num_mcq = st.slider("Number of Questions", 1, 10, value=5)
 
+# --- Generation Button ---
+generate_now = st.button("🚀 Generate Output")
 
 # --- Perform Prompt if Task Selected ---
 selected_task = st.session_state["selected_task"]
 
-if selected_task:
-    st.markdown(f"### ✏️ Prompt Sent to AI")
+
+if selected_task and generate_now:
     system_prompt = system_prompts[selected_task]
     if selected_task == "Plan & Print":
         system_prompt = system_prompt.format(
@@ -154,8 +156,6 @@ if selected_task:
         system_prompt = system_prompt.format(
             num_mcq=num_mcq if num_mcq else 10
         )
-
-    st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
 
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
@@ -181,6 +181,9 @@ if selected_task:
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
 
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
+
+    st.markdown(f"### Prompt Sent to AI")
+    st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
 
 # --- Styling ---
 st.markdown("""
