@@ -147,7 +147,7 @@ A: It's the process by which green plants make food using sunlight.
 Return {num_flashcards} flashcards. Clearly label each pair (Q/A).
 """,
 
-    "Create Group Discussion Tasks/Activities": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided. The goal is to spark thoughtful student dialogue and peer learning.
+    "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided. The goal is to spark thoughtful student dialogue and peer learning.
 
 Step-by-step reasoning:
 1. Extract the key concept or debate point from the material.
