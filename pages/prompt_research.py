@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Engineering Research", layout="wide")
-st.title("📘 Prompt Engineering Research")
+st.title("Prompt Engineering Research")
 
 st.markdown("""
 ## Objective  
