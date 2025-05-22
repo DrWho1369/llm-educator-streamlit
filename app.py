@@ -303,7 +303,7 @@ if selected_task and generate_now:
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]", language="markdown")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]", language="markdown")
 
 # --- Styling ---
 st.markdown("""
