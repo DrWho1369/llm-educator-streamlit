@@ -198,13 +198,22 @@ if selected_task == "Reformat & Repurpose Resource":
             st.session_state["selected_subtask"] = "Group Discussion Task"
 
 selected_subtask = st.session_state["selected_subtask"]
+# Inputs for Plan & Print only
+if selected_task == "Plan & Print":
+    year_group = st.selectbox("Age Category", [
+        "Early Years / KS1 (4–7)",
+        "Lower KS2 (7–9)",
+        "Upper KS2 (9–11)",
+        "KS3 / Lower Secondary (11–14)",
+        "KS4 / GCSE (14–16)",
+        "Post-16 / A-Level (16–18)"
+    ])
+    duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
 
-# Add task-specific inputs
-# Correct visibility logic for age category and duration
-if st.session_state["selected_task"] == "Plan & Print" or (
-    st.session_state["selected_task"] == "Reformat & Repurpose Resource" and
-    st.session_state["selected_subtask"] in ["Convert to MCQ", "Convert to Flashcards", "Group Discussion Task"]
-):
+# Inputs for Reformat & Repurpose subtasks only (no duration)
+if selected_task == "Reformat & Repurpose Resource" and selected_subtask in [
+    "Convert to MCQ", "Convert to Flashcards", "Group Discussion Task"
+]:
     year_group = st.selectbox("Age Category", [
         "Early Years / KS1 (4–7)",
         "Lower KS2 (7–9)",
@@ -214,6 +223,7 @@ if st.session_state["selected_task"] == "Plan & Print" or (
         "Post-16 / A-Level (16–18)"
     ])
 
+# MCQ item count (only for MCQ and Flashcards)
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Convert to MCQ", "Convert to Flashcards"]:
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
 
