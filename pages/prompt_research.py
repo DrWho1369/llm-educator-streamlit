@@ -5,12 +5,12 @@ st.set_page_config(page_title="Prompt Engineering Research", layout="wide")
 st.title("📘 Prompt Engineering Research")
 
 st.markdown("""
-## 🎯 Objective  
+## Objective  
 This page presents deep research into prompt engineering strategies for improving LLM performance in education-focused tasks.  
 """)
 
 # --- Summary Section ---
-st.header("🧠 Summary of Prompt Engineering Techniques")
+st.header("Summary of Prompt Engineering Techniques")
 st.markdown("""
 Prompt engineering techniques can be grouped into several categories:
 
@@ -38,7 +38,7 @@ Prompt engineering techniques can be grouped into several categories:
 """)
 
 # --- Top 5 Table ---
-st.header("🏆 Top 5 Techniques to Use in Prompts")
+st.header("Top 5 Techniques to Use in Prompts")
 
 top5 = [
     ["1", "**Explicit Role Assignment**", "Define who the model is (e.g., teacher, coach)", "Improves context relevance and tone"],
@@ -48,7 +48,7 @@ top5 = [
     ["5", "**Variable Injection**", "Insert user-defined info like `{year_group}`", "Personalizes outputs and increases accuracy"]
 ]
 
-st.markdown("### 📋 Summary Table")
+st.markdown("### Summary Table")
 st.table(top5)
 
 # --- Optional Export ---
