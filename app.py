@@ -227,58 +227,24 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in [
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Convert to MCQ", "Convert to Flashcards"]:
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
 
-# --- Generation Button ---
-# generate_col = st.container()
-# with generate_col:
-#     st.markdown("""
-#         <style>
-#         .generate-btn button {
-#             background-color: #2ecc71 !important;
-#             color: white !important;
-#             font-size: 1.1rem !important;
-#             font-weight: bold;
-#             padding: 0.6rem 1.2rem;
-#             border-radius: 8px;
-#             border: none;
-#         }
-#         </style>
-#     """, unsafe_allow_html=True)
-#     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
-#     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
-# --- Generation Button ---
-
-# --- Generate Button with Visible Custom Style ---
-with st.container():
-    # Create a unique container and write raw HTML inside it
-    generate_btn_html = """
+#--- Generation Button ---
+generate_col = st.container()
+with generate_col:
+    st.markdown("""
         <style>
-        .custom-generate-btn {
-            display: block;
-            width: 100%;
-            background-color: #2ecc71;
-            color: white;
-            font-size: 1.2rem;
+        .generate-btn button {
+            background-color: #2ecc71 !important;
+            color: white !important;
+            font-size: 1.1rem !important;
             font-weight: bold;
-            padding: 0.75rem 1.2rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 8px;
             border: none;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-        .custom-generate-btn:hover {
-            background-color: #27ae60;
-            cursor: pointer;
         }
         </style>
-        <form action="" method="post">
-            <button class="custom-generate-btn" type="submit">🚀 Generate Output</button>
-        </form>
-    """
-
-    # Render the HTML block
-    generate_now = st.markdown(generate_btn_html, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+    generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
+    st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
 
 # --- Perform Prompt if Task Selected ---
