@@ -196,7 +196,7 @@ selected_subtask = st.session_state["selected_subtask"]
 
 
 if selected_task == "Reformat & Repurpose Resource":
-    st.markdown("#### 🔄 Choose how to repurpose the content:")
+    st.markdown("#### Choose how to repurpose the content:")
     subtask_cols = st.columns(3)
     with subtask_cols[0]:
         if st.button("Convert to MCQ"):
@@ -242,7 +242,7 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
 """, unsafe_allow_html=True)
-st.markdown("### 🔽 Now Generate the Output")
+st.markdown("### Now Generate the Output")
 generate_col = st.container()
 with generate_col:
     st.markdown("""
