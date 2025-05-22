@@ -58,6 +58,7 @@ Use only the content provided by the user under [USER INPUT] as your base materi
 Year group = {year_group}
 Duration = {duration}
 Your task is to create a slide-based lesson plan for the topic contained below under [USER INPUT], specific to the year group and duration defined. The output should read like the written content of a PowerPoint or Google Slides presentation.
+
 Use this structure for each slide:
 - Slide Title
 - Slide Content (5 bullet points or short paragraphs)
@@ -75,19 +76,6 @@ Include 6–10 slides covering:
 Include at least one interactive task, such as a pair discussion, mini-quiz, or problem-solving question.
 
 Think through the instructional flow, making sure each slide builds understanding and keeps students engaged.
-
-Example Layout:
----
-**Slide 1 – Objectives**  
-- Understand the water cycle  
-- Identify key processes: evaporation, condensation, precipitation  
-- Explain each process with an example
-
-**Slide 2 – Hook: What's in a Raindrop?**  
-- Show image of storm cloud  
-- Ask: How does rain form?  
-- Quick pair discussion  
----
 
 Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified.
 Use only the content provided by the user under [USER INPUT] as your base material. Do not fabricate unrelated facts.
@@ -299,7 +287,7 @@ if selected_task and generate_now:
                 json={
                     "messages": [
                         {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_input}
+                        {"role": "user", "content": f"[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]"}
                     ]
                 }
             )
@@ -315,7 +303,7 @@ if selected_task and generate_now:
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]", language="markdown")
 
 # --- Styling ---
 st.markdown("""
