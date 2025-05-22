@@ -130,11 +130,11 @@ for i, label in enumerate(task_labels):
 # Add task-specific inputs
 year_group = duration = num_mcq = None
 
-if run_lesson_plan:
+if st.session_state["selected_task"] == "Plan & Print":
     year_group = st.selectbox("Year Group", [f"Year {i}" for i in range(1, 14)])
     duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
 
-if run_mcq:
+if st.session_state["selected_task"] == "Convert to MCQ":
     num_mcq = st.slider("Number of Questions", 1, 10, value=5)
 
 
@@ -144,6 +144,17 @@ selected_task = st.session_state["selected_task"]
 if selected_task:
     st.markdown(f"### ✏️ Prompt Sent to AI")
     system_prompt = system_prompts[selected_task]
+    if selected_task == "Plan & Print":
+        system_prompt = system_prompt.format(
+            year_group=year_group if year_group else "Year 6",
+            duration=duration if duration else 45
+        )
+
+    if selected_task == "Convert to MCQ":
+        system_prompt = system_prompt.format(
+            num_mcq=num_mcq if num_mcq else 10
+        )
+
     st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
 
     if not user_input.strip():
