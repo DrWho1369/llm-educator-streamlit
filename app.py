@@ -43,7 +43,7 @@ Use only the content provided by the user as your base material. Do not fabricat
 """,
     "Plan & Print": """You are an experienced lesson planner creating a detailed teaching plan for the given topic, year group, and lesson duration (Role-based).
 
-Use this structure (Format-constrained):
+Use this structure:
 - Topic
 - Year group
 - Duration
@@ -82,7 +82,7 @@ Return only the final message.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions (Role-based). Based on the resource provided, create {num} MCQs to assess comprehension (Instruction-based).
 
-Each MCQ should follow this format (Format-constrained):
+Each MCQ should follow this format:
 Q: [Question]
 A. Option 1  
 B. Option 2  
@@ -90,9 +90,10 @@ C. Option 3
 D. Option 4  
 Answer: [Correct Option Letter]
 
-Use a mix of easy, medium, and hard questions to cover different cognitive levels. Avoid ambiguous phrasing and ensure only one correct answer.
+Use a mix of easy, medium, and hard questions to cover different cognitive levels, and lable the question with this level. Avoid ambiguous phrasing and ensure only one correct answer.
 
 Example:
+(EASY)
 Q: What is the boiling point of water?  
 A. 90°C  
 B. 100°C  
@@ -140,7 +141,7 @@ if selected_task:
                 st.code(response.text)
                 output = "[No output returned]"
 
-        st.markdown(f"###AI Output")
+        st.markdown(f"### AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
 
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
