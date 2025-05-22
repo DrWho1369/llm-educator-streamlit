@@ -80,7 +80,7 @@ Example Layout:
 
 Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified. If year group or duration are not provided, assume a 45-minute lesson for Year 6 students. Return only the slide content as text.
 """,
-    "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation, your task is to write a short parent message using the tone and context provided.
+    "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation, your task is to write a short message using the tone and context provided. Ensure the message is always addressed to the parent / guardian.
 
 Follow this structure:
 1. Greeting
@@ -228,6 +228,24 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
 
 # --- Generation Button ---
+# generate_col = st.container()
+# with generate_col:
+#     st.markdown("""
+#         <style>
+#         .generate-btn button {
+#             background-color: #2ecc71 !important;
+#             color: white !important;
+#             font-size: 1.1rem !important;
+#             font-weight: bold;
+#             padding: 0.6rem 1.2rem;
+#             border-radius: 8px;
+#             border: none;
+#         }
+#         </style>
+#     """, unsafe_allow_html=True)
+#     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
+#     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
+# --- Generation Button ---
 generate_col = st.container()
 with generate_col:
     st.markdown("""
@@ -240,11 +258,16 @@ with generate_col:
             padding: 0.6rem 1.2rem;
             border-radius: 8px;
             border: none;
+            margin-top: 1rem;
         }
         </style>
+        <div class="generate-btn">
+            <form action="#">
+                <button type="submit">🚀 Generate Output</button>
+            </form>
+        </div>
     """, unsafe_allow_html=True)
-    generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
-    st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
+    generate_now = st.form_submit_button("🚀 Generate Output", help="Send your content to the AI for generation")
 
 # --- Perform Prompt if Task Selected ---
 if selected_task and generate_now:
