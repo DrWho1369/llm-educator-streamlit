@@ -174,12 +174,19 @@ Return the full activity as structured text.
 """
 }
 
+task_descriptions = {
+    "Differentiate Resource": "Adapt learning materials into 3 versions for junior, middle, and advanced learners.",
+    "Generate Parent Message": "Draft a short, professional message to communicate with parents.",
+    "Plan & Print": "Create a detailed, slide-style lesson plan tailored to age and duration.",
+    "Reformat & Repurpose Resource": "Convert a resource into MCQs, flashcards, or a group task."
+}
+
 # Create button layout and track which was clicked
 cols = st.columns(4)
 for i, label in enumerate(task_labels):
     with cols[i % 4]:
         btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
-        if st.button(label, key=label):
+        if st.button(label, key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None 
 
