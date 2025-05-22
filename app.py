@@ -4,8 +4,11 @@ import requests
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
 st.title("OI-TA")
-st.markdown("**Empowering every teacher, AI-Powered Support for Educators.**")
-
+st.markdown("""
+<div style="padding:0.5rem 1rem; background-color:#ecf0f1; border-left:5px solid #3498db; font-size:1rem; color:#2c3e50;">
+    Empowering every teacher, AI-Powered Support for Educators.
+</div>
+""", unsafe_allow_html=True)
 # --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
