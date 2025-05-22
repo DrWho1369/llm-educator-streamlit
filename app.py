@@ -246,7 +246,7 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
 #     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 #     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 # --- Generation Button ---
-g# --- Generation Button with Custom Styling ---
+# --- Generation Button with Custom Styling ---
 generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 
 # Styling specifically for the generate button
