@@ -246,28 +246,25 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
 #     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 #     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 # --- Generation Button ---
-generate_col = st.container()
-with generate_col:
-    st.markdown("""
-        <style>
-        .generate-btn button {
-            background-color: #2ecc71 !important;
-            color: white !important;
-            font-size: 1.1rem !important;
-            font-weight: bold;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-            margin-top: 1rem;
-        }
-        </style>
-        <div class="generate-btn">
-            <form action="#">
-                <button type="submit">🚀 Generate Output</button>
-            </form>
-        </div>
-    """, unsafe_allow_html=True)
-    generate_now = st.form_submit_button("🚀 Generate Output", help="Send your content to the AI for generation")
+g# --- Generation Button with Custom Styling ---
+generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
+
+# Styling specifically for the generate button
+st.markdown("""
+    <style>
+    button[data-testid="baseButton-secondary"][key="generate_btn"] {
+        background-color: #2ecc71 !important;
+        color: white !important;
+        font-size: 1.1rem !important;
+        font-weight: bold;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        border: none;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- Perform Prompt if Task Selected ---
 if selected_task and generate_now:
