@@ -173,7 +173,7 @@ Return the full activity as structured text.
 # Create button layout and track which was clicked
 cols = st.columns(4)
 for i, label in enumerate(task_labels):
-    with cols[i % 2]:
+    with cols[i % 4]:
         btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
         if st.button(label, key=label):
             st.session_state["selected_task"] = label
