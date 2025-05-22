@@ -228,6 +228,10 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
 
 #--- Generation Button ---
+st.markdown("""
+    <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
+""", unsafe_allow_html=True)
+st.markdown("### 🔽 Now Generate the Output")
 generate_col = st.container()
 with generate_col:
     st.markdown("""
