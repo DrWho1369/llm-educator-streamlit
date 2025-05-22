@@ -142,7 +142,7 @@ if st.session_state["selected_task"] == "Plan & Print":
     duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
 
 if st.session_state["selected_task"] == "Convert to MCQ":
-    num_mcq = st.slider("Number of Questions", 1, 10, value=5)
+    num_mcq = st.slider("Number of Questions", 1, 20, value=10)
 
 # --- Generation Button ---
 generate_now = st.button("🚀 Generate Output")
