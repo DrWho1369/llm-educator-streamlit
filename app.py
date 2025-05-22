@@ -46,7 +46,7 @@ Year group = {year_group}
 Duration = {duration}
 Use this structure for each slide:
 - Slide Title
-- Slide Content (2–5 bullet points or short paragraphs)
+- Slide Content (5 bullet points or short paragraphs)
 - [Optional: Teacher Notes or Activity Instructions]
 
 Include 6–10 slides covering:
@@ -62,7 +62,7 @@ Include at least one interactive task, such as a pair discussion, mini-quiz, or 
 
 Think through the instructional flow, making sure each slide builds understanding and keeps students engaged.
 
-Example:
+Example Layout:
 ---
 **Slide 1 – Objectives**  
 - Understand the water cycle  
@@ -131,7 +131,14 @@ for i, label in enumerate(task_labels):
 year_group = duration = num_mcq = None
 
 if st.session_state["selected_task"] == "Plan & Print":
-    year_group = st.selectbox("Year Group", [f"Year {i}" for i in range(1, 14)])
+    year_group = st.selectbox("Age Category", [
+        "Early Years / KS1 (4–7)",
+        "Lower KS2 (7–9)",
+        "Upper KS2 (9–11)",
+        "KS3 / Lower Secondary (11–14)",
+        "KS4 / GCSE (14–16)",
+        "Post-16 / A-Level (16–18)"
+    ])
     duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
 
 if st.session_state["selected_task"] == "Convert to MCQ":
