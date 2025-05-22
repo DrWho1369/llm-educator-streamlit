@@ -5,6 +5,72 @@ import requests
 st.set_page_config(page_title="Prompt Tester", layout="centered")
 st.title("🎓 Prompt Tester")
 
+# --- Initialize state for task highlight ---
+if "selected_task" not in st.session_state:
+    st.session_state["selected_task"] = None
+
+# --- User Input (Always visible) ---
+st.subheader("📝 Paste Your Content")
+user_input = st.text_area("Lesson content, parent update, or material to convert:", height=250)
+
+# --- Task Selection Buttons ---
+st.subheader("🎯 Choose a Task")
+
+task_labels = [
+    "Differentiate Resource",
+    "Generate Parent Message",
+    "Plan & Print",
+    "Convert to MCQ"
+]
+
+system_prompts = {
+    "Differentiate Resource": "You are a teaching assistant differentiating this material into 3 levels: (1) Junior – playful and simple, (2) Middle – age-appropriate depth, (3) Advanced – critical and challenging.",
+    "Plan & Print": "You are a teacher creating a full lesson plan with learning objectives, differentiated activities, and AFL ideas.",
+    "Generate Parent Message": "You are a teacher writing a message to a parent about a student. Use a friendly and supportive tone.",
+    "Convert to MCQ": "You are an exam question writer converting the text into 5 multiple-choice questions. Each should include a question stem, 4 options, and the correct answer clearly indicated."
+}
+
+# Create button layout and track which was clicked
+cols = st.columns(2)
+for i, label in enumerate(task_labels):
+    with cols[i % 2]:
+        btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
+        if st.button(label, key=label):
+            st.session_state["selected_task"] = label
+
+# --- Perform Prompt if Task Selected ---
+selected_task = st.session_state["selected_task"]
+
+if selected_task:
+    st.markdown(f"### ✏️ Prompt Sent to AI")
+    system_prompt = system_prompts[selected_task]
+    st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input}", language="markdown")
+
+    if not user_input.strip():
+        st.warning("⚠️ Please enter some content above.")
+    else:
+        with st.spinner(f"🔄 Generating output for: {selected_task}..."):
+            response = requests.post(
+                "http://18.171.171.212:8080/v1/chat/completions",
+                json={
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_input}
+                    ]
+                }
+            )
+            try:
+                output = response.json()["choices"][0]["message"]["content"]
+            except Exception as e:
+                st.error(f"❌ Failed to parse API response: {e}")
+                st.code(response.text)
+                output = "[No output returned]"
+
+        st.markdown(f"### 📤 AI Output")
+        st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
+
+        st.download_button("📥 Copy/Download Output", data=output, file_name="output.txt")
+
 # --- Styling ---
 st.markdown("""
 <style>
@@ -19,63 +85,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-# --- Task Button UI ---
-st.subheader("Choose a Task")
-task = None
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("Differentiate Resource"):
-        task = "Differentiate Resource"
-    if st.button("Generate Parent Message"):
-        task = "Generate Parent Message"
-
-with col2:
-    if st.button("Plan & Print"):
-        task = "Plan & Print"
-    if st.button("Convert to MCQ"):
-        task = "Convert to MCQ"
-
-# --- Prompt Definitions ---
-system_prompts = {
-    "Differentiate Resource": "You are a teaching assistant differentiating this material into 3 levels: (1) Junior – playful and simple, (2) Middle – age-appropriate depth, (3) Advanced – critical and challenging.",
-    "Plan & Print": "You are a teacher creating a full lesson plan with learning objectives, differentiated activities, and AFL ideas.",
-    "Generate Parent Message": "You are a teacher writing a message to a parent about a student. Use a friendly and supportive tone.",
-    "Convert to MCQ": "You are an exam question writer converting the text into 5 multiple-choice questions. Each should include a question stem, 4 options, and the correct answer clearly indicated."
-}
-
-# --- User Input and Output ---
-if task:
-    st.subheader(f"📝 Input for: {task}")
-    user_input = st.text_area("Paste your content here", height=250)
-
-    if st.button("✨ Generate"):
-        if not user_input.strip():
-            st.warning("Please enter some content.")
-        else:
-            with st.spinner("Sending to LLM..."):
-                response = requests.post(
-                    "http://18.171.171.212:8080/v1/chat/completions",
-                    json={
-                        "messages": [
-                            {"role": "system", "content": system_prompts[task]},
-                            {"role": "user", "content": user_input}
-                        ]
-                    }
-                )
-
-                try:
-                    output = response.json()["choices"][0]["message"]["content"]
-                except Exception as e:
-                    st.error(f"❌ Failed to parse API response: {e}")
-                    st.code(response.text)
-                    output = "[No output returned]"
-
-            st.markdown("### 📤 Output")
-            st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
-
 
 
 
