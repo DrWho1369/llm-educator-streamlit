@@ -246,31 +246,40 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Co
 #     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 #     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 # --- Generation Button ---
-# --- Generation Button with Custom Styling ---
-# --- Generation Button with Custom Styling ---
-generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
 
-# Inject custom CSS for the button
-st.markdown("""
-    <style>
-    /* Style specifically for the Generate Output button */
-    div.stButton > button[kind="secondary"][data-testid="baseButton-secondary"][key="generate_btn"] {
-        background-color: #2ecc71 !important;
-        color: white !important;
-        font-weight: bold !important;
-        font-size: 1.1rem !important;
-        border-radius: 8px !important;
-        width: 100% !important;
-        padding: 0.75rem 1rem !important;
-        margin-top: 1.5rem;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transition: background-color 0.3s ease;
-    }
-    div.stButton > button[kind="secondary"][data-testid="baseButton-secondary"][key="generate_btn"]:hover {
-        background-color: #27ae60 !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# --- Generate Button with Visible Custom Style ---
+with st.container():
+    # Create a unique container and write raw HTML inside it
+    generate_btn_html = """
+        <style>
+        .custom-generate-btn {
+            display: block;
+            width: 100%;
+            background-color: #2ecc71;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .custom-generate-btn:hover {
+            background-color: #27ae60;
+            cursor: pointer;
+        }
+        </style>
+        <form action="" method="post">
+            <button class="custom-generate-btn" type="submit">🚀 Generate Output</button>
+        </form>
+    """
+
+    # Render the HTML block
+    generate_now = st.markdown(generate_btn_html, unsafe_allow_html=True)
+
 
 # --- Perform Prompt if Task Selected ---
 if selected_task and generate_now:
