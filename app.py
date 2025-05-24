@@ -59,21 +59,19 @@ If the user topic is very short (e.g. a single word like "Computers" or "Volcano
 Otherwise, identify the core learning idea shared between the tags [USER INPUT START] and [USER INPUT END]. 
 
 Then rewrite the content into three sections:
-
 1 Advanced Level – Assume prior knowledge. Use precise terminology, explore nuance, and add critical thinking prompts or real-world connections.
-
 2. Middle Level – Use vocabulary and sentence structures suitable for middle school students. Include relevant examples and maintain educational depth while staying accessible.
-
 3. Junior Level – Use simple words, short playful sentences, and concrete metaphors familiar to young children. Make it friendly and engaging.
 
 
 Each version should follow this structure:
-- A heading (e.g., “Junior Level”)
+- A heading
 - A one-sentence description of the version’s intent
 - The rewritten or expanded content
 
 Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
-Return the sections in this order:
+
+Finally, return the sections in the follwoing order:
 1. Advanced Level
 2. Middle Level
 3. Junior level
