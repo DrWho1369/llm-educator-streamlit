@@ -202,7 +202,7 @@ Step-by-step reasoning:
 
 Use this format:
 **Task Title:**  
-**Overview:** [1–2 sentence explanation of the goal]  
+**Overview:** [1–2 sentence explanation of the goal and {year_group}]  
 **Group Roles:** [3–4 roles with simple descriptions]  
 **Discussion Questions:** [1–3 questions]  
 **Instructions:**  
