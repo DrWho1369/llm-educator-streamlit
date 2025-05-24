@@ -131,8 +131,7 @@ Important:
 - Keep the tone respectful and constructive and supportive.
 - Return only the message text. Do not include tags or internal reasoning.
 
-Finally: Return only the final message.
-Ensure you use this structure to compose your message:
+Finally return only the final message in this structure:
 1. Greeting\n
 2. praise or concern\n
 3. Encouragement\n
