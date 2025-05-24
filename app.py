@@ -128,9 +128,9 @@ Use this structure:
 3. Optional context or explanation
 4. Encouragement or next steps
 
-Examples:
+Tone of voice examples:
 • Praise → Highlight achievement, thank the parent, suggest continued support at home.
-• Concern → Describe behaviour factually, invite the parent’s perspective, suggest collaborative action.
+• Concern → Describe behaviour factually, invite the parent’s perspective.
 
 Return only the final message, formatted as plain text with no explanation or commentary.
 """,
