@@ -1,5 +1,10 @@
 import streamlit as st
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+LLM_API_URL = os.getenv("LLM_API_URL")
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
@@ -283,7 +288,7 @@ if selected_task and generate_now:
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
             response = requests.post(
-                "http://18.171.171.212:8080/v1/chat/completions",
+                LLM_API_URL,
                 json={
                     "messages": [
                         {"role": "system", "content": system_prompt},
