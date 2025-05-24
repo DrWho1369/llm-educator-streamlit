@@ -178,8 +178,6 @@ Use this format for **every** flashcard:
 **A:** [Direct, concise answer]
 
 Strict Constraints:
-- Use only the information provided by the user.
-- Do not fabricate, assume, or reference external knowledge.
 - Ensure every flashcard is phrased for the correct age group (if known).
 - Return **exactly** {num_flashcards} flashcards.
 - Clearly label each Q/A pair.
@@ -211,7 +209,6 @@ Use this format:
 - Encourage inclusive participation
 
 Constraints:
-- Use only the provided material
 - Make the activity achievable in 15–20 minutes
 - Avoid abstract questions unless clearly scaffolded
 
