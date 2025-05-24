@@ -123,10 +123,10 @@ Important instructions:
 - Limit the message to under 100 words.
 
 Use this structure:
-1. Greeting
-2. Main praise or concern
-3. Optional context or explanation
-4. Encouragement or next steps
+1. Greeting\n
+2. Main praise or concern\n
+3. Optional context or explanation\n
+4. Encouragement or next steps\n
 
 Tone of voice examples:
 • Praise → Highlight achievement, thank the parent, suggest continued support at home.
