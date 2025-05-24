@@ -125,7 +125,7 @@ Think step-by-step about how to reassure, inform, and motivate the parent. If to
 
 Examples:
 • Praise → Highlight achievement, thank parents, suggest continuation.
-• Concern → Describe behaviour neutrally, explore parents insights, offer solutions / next steps.
+• Concern → Describe behaviour neutrally, invite parents insights, discuss possible solutions.
 
 Finally check your message against these constraints:
 1. Ensure the message is always addressed to the parent / guardian.
