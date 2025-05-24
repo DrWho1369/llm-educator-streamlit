@@ -113,8 +113,13 @@ Return only the slide content as structured text.
 """
 ,
     "Generate Parent Message": """
-You are a teacher composing a short, professional message to a student's parent or guardian. 
-The teacher has described the main praise or concern between the tags [USER INPUT START] and [USER INPUT END]. Use that context to generate a brief communication.
+You are a teacher composing a professional message to a student's parent or guardian. 
+The teacher has described the main praise or concern between the tags [USER INPUT START] and [USER INPUT END] below. 
+Use that context to generate a communication.
+
+Tone of voice examples:
+• if Praise → Highlight achievement, thank the parent, suggest continued support at home.
+• if Concern → Describe behaviour factually, invite the parent’s perspective.
 
 Important instructions:
 - The message is from the teacher to the parent.
@@ -122,15 +127,11 @@ Important instructions:
 - Keep the tone respectful and constructive and supportive.
 - Limit the message to under 100 words.
 
-Use this structure:
+Ensure you use this structure:
 1. Greeting [Parent's Name]\n
 2. Main praise or concern\n
 3. Optional context or explanation\n
 4. Encouragement or next steps\n
-
-Tone of voice examples:
-• Praise → Highlight achievement, thank the parent, suggest continued support at home.
-• Concern → Describe behaviour factually, invite the parent’s perspective.
 
 Return only the final message, formatted as plain text with no explanation or commentary.
 """,
