@@ -46,16 +46,16 @@ with tabs[0]:
 with tabs[1]:
     st.subheader("Generate Parent Message – Test Inputs")
     parent_inputs = [
-        "Jamie completed their homework early and added some extra reading. Please pass on our praise.",
-        "Lena has missed two assignments in a row and seems distracted in class.",
-        "I want to update you that Maya helped another student today without being prompted.",
-        "Tom was involved in a disagreement at break time with another student.",
-        "We're noticing improved focus and effort from Aisha over the past few weeks.",
-        "Luke consistently submits homework late and doesn’t respond to feedback.",
-        "Ella has shown great progress in her reading ability this term.",
-        "Josh’s behaviour has improved, but his attendance is still below 90%.",
-        "Isabelle completed an outstanding project on climate change and presented it to the class.",
-        "There’s been some confusion regarding homework instructions and I wanted to clarify."
+        "Write me an email about an incident that occurred between two children today. One child hit the other as they were calling them names. We had to put the children into cooling off section for 10 minutes.",
+        "Please write a message to a parent about their child repeatedly disrupting group work by talking over peers and refusing to follow instructions despite reminders.",
+        "Can you draft a short note to inform a parent that their child was involved in pushing another pupil in the lunch queue, though they later apologised?",
+        "Write a short praise message to the parents of Sarah. She delivered a fantastic presentation in class today — clearly prepared, confident, and inspiring to others.",
+        "Generate a note for a parent letting them know their son has made outstanding progress in reading comprehension, jumping two levels this term.",
+        "Send a message to inform parents that their child has not submitted any of the last three homework assignments, and we’d like to check if there’s anything we can do to support.",
+        "I need to update a parent that their child continues to struggle staying focused during maths lessons, and we’re trying visual cues and shorter tasks.",
+        "Please write a note to inform the parent that we noticed their child seemed withdrawn today. We’ve checked in and given them some extra support.",
+        "Write a quick message to thank the parent for speaking to their child. We noticed a real improvement in their empathy and group behaviour during today's activity.",
+        "Send a message to let a parent know that their child showed great kindness today, helping a new pupil who seemed nervous at lunch."
     ]
     for i in parent_inputs:
         st.code(i)
