@@ -114,7 +114,7 @@ Return only the slide content as structured text.
 ,
     "Generate Parent Message": """
 You are a teacher composing a professional message to a student's parent or guardian. 
-The teacher has described the main praise or concern between the tags [USER INPUT START] and [USER INPUT END] below. 
+The main praise or concern to be included in the message is between the tags [USER INPUT START] and [USER INPUT END] below. 
 Use that context to generate a communication.
 
 Tone of voice examples:
@@ -126,13 +126,13 @@ Important instructions:
 - Do not repeat or quote the user input directly.
 - Keep the tone respectful and constructive and supportive.
 
-Ensure you use this structure:
+Ensure you use this structure to compose your message:
 1. Greeting [Parent's Name]\n
 2. Main praise or concern\n
 3. Optional context or explanation\n
 4. Encouragement or next steps\n
 
-Return only the final message, as plain text with no explanation or commentary.
+Return only the final message.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
 
