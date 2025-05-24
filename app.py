@@ -86,13 +86,6 @@ If the user topic is very short (e.g. a single word like "Computers" or "Volcano
 2. Break it into logical, curriculum-appropriate subtopics,
 3. Clearly define the scope of the lesson in Slide 1.
 
-Your output should read like the written content of a PowerPoint or Google Slides presentation.
-
-Use this structure for each slide:
-- Slide Title
-- Slide Content (5 bullet points or short paragraphs)
-- [Optional: Teacher Notes or Activity Instructions]
-
 Include 6–10 slides covering:
 1. Lesson Objectives  
 2. Hook or Starter Activity  
@@ -105,8 +98,13 @@ Include 6–10 slides covering:
 Include at least one interactive task (e.g. a pair discussion, mini-quiz, or real-world challenge).
 
 Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified.
-
 Do not fabricate unrelated facts. Expand on the user topic only using general knowledge appropriate to the subject and level/year group.
+Your output should read like the written content of a PowerPoint or Google Slides presentation.
+
+Use this structure for each slide:
+- Slide Title
+- Slide Content (5 bullet points or short paragraphs)
+- [Optional: Teacher Notes or Activity Instructions]
 
 Return only the slide content as structured text.
 """
