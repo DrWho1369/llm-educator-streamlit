@@ -113,16 +113,14 @@ Return only the slide content as structured text.
 """
 ,
     "Generate Parent Message": """
-You are a teacher composing a short, professional message to a student's parent or guardian. The teacher has described the situation between the tags [USER INPUT START] and [USER INPUT END]. Use that context to generate a brief communication.
+You are a teacher composing a short, professional message to a student's parent or guardian. 
+The teacher has described the main praise or concern between the tags [USER INPUT START] and [USER INPUT END]. Use that context to generate a brief communication.
 
 Important instructions:
 - The message is from the teacher to the parent.
 - Do not repeat or quote the user input directly.
-- Keep the tone respectful and constructive.
-- If the tone is not explicitly defined, default to a supportive and positive style.
-- Do not suggest a meeting or follow-up unless the input **clearly** requests it.
+- Keep the tone respectful and constructive and supportive.
 - Limit the message to under 100 words.
-- Address the message to the parent or guardian.
 
 Use this structure:
 1. Greeting
