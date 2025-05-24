@@ -146,7 +146,7 @@ Answer: [Correct Option Letter]
 
 Use a mix of easy, medium, and hard questions to cover different cognitive levels, and lable the question with this level. Avoid ambiguous phrasing and ensure only one correct answer.
 
-Example:
+<Example>
 (EASY)
 Q: What is the boiling point of water?  
 A. 90°C  
@@ -154,6 +154,7 @@ B. 100°C
 C. 110°C  
 D. 120°C  
 Answer: B
+</Example>
 
 Return the {num_mcq} Multiple Choice Questions generated.
 """,
@@ -175,9 +176,11 @@ Constraints:
 - Keep language age-appropriate but precise.
 - Limit each answer to 1–2 sentences max.
 
+<Example>
 Example flashcard:
 Q: What is photosynthesis?  
 A: It's the process by which green plants make food using sunlight.
+</Example>
 
 Return {num_flashcards} flashcards. Clearly label each pair (Q/A).
 """,
