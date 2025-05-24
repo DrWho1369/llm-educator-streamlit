@@ -125,7 +125,6 @@ Important instructions:
 - The message is from the teacher to the parent.
 - Do not repeat or quote the user input directly.
 - Keep the tone respectful and constructive and supportive.
-- Limit the message to under 100 words.
 
 Ensure you use this structure:
 1. Greeting [Parent's Name]\n
