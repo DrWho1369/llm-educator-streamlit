@@ -163,12 +163,12 @@ Return the {num_mcq} Multiple Choice Questions generated.
 Your task is to produce {num_flashcards} flashcards using the Q&A format described below appropriate for year Group = {year_group}.
 
 If the input is very short (e.g. a single word like "Computers", "Volcanoes", or "Photosynthesis"), follow this process:
-1. Interpret the topic broadly and logically based on typical curriculum expectations.
+1. Interpret the topic broadly and logically based on typical curriculum expectations for {year_group}.
 2. Break it into several subtopics or essential components.
 3. Define the scope of what should be covered before generating flashcards.
 
 If the input is longer or more detailed, follow this process:
-1. Identify key facts, terms, definitions, or concepts.
+1. Identify key facts, terms, definitions, or concepts applicable to {year_group}.
 2. For each, write a clear and focused question that prompts recall or understanding.
 3. Provide a concise and accurate answer (1–2 sentences).
 4. Optionally use cloze-style questions (fill-in-the-blank), but no more than 20% of total.
