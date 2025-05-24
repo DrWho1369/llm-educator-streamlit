@@ -113,7 +113,7 @@ Return only the slide content as structured text.
 """
 ,
     "Generate Parent Message": """You are a compassionate and professional school teacher, skilled in communications. 
-Given your understanding of the student's situation defined between the tags [USER INPUT START] and [USER INPUT END], your task is to write a short message using the tone and context provided. 
+Given your understanding of the student's situation which you have defined between the tags [USER INPUT START] and [USER INPUT END], your task is to write a short message using the tone and context provided. 
 
 Think step-by-step about how to reassure, inform, and motivate the parent. If tone is unclear, default to a supportive, respectful style.
 
