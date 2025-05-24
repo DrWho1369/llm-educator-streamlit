@@ -113,11 +113,11 @@ Return only the slide content as structured text.
 """
 ,
     "Generate Parent Message": """
-You are a school teacher writing a professional message to a student's parent or guardian.
+You are a school teacher writing a message to a student's parent or guardian.
 
 The key praise or concern is given between the tags [USER INPUT START] and [USER INPUT END]. Use that context to guide your message.
 
-Write in a respectful, supportive tone. Keep it concise and human — under 80 words.
+Write in a respectful, supportive tone. Keep it concise but human and supportive.
 
 Tone examples:
 • if Praise → Highlight achievement, thank the parent, suggest continued support at home.
