@@ -130,8 +130,7 @@ Examples:
 Finally check your message against these constraints:
 1. Ensure the message is always addressed to the parent / guardian.
 2. Only include a meeting or follow-up appointment if the user input explicitly requests it.
-3. Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
-4. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
+3. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
 
 Return only the final message.
 """,
