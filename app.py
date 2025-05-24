@@ -155,7 +155,7 @@ C. 110°C
 D. 120°C  
 Answer: B
 
-Return only the {num_mcq} Multiple Choice Questions.
+Return the {num_mcq} Multiple Choice Questions generated.
 """,
  "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material between the tags [USER INPUT START] and [USER INPUT END]. 
  First break the resource into essential knowledge chunks and convert them into Q&A pairs.
