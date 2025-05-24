@@ -253,7 +253,7 @@ if selected_task == "Plan & Print":
         "KS4 / GCSE (14–16)",
         "Post-16 / A-Level (16–18)"
     ])
-    duration = st.slider("Lesson Duration (minutes)", min_value=20, max_value=120, value=45)
+    duration = st.slider("Lesson Duration (minutes)", min_value=15, max_value=60, value=30)
 
 # Inputs for Reformat & Repurpose subtasks only (no duration)
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in [
