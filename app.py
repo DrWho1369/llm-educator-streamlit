@@ -71,7 +71,7 @@ Each version should follow this structure:
 
 Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
 
-Finally, return the sections in the follwoing order:
+Finally, return the sections in the following order:
 1. Advanced Level
 2. Middle Level
 3. Junior level
@@ -129,7 +129,7 @@ Examples:
 
 Finally check your message against these constraints:
 1. Ensure the message is always addressed to the parent / guardian.
-2. Only include a meeting or follow-up appointment if the user input explicitly requests it. If it’s not mentioned, do not include any reference to meetings or scheduling.
+2. Only include a meeting or follow-up appointment if the user input explicitly requests it.
 3. Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
 4. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
 
