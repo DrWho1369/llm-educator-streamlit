@@ -28,9 +28,15 @@ if "selected_subtask" not in st.session_state:
 st.subheader("Paste Your Content")
 user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
 
-# Warn if user input is too short or vague for any task
-if len(user_input.strip()) < 10:
-    st.warning("⚠️ Your input is very short. For better results, try adding more context, details, or learning goals related to the task.")
+# Track the warning state and input word count
+word_count = len(user_input.strip().split())
+warning_placeholder = st.empty()
+
+# Only show warning if input is too short
+if word_count < 10:
+    warning_placeholder.warning("✏️ Please expand your input with more context so the AI can generate a meaningful response.")
+else:
+    warning_placeholder.empty()  # Clears the warning once the condition is met
 
 # --- Task Selection Buttons ---
 st.markdown("""
