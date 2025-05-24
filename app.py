@@ -28,6 +28,10 @@ if "selected_subtask" not in st.session_state:
 st.subheader("Paste Your Content")
 user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
 
+# Warn if user input is too short or vague for any task
+if len(user_input.strip()) < 10:
+    st.warning("⚠️ Your input is very short. For better results, try adding more context, details, or learning goals related to the task.")
+
 # --- Task Selection Buttons ---
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
@@ -44,7 +48,7 @@ task_labels = [
 system_prompts = {
     "Differentiate Resource": """You are a specialist teaching assistant trained in curriculum adaptation. Your task is to differentiate the piece of educational content shared below under [USER INPUT] into three clearly labeled versions for different learner levels. 
 
-First, identify the core learning idea shared below the [USER INPUT]. Then rewrite the content into three sections:
+First, identify the core learning idea shared between the tags [USER INPUT START] and [USER INPUT END]. Then rewrite the content into three sections:
 
 1. **Junior Level** – Use simple words, short playful sentences, and concrete metaphors familiar to young children. Make it friendly and engaging.
 
@@ -57,12 +61,22 @@ Each version should follow this structure:
 - A one-sentence description of the version’s intent
 - The rewritten version of the content
 
-Use only the content provided by the user under [USER INPUT] as your base material. Do not fabricate unrelated facts.
+Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
 """,
-    "Plan & Print": """You are an experienced teacher and curriculum designer. 
-Year group = {year_group}
-Duration = {duration}
-Your task is to create a slide-based lesson plan for the topic contained below under [USER INPUT], specific to the year group and duration defined. The output should read like the written content of a PowerPoint or Google Slides presentation.
+   "Plan & Print": """You are an experienced teacher and curriculum designer.
+
+Your task is to create a slide-based lesson plan using only the topic provided between the tags [USER INPUT START] and [USER INPUT END].
+
+Use the provided age group and lesson duration below to guide the tone, depth, and length of the plan:
+- Year group = {year_group}
+- Duration = {duration} minutes
+
+If the user topic is very short (e.g. a single word like "Computers" or "Volcanoes"), you must:
+1. Interpret the topic in a way that makes sense for the age group,
+2. Break it into logical, curriculum-appropriate subtopics,
+3. Clearly define the scope of the lesson in Slide 1.
+
+Your output should read like the written content of a PowerPoint or Google Slides presentation.
 
 Use this structure for each slide:
 - Slide Title
@@ -78,16 +92,21 @@ Include 6–10 slides covering:
 6. Recap / Exit Task  
 7. Optional Homework  
 
-Include at least one interactive task, such as a pair discussion, mini-quiz, or problem-solving question.
-
-Think through the instructional flow, making sure each slide builds understanding and keeps students engaged.
+Include at least one interactive task (e.g. a pair discussion, mini-quiz, or real-world challenge).
 
 Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified.
-Use only the content provided by the user under [USER INPUT] as your base material. Do not fabricate unrelated facts.
-Return only the slide content as text.
-""",
-    "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation defined below [USER INPUT], your task is to write a short message using the tone and context provided. 
+
+Do not fabricate unrelated facts. Expand on the user topic only using general knowledge appropriate to the subject and level/year group.
+
+Return only the slide content as structured text.
+"""
+,
+    "Generate Parent Message": """You are a compassionate and professional school communications advisor. Given the student's situation defined between the tags [USER INPUT START] and [USER INPUT END], your task is to write a short message using the tone and context provided. 
     Ensure the message is always addressed to the parent / guardian.
+
+
+Keep the message short and professional (under 100 words). 
+Only include a meeting or follow-up appointment if the user input explicitly requests it. If it’s not mentioned, do not include any reference to meetings or scheduling.
 
 Follow this structure:
 1. Greeting
@@ -103,7 +122,7 @@ Examples:
 
 Return only the final message.
 """,
-    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided, create {num_mcq} MCQs to assess comprehension.
+    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
 
 Each MCQ should follow this format:
 Q: [Question]
@@ -126,7 +145,7 @@ Answer: B
 
 Return only the MCQs.
 """,
- "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material below [USER INPUT]. 
+ "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material between the tags [USER INPUT START] and [USER INPUT END]. 
  First break the resource into essential knowledge chunks and convert them into Q&A pairs.
 
 Follow this step-by-step approach:
@@ -151,7 +170,7 @@ A: It's the process by which green plants make food using sunlight.
 Return {num_flashcards} flashcards. Clearly label each pair (Q/A).
 """,
 
-    "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided below [USER INPUT]. 
+    "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided between the tags [USER INPUT START] and [USER INPUT END]. 
     The goal is to spark thoughtful student dialogue and peer learning.
 
 Step-by-step reasoning:
