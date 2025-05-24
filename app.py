@@ -112,11 +112,12 @@ Use this structure for each slide:
 Return only the slide content as structured text.
 """
 ,
-    "Generate Parent Message": """You are assisting a compassionate and professional school teacher in writing a short message to a student's parent or guardian.
+    "Generate Parent Message": """
+You are a teacher composing a short, professional message to a student's parent or guardian. The teacher has described the situation between the tags [USER INPUT START] and [USER INPUT END]. Use that context to generate a brief communication.
 
-Your role is to communicate clearly and supportively, using only the information provided between the tags [USER INPUT START] and [USER INPUT END].
-
-Please:
+Important instructions:
+- The message is from the teacher to the parent.
+- Do not repeat or quote the user input directly.
 - Keep the tone respectful and constructive.
 - If the tone is not explicitly defined, default to a supportive and positive style.
 - Do not suggest a meeting or follow-up unless the input **clearly** requests it.
@@ -319,15 +320,23 @@ if selected_task and generate_now:
         st.warning("⚠️ Please enter some content above.")
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
+            # Combine system prompt and user input into one message
+            combined_prompt = f"""{system_prompt.strip()}
+
+            [USER INPUT START]
+            {user_input.strip()}
+            [USER INPUT END]
+            """
+
             response = requests.post(
                 LLM_API_URL,
                 json={
                     "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": f"[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]"}
+                        {"role": "system", "content": combined_prompt}
                     ]
                 }
             )
+
             try:
                 output = response.json()["choices"][0]["message"]["content"]
             except Exception as e:
