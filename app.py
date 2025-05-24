@@ -60,11 +60,12 @@ Otherwise, identify the core learning idea shared between the tags [USER INPUT S
 
 Then rewrite the content into three sections:
 
-1. **Junior Level** – Use simple words, short playful sentences, and concrete metaphors familiar to young children. Make it friendly and engaging.
+1 Advanced Level – Assume prior knowledge. Use precise terminology, explore nuance, and add critical thinking prompts or real-world connections.
 
-2. **Middle Level** – Use vocabulary and sentence structures suitable for middle school students. Include relevant examples and maintain educational depth while staying accessible.
+2. Middle Level – Use vocabulary and sentence structures suitable for middle school students. Include relevant examples and maintain educational depth while staying accessible.
 
-3. **Advanced Level** – Assume prior knowledge. Use precise terminology, explore nuance, and add critical thinking prompts or real-world connections.
+3. Junior Level – Use simple words, short playful sentences, and concrete metaphors familiar to young children. Make it friendly and engaging.
+
 
 Each version should follow this structure:
 - A heading (e.g., “Junior Level”)
