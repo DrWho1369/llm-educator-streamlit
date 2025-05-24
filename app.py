@@ -134,7 +134,7 @@ Important:
 Return only the message text. Do not include tags or internal reasoning.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. 
-    Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} multiple choice questions to assess comprehension.
+    Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} multiple choice questions to assess comprehension for year group = {year_group}.
 
 Each  Multiple Choice Question should follow this format:
 Q: [Question]
@@ -158,35 +158,41 @@ Answer: B
 
 Return the {num_mcq} Multiple Choice Questions generated.
 """,
- "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material between the tags [USER INPUT START] and [USER INPUT END]. 
- First break the resource into essential knowledge chunks and convert them into Q&A pairs.
+"Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material provided by the user between the tags [USER INPUT START] and [USER INPUT END].
 
-Follow this step-by-step approach:
-1. Identify key facts, terms, or concepts that should be retained.
-2. For each, write a question that prompts recall or understanding.
-3. Provide a concise and accurate answer.
-4. Optionally use cloze-style (fill-in-the-blank) for variety.
+Your task is to produce {num_flashcards} flashcards using the Q&A format described below appropriate for year Group = {year_group}.
 
-Apply this structure:
+🟡 If the input is very short (e.g. a single word like "Computers", "Volcanoes", or "Photosynthesis"), follow this process:
+1. Interpret the topic broadly and logically based on typical curriculum expectations.
+2. Break it into several subtopics or essential components.
+3. Define the scope of what should be covered before generating flashcards.
+
+🔵 If the input is longer or more detailed, follow this process:
+1. Identify key facts, terms, definitions, or concepts.
+2. For each, write a clear and focused question that prompts recall or understanding.
+3. Provide a concise and accurate answer (1–2 sentences).
+4. Optionally use cloze-style questions (fill-in-the-blank), but no more than 20% of total.
+
+🧾 Use this format for **every** flashcard:
 **Q:** [Clear, focused question]  
-**A:** [Direct answer]
+**A:** [Direct, concise answer]
 
-Constraints:
-- Use only information provided by the user. Do not invent content.
-- Keep language age-appropriate but precise.
-- Limit each answer to 1–2 sentences max.
+⚠️ Strict Constraints:
+- Use only the information provided by the user.
+- Do not fabricate, assume, or reference external knowledge.
+- Ensure every flashcard is phrased for the correct age group (if known).
+- Return **exactly** {num_flashcards} flashcards.
+- Clearly label each Q/A pair.
 
-<Example>
-Example flashcard:
-Q: What is photosynthesis?  
-A: It's the process by which green plants make food using sunlight.
-</Example>
+✅ Example flashcard:
+**Q:** What is photosynthesis?  
+**A:** It's the process by which green plants make food using sunlight.
 
-Return {num_flashcards} flashcards. Clearly label each pair (Q/A).
-""",
+Return only the flashcards as structured text. Do not include explanations or summaries.
+"""
 
     "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided between the tags [USER INPUT START] and [USER INPUT END]. 
-    The goal is to spark thoughtful student dialogue and peer learning.
+    The goal is to spark thoughtful student dialogue and peer learning appropriate for year group = {year_group}.
 
 Step-by-step reasoning:
 1. Extract the key concept or debate point from the material.
@@ -313,9 +319,17 @@ if selected_task and generate_now:
         )
     elif task_key == "Convert to MCQ":
         system_prompt = system_prompt.replace("{num_mcq}", str(num_mcq if num_mcq else 5))
+        if "{year_group}" in system_prompt:
+            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
 
     elif task_key == "Convert to Flashcards":
         system_prompt = system_prompt.replace("{num_flashcards}", str(num_mcq if num_mcq else 10))
+        if "{year_group}" in system_prompt:
+            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
+
+    elif task_key == "Group Discussion Task":
+        if "{year_group}" in system_prompt:
+            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
 
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
