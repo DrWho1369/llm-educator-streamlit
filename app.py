@@ -89,20 +89,21 @@ If the user topic is very short (e.g. a single word like "Computers" or "Volcano
 2. Break it into logical, curriculum-appropriate subtopics,
 3. Clearly define the scope of the lesson in Slide 1.
 
-Include 6–10 slides covering:
-1. Lesson Objectives  
-2. Hook or Starter Activity  
-3. Core Concept Explanation  
-4. Guided Practice or Worked Example  
-5. Student Activity Instructions  
-6. Recap / Exit Task  
-7. Optional Homework  
+Your lesson plan should include between 6–10 slides that guide the learner through a complete lesson journey. These should typically include:
+- An objective-setting slide
+- An engaging hook or starter
+- A clear explanation of the core concept
+- A guided example or teacher-led task
+- Student activity instructions
+- A recap or exit task
+- Optional homework (if appropriate)
 
 Include at least one interactive task (e.g. a pair discussion, mini-quiz, or real-world challenge).
 
 Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified.
 Do not fabricate unrelated facts. Expand on the user topic only using general knowledge appropriate to the subject and level/year group.
-Your output should read like the written content of a PowerPoint or Google Slides presentation.
+
+**Important:** Do not label the slides using generic headings. Instead, create meaningful slide titles that reflect the specific topic and content of the slide.
 
 Use this structure for each slide:
 - Slide Title
