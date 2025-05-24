@@ -132,7 +132,7 @@ Ensure you use this structure:
 3. Optional context or explanation\n
 4. Encouragement or next steps\n
 
-Return only the final message, formatted as plain text with no explanation or commentary.
+Return only the final message, as plain text with no explanation or commentary.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
 
