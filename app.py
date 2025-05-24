@@ -51,12 +51,12 @@ task_labels = [
 system_prompts = {
     "Differentiate Resource": """You are a specialist teaching assistant trained in curriculum adaptation. Your task is to differentiate the piece of educational content shared below under [USER INPUT] into three clearly labeled versions for different learner levels. 
 
-First, identify the core learning idea shared between the tags [USER INPUT START] and [USER INPUT END]. 
-
 If the user topic is very short (e.g. a single word like "Computers" or "Volcanoes"), you must:
 1. Interpret the topic in a way that makes sense for educational purposes / curriculums,
 2. Break it into logical, curriculum-appropriate subtopics,
 3. Clearly define the scope of the user topic to yourself.
+
+Otherwise, identify the core learning idea shared between the tags [USER INPUT START] and [USER INPUT END]. 
 
 Then rewrite the content into three sections:
 
