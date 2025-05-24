@@ -130,7 +130,7 @@ Finally, follow this structure for your message:
 1. Greeting
 2. Main concern or praise
 3. Optional context
-4. Positive reinforcement and next step
+4. Positive reinforcement for main concern or paise
 
 Return only the final message.
 """,
