@@ -24,10 +24,10 @@ with tabs[0]:
         "In mathematics, a prime number is a natural number greater than 1 that cannot be formed by multiplying two smaller natural numbers."
     ]
     long = [
-        """Global warming refers to the long-term heating of Earth’s climate system due to human activities, primarily the release of greenhouse gases from fossil fuel combustion...""",
-        """Macbeth, one of Shakespeare’s most famous tragedies, explores the psychological consequences of unchecked ambition...""",
-        """In biology, cellular respiration is the process by which cells break down glucose to produce energy in the form of ATP...""",
-        """The Treaty of Versailles, signed in 1919, officially ended World War I..."""
+        """Global warming refers to the long-term heating of Earth’s climate system due to human activities, primarily the release of greenhouse gases from fossil fuel combustion. It is a major contributor to climate change, leading to rising sea levels, extreme weather events, and shifts in biodiversity. Students should learn about the causes, impacts, and possible solutions to mitigate global warming through renewable energy and sustainable practices.""",
+        """Macbeth, one of Shakespeare’s most famous tragedies, explores the psychological consequences of unchecked ambition. The play follows the title character, a Scottish general, whose desire for power leads him down a dark and destructive path. Key themes include guilt, fate vs free will, and the corrupting influence of power. This passage is suitable for literary analysis in secondary school.""",        
+        """In biology, cellular respiration is the process by which cells break down glucose to produce energy in the form of ATP. It involves three main stages: glycolysis, the Krebs cycle, and the electron transport chain. Unlike photosynthesis, which stores energy, respiration releases it, and it occurs in both plant and animal cells. Understanding this process is key for students studying metabolic pathways.""",
+        """The Treaty of Versailles, signed in 1919, officially ended World War I. It imposed heavy reparations on Germany, redrew national boundaries, and established the League of Nations. Many historians believe the harsh terms contributed to political and economic instability in Germany, ultimately setting the stage for World War II. This text can be used to discuss historical cause and effect, nationalism, and peace treaties in a modern context."""
     ]
 
     with st.expander("🔹 Short Inputs"):
