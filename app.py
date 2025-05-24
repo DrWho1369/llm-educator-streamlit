@@ -3,8 +3,10 @@ import requests
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # Load .env variables
+
 LLM_API_URL = os.getenv("LLM_API_URL")
+print("Loaded LLM_API_URL:", LLM_API_URL)
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
