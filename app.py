@@ -189,7 +189,7 @@ Your task is to produce {num_flashcards} flashcards using the Q&A format describ
 **A:** It's the process by which green plants make food using sunlight.
 
 Return only the flashcards as structured text. Do not include explanations or summaries.
-"""
+""",
 
     "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided between the tags [USER INPUT START] and [USER INPUT END]. 
     The goal is to spark thoughtful student dialogue and peer learning appropriate for year group = {year_group}.
