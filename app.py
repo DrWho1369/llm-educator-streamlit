@@ -70,9 +70,13 @@ Then rewrite the content into three sections:
 Each version should follow this structure:
 - A heading (e.g., “Junior Level”)
 - A one-sentence description of the version’s intent
-- The rewritten version of the content
+- The rewritten or expanded content
 
 Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
+Return the sections in this order:
+1. Advanced Level
+2. Middle Level
+3. Junior level
 """,
    "Plan & Print": """You are an experienced teacher and curriculum designer.
 
