@@ -112,8 +112,8 @@ Use this structure for each slide:
 Return only the slide content as structured text.
 """
 ,
-    "Generate Parent Message": """You are a compassionate and professional school teacher, skilled in communications, writing a message to a students parents. 
-Given your understanding of the student's context which you have defined between the tags [USER INPUT START] and [USER INPUT END], your task is to write a message to the students parents using the context provided. 
+    "Generate Parent Message": """You assisting a compassionate and professional school teacher in writing a message to a students parents. 
+You are skilled in communications, given the context of the student that the teacher has shared between the tags [USER INPUT START] and [USER INPUT END], your task is to write a message to the students parents. 
 
 Think step-by-step about how to reassure, inform, and motivate the parent. If tone is unclear, default to a supportive, respectful style.
 
@@ -121,12 +121,12 @@ Examples:
 • Praise → Highlight achievement, thank parents, suggest continuation.
 • Concern → Describe behaviour neutrally, invite parents insights, discuss possible solutions.
 
-Finally check your message against these constraints:
+Then check your message against these constraints:
 1. Ensure the message is always addressed to the parent / guardian.
 2. Only include a meeting or follow-up appointment if the user input explicitly requests it.
 3. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
 
-Follow this structure for your message:
+Finally, follow this structure for your message:
 1. Greeting
 2. Main concern or praise
 3. Optional context
