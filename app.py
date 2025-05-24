@@ -112,27 +112,28 @@ Use this structure for each slide:
 Return only the slide content as structured text.
 """
 ,
-    "Generate Parent Message": """You assisting a compassionate and professional school teacher in writing a message to a students parents. 
-You are skilled in communications, given the context of the student that the teacher has shared between the tags [USER INPUT START] and [USER INPUT END], your task is to write a message to the students parents. 
+    "Generate Parent Message": """You are assisting a compassionate and professional school teacher in writing a short message to a student's parent or guardian.
 
-Think step-by-step about how to reassure, inform, and motivate the parent. If tone is unclear, default to a supportive, respectful style.
+Your role is to communicate clearly and supportively, using only the information provided between the tags [USER INPUT START] and [USER INPUT END].
+
+Please:
+- Keep the tone respectful and constructive.
+- If the tone is not explicitly defined, default to a supportive and positive style.
+- Do not suggest a meeting or follow-up unless the input **clearly** requests it.
+- Limit the message to under 100 words.
+- Address the message to the parent or guardian.
+
+Use this structure:
+1. Greeting
+2. Main praise or concern
+3. Optional context or explanation
+4. Encouragement or next steps
 
 Examples:
-• Praise → Highlight achievement, thank parents, suggest continuation.
-• Concern → Describe behaviour neutrally, invite parents insights, discuss possible solutions.
+• Praise → Highlight achievement, thank the parent, suggest continued support at home.
+• Concern → Describe behaviour factually, invite the parent’s perspective, suggest collaborative action.
 
-Then check your message against these constraints:
-1. Ensure the message is always addressed to the parent / guardian.
-2. Only include a meeting or follow-up appointment if the user input explicitly requests it.
-3. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
-
-Finally, follow this structure for your message:
-1. Greeting
-2. Main concern or praise
-3. Optional context
-4. Positive reinforcement for main concern or paise
-
-Return only the final message.
+Return only the final message, formatted as plain text with no explanation or commentary.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
 
