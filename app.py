@@ -133,9 +133,10 @@ Important:
 
 Return only the message text. Do not include tags or internal reasoning.
 """,
-    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
+    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. 
+    Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} multiple choice questions to assess comprehension.
 
-Each MCQ should follow this format:
+Each  Multiple Choice Question should follow this format:
 Q: [Question]
 A. Option 1  
 B. Option 2  
@@ -154,7 +155,7 @@ C. 110°C
 D. 120°C  
 Answer: B
 
-Return only the MCQs.
+Return only the {num_mcq} Multiple Choice Questions.
 """,
  "Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material between the tags [USER INPUT START] and [USER INPUT END]. 
  First break the resource into essential knowledge chunks and convert them into Q&A pairs.
