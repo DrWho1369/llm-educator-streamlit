@@ -178,7 +178,7 @@ Use this format for every one of the {num_flashcards} flashcard:
 **A:** [Direct, concise answer]
 
 Strict Constraints:
-- Ensure every flashcard is phrased for the correct age group (if known).
+- Ensure every flashcard is phrased for the correct year group = {year_group}.
 - Return **exactly** {num_flashcards} flashcards.
 """,
 
