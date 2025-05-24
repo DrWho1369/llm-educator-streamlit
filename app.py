@@ -173,20 +173,13 @@ If the input is longer or more detailed, follow this process:
 3. Provide a concise and accurate answer (1–2 sentences).
 4. Optionally use cloze-style questions (fill-in-the-blank), but no more than 20% of total.
 
-Use this format for **every** flashcard:
+Use this format for every one of the {num_flashcards} flashcard:
 **Q:** [Clear, focused question]  
 **A:** [Direct, concise answer]
 
 Strict Constraints:
 - Ensure every flashcard is phrased for the correct age group (if known).
 - Return **exactly** {num_flashcards} flashcards.
-- Clearly label each Q/A pair.
-
-Example flashcard:
-**Q:** What is photosynthesis?  
-**A:** It's the process by which green plants make food using sunlight.
-
-Return only the flashcards as structured text. Do not include explanations or summaries.
 """,
 
     "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided between the tags [USER INPUT START] and [USER INPUT END]. 
