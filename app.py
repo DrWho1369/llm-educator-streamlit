@@ -134,7 +134,7 @@ Important:
 Ensure you use this structure to compose your message:
 1. Greeting\n
 2. praise or concern\n
-3. Encouragement or next steps\n
+3. Encouragement\n
 
 Return only the final message.
 """,
