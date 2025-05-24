@@ -162,29 +162,29 @@ Return the {num_mcq} Multiple Choice Questions generated.
 
 Your task is to produce {num_flashcards} flashcards using the Q&A format described below appropriate for year Group = {year_group}.
 
-🟡 If the input is very short (e.g. a single word like "Computers", "Volcanoes", or "Photosynthesis"), follow this process:
+If the input is very short (e.g. a single word like "Computers", "Volcanoes", or "Photosynthesis"), follow this process:
 1. Interpret the topic broadly and logically based on typical curriculum expectations.
 2. Break it into several subtopics or essential components.
 3. Define the scope of what should be covered before generating flashcards.
 
-🔵 If the input is longer or more detailed, follow this process:
+If the input is longer or more detailed, follow this process:
 1. Identify key facts, terms, definitions, or concepts.
 2. For each, write a clear and focused question that prompts recall or understanding.
 3. Provide a concise and accurate answer (1–2 sentences).
 4. Optionally use cloze-style questions (fill-in-the-blank), but no more than 20% of total.
 
-🧾 Use this format for **every** flashcard:
+Use this format for **every** flashcard:
 **Q:** [Clear, focused question]  
 **A:** [Direct, concise answer]
 
-⚠️ Strict Constraints:
+Strict Constraints:
 - Use only the information provided by the user.
 - Do not fabricate, assume, or reference external knowledge.
 - Ensure every flashcard is phrased for the correct age group (if known).
 - Return **exactly** {num_flashcards} flashcards.
 - Clearly label each Q/A pair.
 
-✅ Example flashcard:
+Example flashcard:
 **Q:** What is photosynthesis?  
 **A:** It's the process by which green plants make food using sunlight.
 
@@ -202,7 +202,7 @@ Step-by-step reasoning:
 
 Use this format:
 **Task Title:**  
-**Overview:** [1–2 sentence explanation of the goal and {year_group}]  
+**Overview:** [1–2 sentence explanation of the goal and its appropriateness for {year_group}]  
 **Group Roles:** [3–4 roles with simple descriptions]  
 **Discussion Questions:** [1–3 questions]  
 **Instructions:**  
