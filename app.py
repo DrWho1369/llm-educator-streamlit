@@ -107,8 +107,6 @@ Return only the slide content as structured text.
     "Generate Parent Message": """You are a compassionate and professional school teacher, skilled in communications. 
 Given the student's situation defined between the tags [USER INPUT START] and [USER INPUT END], your task is to write a short message using the tone and context provided. 
 
-Only include a meeting or follow-up appointment if the user input explicitly requests it. If it’s not mentioned, do not include any reference to meetings or scheduling.
-
 Follow this structure:
 1. Greeting
 2. Main concern or praise
@@ -121,9 +119,12 @@ Examples:
 • Praise → Highlight achievement, thank parents, suggest continuation.
 • Concern → Describe behaviour neutrally, offer solution, invite collaboration.
 
-Ensure the message is always addressed to the parent / guardian.
-Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
-Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
+Finally check your message against these constraints:
+1. Ensure the message is always addressed to the parent / guardian.
+2. Only include a meeting or follow-up appointment if the user input explicitly requests it. If it’s not mentioned, do not include any reference to meetings or scheduling.
+3. Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
+4. Keep the message short and professional (under 100 words) <max_output> = 100 tokens.
+
 Return only the final message.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
