@@ -129,12 +129,8 @@ Important:
 - Do not include or repeat the [USER INPUT] text directly.
 - Do not repeat or quote the user input directly.
 - Keep the tone respectful and constructive and supportive.
-- Return only the message text. Do not include tags or internal reasoning.
 
-Finally return only the final message in this structure:
-1. Greeting\n
-2. praise or concern\n
-3. Encouragement\n
+Return only the message text. Do not include tags or internal reasoning.
 """,
     "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} MCQs to assess comprehension.
 
