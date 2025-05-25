@@ -49,94 +49,104 @@ task_labels = [
 ]
 
 system_prompts = {
-    "Differentiate Resource": """You are a specialist teaching assistant trained in curriculum adaptation. Your task is to differentiate the piece of educational content shared below under [USER INPUT] into three clearly labeled versions for different learner levels. 
-
-If the user topic is very short (e.g. a single word like "Computers" or "Volcanoes"), you must:
-1. Interpret the topic in a way that makes sense for educational purposes / curriculums,
-2. Break it into logical, curriculum-appropriate subtopics,
-3. Clearly define the scope of the user topic to yourself.
-
-Otherwise, identify the core learning idea shared between the tags [USER INPUT START] and [USER INPUT END]. 
-
-Then rewrite the content into three sections:
-1 Advanced Level – Assume prior knowledge. Use precise terminology, explore nuance, and add critical thinking prompts or real-world connections.
-2. Middle Level – Use vocabulary and sentence structures suitable for middle school students. Include relevant examples and maintain educational depth while staying accessible.
-3. Junior Level – Use simple words, short playful sentences, and concrete metaphors familiar to young children. Make it friendly and engaging.
+    "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
+    "Plan & Print": "You are an experienced teacher and curriculum designer. Your role is to generate engaging, age-appropriate slide-based lesson plans.",
+    "Generate Parent Message": "You are a compassionate and professional school teacher writing messages to parents.",
+    "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
+    "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
+    "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
+}
 
 
-Each version should follow this structure:
-- A heading
-- A one-sentence description of the version’s intent
-- The rewritten or expanded content
+user_prompts = {
+    "Differentiate Resource": """Your task is to differentiate the following content into three versions for different ability levels.
 
-Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your base material. Do not fabricate unrelated facts.
+If the input topic is very short (e.g. "Computers" or "Volcanoes"), do the following:
+1. Interpret the topic logically within an educational curriculum.
+2. Break it into curriculum-appropriate subtopics.
+3. Clearly define your interpreted scope before rewriting.
 
-Finally, return the sections in the following order:
-1. Advanced Level
-2. Middle Level
-3. Junior level
+Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your source material.
+
+Write 3 versions:
+1. **Advanced Level** – Assume prior knowledge. Use precise terminology, explore nuance, and include real-world or critical-thinking prompts.
+2. **Middle Level** – Use accessible language for middle-year learners. Explain key ideas with examples.
+3. **Junior Level** – Use playful, simple language and concrete examples familiar to young children.
+
+Each version must include:
+- A clear heading
+- A one-sentence description of the intent
+- The adapted content
+
+Return the three sections in this order:  
+1. Advanced Level  
+2. Middle Level  
+3. Junior Level
 """,
-   "Plan & Print": """You are an experienced teacher and curriculum designer.
+   "Plan & Print": """
+Create a slide-based lesson plan based on the topic provided between the tags below.
 
-Your task is to create a slide-based lesson plan using only the topic provided between the tags [USER INPUT START] and [USER INPUT END].
+- Year group: {year_group}
+- Duration: {duration} minutes
 
-Use the provided age group and lesson duration below to guide the tone, depth, and length of the plan:
-- Year group = {year_group}
-- Duration = {duration} minutes
+Use only the topic between [USER INPUT START] and [USER INPUT END] to build your slides. Do not make up unrelated content.
 
-If the user topic is very short (e.g. a single word like "Computers" or "Volcanoes"), you must:
-1. Interpret the topic in a way that makes sense for the age group,
-2. Break it into logical, curriculum-appropriate subtopics,
-3. Clearly define the scope of the lesson in Slide 1.
+If the topic is very short (e.g. just one word), you must:
+1. Interpret the topic in a way that fits the curriculum for the specified year group.
+2. Break it into logical subtopics.
+3. Clearly define the lesson’s focus in the first slide.
 
-Your lesson plan should include between 6–10 slides that guide the learner through a complete lesson journey. These should typically include:
-- An objective-setting slide
-- An engaging hook or starter
-- A clear explanation of the core concept
-- A guided example or teacher-led task
-- Student activity instructions
-- A recap or exit task
-- Optional homework (if appropriate)
+Your lesson should include 6–10 slides that guide learners through a complete journey. Typical slides include:
+- Lesson objectives
+- Hook or starter
+- Core explanation
+- Guided or worked example
+- Student task instructions
+- Recap / Exit task
+- Optional homework
 
-Include at least one interactive task (e.g. a pair discussion, mini-quiz, or real-world challenge).
-
-Use clear, age-appropriate language. Tailor tone and depth of content to the year group specified.
-Do not fabricate unrelated facts. Expand on the user topic only using general knowledge appropriate to the subject and level/year group.
-
-**Important:** Do not label the slides using generic headings. Instead, create meaningful slide titles that reflect the specific topic and content of the slide.
-
-Use this structure for each slide:
-- Slide Title
+Each slide should follow this format:
+- Slide Title (specific to the content)
 - Slide Content (5 bullet points or short paragraphs)
-- [Optional: Teacher Notes or Activity Instructions]
+- [Optional: Teacher Notes]
 
-Return only the slide content as structured text.
-"""
-,
+Tailor tone, depth, and content to {year_group}.
+Return only the slides as structured text.
+""",
     "Generate Parent Message": """
-You are a school teacher writing a message to a student's parent or guardian.
+Your task is to write a short, supportive message from the teacher to the student’s parent or guardian.
 
-The key praise or concern is given between the tags [USER INPUT START] and [USER INPUT END]. Use that context to guide your message.
+Context about the praise or concern is provided between the tags [USER INPUT START] and [USER INPUT END].
 
-Write in a respectful, supportive tone. Keep it concise but human and supportive.
+Guidelines:
+- The message should be in first person (from the teacher’s perspective).
+- Address the parent as “Dear Parent/Guardian” unless a name is explicitly provided.
+- Do not repeat the input text verbatim.
+- Do not suggest a meeting unless the input specifically asks for one.
+- Keep the tone respectful, encouraging, and professional.
+- Keep the message concise (under 100 words).
 
 Tone examples:
-• if Praise → Highlight achievement, thank the parent, suggest continued support at home.
-• if Concern → Describe behaviour factually and invite the parent’s perspective.
+- Praise → Highlight achievement, thank the parent, suggest continued support at home.
+- Concern → Describe behaviour factually, invite the parent’s perspective, suggest next steps only if appropriate.
 
-Important:
-- The message is from the teacher, written in first person (I/we).
-- Address the parent as “Dear Parent/Guardian” unless a name is explicitly given.
-- Do not include or repeat the [USER INPUT] text directly.
-- Do not repeat or quote the user input directly.
-- Keep the tone respectful and constructive and supportive.
-
-Return only the message text. Do not include tags or internal reasoning.
+Follow this message structure:
+1. Greeting
+2. Main praise or concern
+3. Encouragement or next steps
 """,
-    "Convert to MCQ": """You are an expert exam question writer designing multiple-choice questions. 
-    Based on the resource provided between the tags [USER INPUT START] and [USER INPUT END], create {num_mcq} multiple choice questions to assess comprehension for year group = {year_group}.
 
-Each  Multiple Choice Question should follow this format:
+    "Convert to MCQ": """
+Create {num_mcq} multiple-choice questions based only on the educational content between the tags [USER INPUT START] and [USER INPUT END].
+
+Target audience: {year_group} students
+
+Instructions:
+- Ensure each question tests understanding of the input content.
+- Include a mix of easy, medium, and hard difficulty levels.
+- Avoid ambiguous phrasing or trick questions.
+
+Each question should follow this format:
 Q: [Question]
 A. Option 1  
 B. Option 2  
@@ -144,68 +154,59 @@ C. Option 3
 D. Option 4  
 Answer: [Correct Option Letter]
 
-Use a mix of easy, medium, and hard questions to cover different cognitive levels, and lable the question with this level. Avoid ambiguous phrasing and ensure only one correct answer.
-
-<Example>
-(EASY)
-Q: What is the boiling point of water?  
-A. 90°C  
-B. 100°C  
-C. 110°C  
-D. 120°C  
-Answer: B
-</Example>
-
-Return the {num_mcq} Multiple Choice Questions generated.
-""",
-"Convert to Flashcards": """You are an educational content designer creating flashcards to reinforce learning from the material provided by the user between the tags [USER INPUT START] and [USER INPUT END].
-
-Your task is to produce {num_flashcards} flashcards using the Q&A format described below appropriate for year Group = {year_group}.
-
-If the input is very short (e.g. a single word like "Computers", "Volcanoes", or "Photosynthesis"), follow this process:
-1. Interpret the topic broadly and logically based on typical curriculum expectations for {year_group}.
-2. Break it into several subtopics or essential components.
-3. Define the scope of what should be covered before generating flashcards.
-
-If the input is longer or more detailed, follow this process:
-1. Identify key facts, terms, definitions, or concepts applicable to {year_group}.
-2. For each, write a clear and focused question that prompts recall or understanding.
-3. Provide a concise and accurate answer (1–2 sentences).
-4. Optionally use cloze-style questions (fill-in-the-blank), but no more than 20% of total.
-
-Use this format for every one of the {num_flashcards} flashcard:
-**Q:** [Clear, focused question]  
-**A:** [Direct, concise answer]
-
-Strict Constraints:
-- Ensure every flashcard is phrased for the correct year group = {year_group}.
-- Return **exactly** {num_flashcards} flashcards.
 """,
 
-    "Group Discussion Task": """You are an expert teacher designing a collaborative classroom discussion task based on the resource provided between the tags [USER INPUT START] and [USER INPUT END]. 
-    The goal is to spark thoughtful student dialogue and peer learning appropriate for year group = {year_group}.
+"Convert to Flashcards": """
+Create exactly {num_flashcards} flashcards based only on the educational content provided between the tags [USER INPUT START] and [USER INPUT END].
 
-Step-by-step reasoning:
-1. Extract the key concept or debate point from the material.
-2. Pose one or more open-ended discussion questions.
-3. Suggest clear roles or responsibilities for group members (e.g. facilitator, recorder, timekeeper).
-4. Provide instructions that encourage active participation and critical thinking.
+Target audience: {year_group} students
 
-Use this format:
+Instructions:
+1. Identify key facts, terms, definitions, or concepts relevant to {year_group}.
+2. For each, write a clear and focused question to prompt understanding.
+3. Provide a concise and accurate answer (1–2 sentences max).
+4. Optionally include 1–2 cloze-style questions (fill-in-the-blank), but no more than 20%.
+
+If the educational content provided between the tags [USER INPUT START] and [USER INPUT END] is very short (e.g., just a word like “Volcanoes” or “Photosynthesis”):
+- Define the topic scope based on typical curriculum expectations for {year_group}.
+- Break it into logical subtopics before generating flashcards.
+
+Use this format for every flashcard:
+**Q:** [Question]  
+**A:** [Answer]
+
+Return {num_flashcards} flashcards formatted exactly as above.
+
+""",
+    "Group Discussion Task": """
+Design a classroom group discussion task using only the material provided between the tags [USER INPUT START] and [USER INPUT END].
+
+Audience: {year_group} students
+
+Goal: Spark thoughtful peer dialogue and cooperative learning. The activity should be achievable in 15–20 minutes.
+
+Instructions:
+1. Identify a key idea, theme, or concept from the material.
+2. Pose 1–3 open-ended discussion questions.
+3. Define group roles (e.g. facilitator, recorder, timekeeper).
+4. Write step-by-step instructions that promote active participation and critical thinking.
+
+Format your output using this structure:
 **Task Title:**  
-**Overview:** [1–2 sentence explanation of the goal and its appropriateness for {year_group}]  
-**Group Roles:** [3–4 roles with simple descriptions]  
-**Discussion Questions:** [1–3 questions]  
+**Overview:** [1–2 sentence summary of the purpose and age-appropriateness]  
+**Group Roles:** [3–4 clearly described roles]  
+**Discussion Questions:** [1–3 open-ended questions]  
 **Instructions:**  
-- Step-by-step guidance on how to run the discussion  
-- Include time guidance (e.g. “5 mins discussion, 3 mins summary”)  
-- Encourage inclusive participation
+- [Clear, sequenced steps]
+- Include time guidance (e.g. “5 min discussion, 3 min summary”)
+- Encourage inclusive discussion
 
 Constraints:
-- Make the activity achievable in 15–20 minutes
-- Avoid abstract questions unless clearly scaffolded
+- Ensure task and tone match the developmental level of {year_group}
+- Avoid overly abstract or unsupported questions
+- Do not fabricate facts not found in the provided material
 
-Return the full activity as structured text.
+Return only the full activity as structured text.
 """
 }
 
@@ -216,14 +217,36 @@ task_descriptions = {
     "Reformat & Repurpose Resource": "Convert a resource into MCQs, flashcards, or a group task."
 }
 
-# Create button layout and track which was clicked
+st.markdown("""
+<style>
+.task-button {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+.task-button:hover {
+    background-color: #e0e0e0;
+}
+.task-button-selected {
+    background-color: #3498db !important;
+    color: white !important;
+    border: 2px solid #2980b9;
+}
+</style>
+""", unsafe_allow_html=True)
+
 cols = st.columns(4)
 for i, label in enumerate(task_labels):
-    with cols[i % 4]:
-        btn_style = f"background-color: #3498db; color: white;" if st.session_state["selected_task"] == label else ""
-        if st.button(label, key=label, help=task_descriptions[label]):
+    with cols[i]:
+        button_class = "task-button-selected" if st.session_state["selected_task"] == label else "task-button"
+        if st.button(f"📝 {label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
-            st.session_state["selected_subtask"] = None 
+            st.session_state["selected_subtask"] = None
+        st.markdown(f"<div class='{button_class}'>{label}</div>", unsafe_allow_html=True)
 
 # Handle Reformat & Repurpose subtasks
 selected_task = st.session_state["selected_task"]
@@ -297,50 +320,37 @@ with generate_col:
     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
 
-# --- Perform Prompt if Task Selected ---
 if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
 
-    if task_key == "Plan & Print":
-        system_prompt = system_prompt.format(
-            year_group=year_group if year_group else "Year 6",
-            duration=duration if duration else 45
-        )
-    elif task_key == "Convert to MCQ":
-        system_prompt = system_prompt.replace("{num_mcq}", str(num_mcq if num_mcq else 5))
-        if "{year_group}" in system_prompt:
-            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
+    user_prompt_template = user_prompts[task_key]
+    user_prompt = user_prompt_template.format(
+        user_input=user_input.strip(),
+        year_group=year_group if 'year_group' in user_prompt_template else "",
+        duration=duration if 'duration' in user_prompt_template else "",
+        num_mcq=num_mcq if 'num_mcq' in user_prompt_template else "",
+        num_flashcards=num_mcq if 'num_flashcards' in user_prompt_template else "",
+    )
 
-    elif task_key == "Convert to Flashcards":
-        system_prompt = system_prompt.replace("{num_flashcards}", str(num_mcq if num_mcq else 10))
-        if "{year_group}" in system_prompt:
-            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
-
-    elif task_key == "Group Discussion Task":
-        if "{year_group}" in system_prompt:
-            system_prompt = system_prompt.replace("{year_group}", year_group if year_group else "Year 6")
+   # Add the user input wrapped in tags
+    user_prompt += f"\n\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]"
 
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
-            # Combine system prompt and user input into one message
-            combined_prompt = f"""{system_prompt.strip()}
-
-            [USER INPUT START]
-            {user_input.strip()}
-            [USER INPUT END]
-            """
-
             response = requests.post(
                 LLM_API_URL,
                 json={
                     "messages": [
-                        {"role": "system", "content": combined_prompt}
+                        {"role": "system", "content": system_prompt.strip()},
+                        {"role": "user", "content": user_prompt.strip()}
                     ]
                 }
             )
+
+
 
             try:
                 output = response.json()["choices"][0]["message"]["content"]
@@ -354,7 +364,7 @@ if selected_task and generate_now:
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]", language="markdown")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n{user_input.strip()}, language="markdown")
 
 # --- Styling ---
 st.markdown("""
