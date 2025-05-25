@@ -111,7 +111,7 @@ Each slide should follow this format:
 - Slide Content (5 bullet points or short paragraphs)
 - [Optional: Teacher Notes]
 
-Start your output:
+Always start your reply with:
 Slide 1
 """,
     "Generate Parent Message": """
