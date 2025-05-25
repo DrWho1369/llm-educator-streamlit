@@ -51,7 +51,7 @@ task_labels = [
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
     "Plan & Print": "You are an experienced teacher and curriculum designer. Your role is to generate engaging, age-appropriate slide-based lesson plans.",
-    "Generate Parent Message": "You are a compassionate and professional school teacher writing messages to parents.",
+    "Generate Parent Message": "You are a compassionate and professional school teacher writing an email to parents.",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
     "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
