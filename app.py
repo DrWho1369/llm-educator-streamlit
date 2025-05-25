@@ -243,7 +243,7 @@ cols = st.columns(4)
 for i, label in enumerate(task_labels):
     with cols[i]:
         button_class = "task-button-selected" if st.session_state["selected_task"] == label else "task-button"
-        if st.button(f"📝 {label}", key=label, help=task_descriptions[label]):
+        if st.button(f"{label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
 
