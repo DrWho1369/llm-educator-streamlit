@@ -247,6 +247,19 @@ for i, label in enumerate(task_labels):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
 
+# Forcefully update the style of the selected button using JavaScript
+if st.session_state["selected_task"]:
+    st.markdown(f"""
+    <script>
+    const buttons = window.parent.document.querySelectorAll('button[kind="secondary"]');
+    buttons.forEach(btn => {{
+        if (btn.innerText === "{st.session_state['selected_task']}") {{
+            btn.classList.add("selected");
+        }}
+    }});
+    </script>
+    """, unsafe_allow_html=True)
+
 # Handle Reformat & Repurpose subtasks
 selected_task = st.session_state["selected_task"]
 selected_subtask = st.session_state["selected_subtask"]
