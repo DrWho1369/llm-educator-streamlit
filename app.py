@@ -134,6 +134,9 @@ Follow this message structure:
 1. Greeting
 2. Main praise or concern
 3. Encouragement or next steps
+
+Start your output: 
+Dear Parent/Guardian,
 """,
 
     "Convert to MCQ": """
