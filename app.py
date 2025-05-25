@@ -90,10 +90,11 @@ Create a slide-based lesson plan based on the topic provided between the tags be
 - Duration: {duration} minutes
 
 Use only the topic between [USER INPUT START] and [USER INPUT END] to build your slides. Do not make up unrelated content.
+If the topic is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
-If the topic is very short (e.g. just one word), you must:
-1. Interpret the topic in a way that fits the curriculum for the specified year group.
-2. Break it into logical subtopics.
+Then:
+1. Break it into logical subtopics.
+2. Tailor tone, depth, and content to {year_group}.
 3. Clearly define the lesson’s focus in the first slide.
 
 Your lesson should include 6–10 slides that guide learners through a complete journey. Typical slides include:
@@ -110,8 +111,8 @@ Each slide should follow this format:
 - Slide Content (5 bullet points or short paragraphs)
 - [Optional: Teacher Notes]
 
-Tailor tone, depth, and content to {year_group}.
-Return only the slides as structured text.
+Start your output:
+Slide 1
 """,
     "Generate Parent Message": """
 Your task is to write a short, supportive message from the teacher to the student’s parent or guardian.
