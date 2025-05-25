@@ -246,7 +246,6 @@ for i, label in enumerate(task_labels):
         if st.button(f"📝 {label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
-        st.markdown(f"<div class='{button_class}'>{label}</div>", unsafe_allow_html=True)
 
 # Handle Reformat & Repurpose subtasks
 selected_task = st.session_state["selected_task"]
