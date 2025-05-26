@@ -194,14 +194,14 @@ If the educational content provided between the tags [USER INPUT START] and [USE
 - Define the topic scope based on typical curriculum expectations for {year_group}.
 - Break it into logical subtopics before generating flashcards.
 
-Use this format for every flashcard:
-**Flashcard No.N**
+Use this format for everyone of the {num_flashcards} flashcards:
+**Flashcard ___**
 **Q:** [Question]  
 **A:** [Answer]
 
 Remember to create {num_flashcards} flashcards formatted exactly as above.
 Start your reply:
-**Flashcard No.1**
+**Flashcard 1**
  
 """,
     "Group Discussion Task": """
