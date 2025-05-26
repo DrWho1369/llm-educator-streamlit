@@ -163,17 +163,17 @@ Instructions:
 - Include a mix of easy, medium, and hard difficulty levels.
 - Avoid ambiguous phrasing or trick questions.
 
-Each question should follow this format:
-Qn: [Question]
+--------
+**Question format:**
+Q: [Question]
 A. Option 1  
 B. Option 2  
 C. Option 3  
 D. Option 4  
 Answer: [Correct Option Letter]
+-------
 
-num_mcq = {num_mcq}
-Always start your reply with:
-Q1: 
+Return {num_mcq} Multiple Choice Questions
 """,
 
 "Convert to Flashcards": """
