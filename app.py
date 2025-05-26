@@ -188,21 +188,13 @@ Instructions:
 1. Identify key facts, terms, definitions, or concepts relevant to {year_group}.
 2. For each, write a clear and focused question to prompt understanding.
 3. Provide a concise and accurate answer (1–2 sentences max).
-4. Optionally include 1–2 cloze-style questions (fill-in-the-blank), but no more than 20%.
-
-If the educational content provided between the tags [USER INPUT START] and [USER INPUT END] is very short (e.g., just a word like “Volcanoes” or “Photosynthesis”):
-- Define the topic scope based on typical curriculum expectations for {year_group}.
-- Break it into logical subtopics before generating flashcards.
 
 Use this format for everyone of the {num_flashcards} flashcards:
-**Flashcard ___**
-**Q:** [Question]  
-**A:** [Answer]
+**Flashcard**
+**Q:** Question  
+**A:** Full Answer
 
 Remember to create {num_flashcards} flashcards formatted exactly as above.
-Start your reply:
-**Flashcard 1**
- 
 """,
     "Group Discussion Task": """
 Design a classroom group discussion task appropriate for the audience: {year_group} students, using only the material provided between the tags here:
