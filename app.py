@@ -51,7 +51,7 @@ task_labels = [
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
     "Plan & Print": "You are an expert curriculum designer who creates age-appropriate lesson materials. Your task is to help teachers prepare for a topic by generating a topic guide, a structured lesson plan, and a slide-based presentation.",
-    "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Your message must be based entirely on the teacher’s notes provided in the input. Do not fabricate details or assume extra context beyond what is given. Maintain a respectful, human tone that suits the nature of the input (positive or negative).",
+    "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Your message must be based entirely on the user input message. Do not fabricate details or assume extra context beyond what is given. Maintain a respectful, human tone that suits the nature of the input (positive or negative).",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
     "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
@@ -132,7 +132,7 @@ C. Lesson Plan Outline
 D. Full complete slide deck for lesson
 """,
    "Generate Parent Message": """
-Write a short message to the student’s parent or guardian.
+Write a message to the student’s parent or guardian.
 
 Read the user input message (sent before). Your message should be based entirely on this user input message.
 
