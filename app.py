@@ -59,7 +59,7 @@ system_prompts = {
 
 
 user_prompts = {
-"Differentiated Resource": """
+"Differentiate Resource": """
 Your task is to differentiate the following educational content into three versions for different ability levels. 
 
 Topic: See user input message.
