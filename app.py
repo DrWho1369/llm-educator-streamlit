@@ -145,7 +145,7 @@ Guidelines:
 **Email Structure:**
 1. Greeting — Start with “Dear Parent/Guardian”
 2. Main message — Focused on describing the context in the user input message over 2 paragraphs
-3. Conclude with positive reinforcement / encouragement the parent can do at home
+3. Always conclude with positive reinforcement / encouraging actions that the parent can do at home
 ---
 
 - Keep the email under 100 words.
