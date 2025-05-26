@@ -61,12 +61,16 @@ system_prompts = {
 user_prompts = {
     "Differentiate Resource": """Your task is to differentiate the following content into three versions for different ability levels.
 
+Use only the content provided between the tags here: 
+[USER INPUT START] 
+{user_input}
+[USER INPUT END] 
+as your source material.
+
 If the input topic is very short (e.g. "Computers" or "Volcanoes"), do the following:
 1. Interpret the topic logically within an educational curriculum.
 2. Break it into curriculum-appropriate subtopics.
 3. Clearly define your interpreted scope before rewriting.
-
-Use only the content provided between the tags [USER INPUT START] and [USER INPUT END] as your source material.
 
 Write 3 versions:
 1. **Advanced Level** – Assume prior knowledge. Use precise terminology, explore nuance, and include real-world or critical-thinking prompts.
@@ -89,7 +93,11 @@ Create a slide-based lesson plan based on the topic provided between the tags be
 - Year group: {year_group}
 - Duration: {duration} minutes
 
-Use only the topic between [USER INPUT START] and [USER INPUT END] to build your slides. Do not make up unrelated content.
+Use only the topic between the tags here 
+[USER INPUT START] 
+{user_input}
+[USER INPUT END] to build your slides. Do not make up unrelated content.
+
 If the topic is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
 Then:
@@ -117,7 +125,10 @@ Slide 1
     "Generate Parent Message": """
 Your task is to write a short, supportive message from the teacher to the student’s parent or guardian.
 
-Context about the praise or concern is provided between the tags [USER INPUT START] and [USER INPUT END].
+Context about the praise or concern is provided between the tags here: 
+[USER INPUT START] 
+{user_input}
+[USER INPUT END].
 
 Guidelines:
 - The message should be in first person (from the teacher’s perspective).
@@ -141,9 +152,12 @@ Dear Parent/Guardian,
 """,
 
     "Convert to MCQ": """
-Create {num_mcq} multiple-choice questions based only on the educational content between the tags [USER INPUT START] and [USER INPUT END].
+Create {num_mcq} multiple-choice questions for the target audience: {year_group} students, based only on the educational content between the tags here: 
+[USER INPUT START]  
+{user_input}
+[USER INPUT END].
 
-Target audience: {year_group} students
+If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
 Instructions:
 - Ensure each question tests understanding of the input content.
@@ -161,9 +175,12 @@ Answer: [Correct Option Letter]
 """,
 
 "Convert to Flashcards": """
-Create exactly {num_flashcards} flashcards based only on the educational content provided between the tags [USER INPUT START] and [USER INPUT END].
+Create exactly {num_flashcards} flashcards appropriate for the target audience: {year_group} students based only on the educational content provided between the tags here:
+[USER INPUT START] 
+{user_input}
+[USER INPUT END].
 
-Target audience: {year_group} students
+If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
 Instructions:
 1. Identify key facts, terms, definitions, or concepts relevant to {year_group}.
@@ -183,9 +200,11 @@ Return {num_flashcards} flashcards formatted exactly as above.
 
 """,
     "Group Discussion Task": """
-Design a classroom group discussion task using only the material provided between the tags [USER INPUT START] and [USER INPUT END].
-
-Audience: {year_group} students
+Design a classroom group discussion task appropriate for the audience: {year_group} students, using only the material provided between the tags here:
+[USER INPUT START]
+{user_input}
+[USER INPUT END].
+If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
 Goal: Spark thoughtful peer dialogue and cooperative learning. The activity should be achievable in 15–20 minutes.
 
@@ -348,9 +367,6 @@ if selected_task and generate_now:
         num_mcq=num_mcq if 'num_mcq' in user_prompt_template else "",
         num_flashcards=num_mcq if 'num_flashcards' in user_prompt_template else "",
     )
-
-   # Add the user input wrapped in tags
-    user_prompt += f"\n\n[USER INPUT START]\n{user_input.strip()}\n[USER INPUT END]"
 
     if not user_input.strip():
         st.warning("⚠️ Please enter some content above.")
