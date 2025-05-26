@@ -79,7 +79,7 @@ Create 3 differentiated versions of the content:
 For each level, follow this exact structure:
 ---
 
-### {Level Name}
+### Level Name
 
 **Intent:** [1 sentence summary of how this level is adapted]
 
