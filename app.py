@@ -98,14 +98,14 @@ For each level, follow this exact structure:
 3. Junior Level
 """
 ,
-   "Plan & Print": """You are helping a teacher prepare a full lesson based on a single topic. Use the information below to design the lesson plan and student slides.
+   "Plan & Print": """You are helping a teacher prepare a full lesson plan and slides based on a single topic. Use the information in the user inpput message to design the lesson plan and student slides.
 
-Topic: see user input message
+Topic: see user input message before
 
 Year Group: {year_group}  
 Duration: {duration} minutes
 
-Follow these steps:
+Follow these steps to create your output:
 1. **Define the Lesson Scope:** If the topic is broad or vague, interpret it appropriately for the age group and specify your focus in Slide 1.
 2. **Create a Teacher Guide:** Start your output with a brief topic overview and 4–6 key terms or learning objectives.
 3. **Write a Lesson Plan Outline:** Include a short paragraph for the teacher explaining how the lesson will flow.
@@ -125,8 +125,11 @@ Typical slides might include:
 
 Use age-appropriate, accurate language. Do **not** fabricate facts or examples. Focus only on the provided topic.
 
-Always start your output with:
-**Teacher Guide**
+Always contain in your output:
+A. The lesson scope
+B. Teacher Guide
+C. Lesson Plan Outline
+D. Full complete slide deck for lesson
 """,
    "Generate Parent Message": """
 Please read the teacher’s note above in the user input message (sent before). Your message should be based entirely on this note.
