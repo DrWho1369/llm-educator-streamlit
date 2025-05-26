@@ -50,8 +50,8 @@ task_labels = [
 
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
-    "Plan & Print": "You are an experienced teacher and curriculum designer. Your role is to generate engaging, age-appropriate slide-based lesson plans.",
-    "Generate Parent Message": "You are a compassionate and professional school teacher writing an email to parents.",
+    "Plan & Print": "You are an experienced teacher and curriculum designer. Your role is to generate engaging, age-appropriate slides for the topic shared.",
+    "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Your message must be based entirely on the teacher’s notes provided in the input. Do not fabricate details or assume extra context beyond what is given. Maintain a respectful, human tone that suits the nature of the input (positive or negative).",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
     "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
@@ -79,7 +79,7 @@ Write 3 versions:
 
 Each version must include:
 - A clear heading
-- A one-sentence description of the intent
+- A one-sentence description of the intent / breaking down the key points appli
 - The adapted content
 
 Return the three sections in this order:  
@@ -122,32 +122,32 @@ Each slide should follow this format:
 Always start your reply with:
 Slide 1
 """,
-    "Generate Parent Message": """
-Your task is to write a short, supportive message from the teacher to the student’s parent or guardian.
+   "Generate Parent Message": """
+Please read the teacher’s note below. Your message should be based entirely on this note.
 
-Context about the praise or concern is provided between the tags here: 
-[USER INPUT START] 
+[TEACHER NOTE]
 {user_input}
-[USER INPUT END].
+[/TEACHER NOTE]
+
+Now write a short message to the student’s parent or guardian.
 
 Guidelines:
-- The message should be in first person (from the teacher’s perspective).
-- Address the parent as “Dear Parent/Guardian” unless a name is explicitly provided.
-- Do not repeat the input text verbatim.
-- Do not suggest a meeting unless the input specifically asks for one.
-- Keep the tone respectful, encouraging, and professional.
-- Keep the message concise (under 100 words).
+- First person (“I” or “We”), from the teacher’s perspective.
+- Do not invent or infer any information not in the teacher note.
+- Do not quote the teacher note directly.
+- Use a respectful and appropriate tone:
+    • Praise → warm and thankful.
+    • Concern → factual and supportive, without sugarcoating.
+- Do not suggest a meeting unless clearly requested.
 
-Tone examples:
-- Praise → Highlight achievement, thank the parent, suggest continued support at home.
-- Concern → Describe behaviour factually, invite the parent’s perspective, suggest next steps only if appropriate.
+Structure:
+1. Greeting — Start with “Dear Parent/Guardian”
+2. Main message — Focused on the teacher note
+3. Encouragement or next steps — if appropriate
 
-Follow this message structure:
-1. Greeting
-2. Main praise or concern
-3. Encouragement or next steps
+Keep the message under 100 words.
+Return only the final message starting with:
 
-Start your output: 
 Dear Parent/Guardian,
 """,
 
