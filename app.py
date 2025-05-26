@@ -132,7 +132,7 @@ C. Lesson Plan Outline
 D. Full complete slide deck for lesson
 """,
    "Generate Parent Message": """
-Your task is to write an email to the student’s parent or guardian based entirely on the previous user input message.
+Your task is to write an email to the student’s parent or guardian based entirely on your personal notes written above in the "user input" message.
 
 Guidelines:
 - First person (“I” or “We”), from the teacher’s perspective.
