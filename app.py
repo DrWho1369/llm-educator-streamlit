@@ -187,10 +187,12 @@ Instructions:
 2. For each, write a clear and focused question to prompt understanding.
 3. Provide a concise and accurate answer (1–2 sentences max).
 
-Use this format for everyone of the {num_flashcards} flashcards:
-**Flashcard**
-**Q:** Question  
-**A:** Full Answer
+-------
+**Use this format for everyone of the {num_flashcards} flashcards:**
+Flashcard Number
+Q: Question  
+A: Full Answer
+-------
 
 Remember to create {num_flashcards} flashcards formatted exactly as above.
 """,
