@@ -50,7 +50,7 @@ task_labels = [
 
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
-    "Plan & Print": "You are an experienced teacher and curriculum designer. Your role is to generate engaging, age-appropriate slides for the topic shared.",
+    "Plan & Print": "You are an expert curriculum designer who creates age-appropriate lesson materials. Your task is to help teachers prepare for a topic by generating a topic guide, a structured lesson plan, and a slide-based presentation.",
     "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Your message must be based entirely on the teacher’s notes provided in the input. Do not fabricate details or assume extra context beyond what is given. Maintain a respectful, human tone that suits the nature of the input (positive or negative).",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
@@ -59,68 +59,74 @@ system_prompts = {
 
 
 user_prompts = {
-    "Differentiate Resource": """Your task is to differentiate the following content into three versions for different ability levels.
+"Differentiated Resource": """
+Your task is to differentiate the following educational content into three versions for different ability levels. 
 
-Use only the content provided between the tags here: 
-[USER INPUT START] 
-{user_input}
-[USER INPUT END] 
-as your source material.
+Topic: {user_input}
 
-If the input topic is very short (e.g. "Computers" or "Volcanoes"), do the following:
-1. Interpret the topic logically within an educational curriculum.
-2. Break it into curriculum-appropriate subtopics.
-3. Clearly define your interpreted scope before rewriting.
+Use only the content provided above as your base material. Do not fabricate unrelated facts.
 
-Write 3 versions:
-1. **Advanced Level** – Assume prior knowledge. Use precise terminology, explore nuance, and include real-world or critical-thinking prompts.
-2. **Middle Level** – Use accessible language for middle-year learners. Explain key ideas with examples.
-3. **Junior Level** – Use playful, simple language and concrete examples familiar to young children.
+If the topic is very short (e.g. “Computers” or “Volcanoes”), you must:
+1. Interpret the topic in a way that makes sense for curriculum and age level.
+2. Break it into logical, curriculum-appropriate subtopics.
+3. Clearly define your interpreted scope before writing.
 
-Each version must include:
-- A clear heading
-- A one-sentence description of the intent / breaking down the key points appli
-- The adapted content
+Create 3 differentiated versions of the content:
+1. **Advanced Level** – For high-attaining or older students. Use precise terminology, explore nuance, include critical thinking prompts or real-world applications.
+2. **Middle Level** – For general learners. Use mid-level vocabulary, include relevant examples, and explain key ideas clearly.
+3. **Junior Level** – For younger or lower-ability students. Use simple language, short sentences, concrete examples or metaphors. Make it playful and friendly.
 
-Return the three sections in this order:  
+For each level, follow this exact structure:
+---
+
+### {Level Name}
+
+**Intent:** [1 sentence summary of how this level is adapted]
+
+**Summary for Teacher:**
+- [3–5 bullet points summarising the key ideas this level covers]
+- [Include important terms or phrases that a teacher should highlight]
+
+**Content:**
+[The rewritten content suitable for this level.]
+
+---
+
+**Important:** Return the sections in this order:  
 1. Advanced Level  
 2. Middle Level  
 3. Junior Level
-""",
-   "Plan & Print": """
-Create a slide-based lesson plan based on the topic provided between the tags below.
+"""
+,
+   "Plan & Print": """You are helping a teacher prepare a full lesson based on a single topic. Use the information below to design the lesson plan and student slides.
 
-- Year group: {year_group}
-- Duration: {duration} minutes
+Topic: {user_input}
 
-Use only the topic between the tags here 
-[USER INPUT START] 
-{user_input}
-[USER INPUT END] to build your slides. Do not make up unrelated content.
+Year Group: {year_group}  
+Duration: {duration} minutes
 
-If the topic is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
+Follow these steps:
+1. **Define the Lesson Scope:** If the topic is broad or vague, interpret it appropriately for the age group and specify your focus in Slide 1.
+2. **Create a Teacher Guide:** Start your output with a brief topic overview and 4–6 key terms or learning objectives.
+3. **Write a Lesson Plan Outline:** Include a short paragraph for the teacher explaining how the lesson will flow.
+4. **Generate Slides:** Create 6–10 slides following this structure:
+   - Slide Title (specific and relevant to the topic)
+   - Slide Content (5 bullet points or short paragraphs)
+   - [Optional: Teacher Notes or Activity Instructions]
 
-Then:
-1. Break it into logical subtopics.
-2. Tailor tone, depth, and content to {year_group}.
-3. Clearly define the lesson’s focus in the first slide.
+Typical slides might include:
+- Lesson Objectives  
+- Hook or Starter  
+- Core Explanation  
+- Guided Example or Modelled Task  
+- Student Activity Instructions  
+- Recap or Exit Task  
+- Optional Homework
 
-Your lesson should include 6–10 slides that guide learners through a complete journey. Typical slides include:
-- Lesson objectives
-- Hook or starter
-- Core explanation
-- Guided or worked example
-- Student task instructions
-- Recap / Exit task
-- Optional homework
+Use age-appropriate, accurate language. Do **not** fabricate facts or examples. Focus only on the provided topic.
 
-Each slide should follow this format:
-- Slide Title (specific to the content)
-- Slide Content (5 bullet points or short paragraphs)
-- [Optional: Teacher Notes]
-
-Always start your reply with:
-Slide 1
+Always start your output with:
+**Teacher Guide**
 """,
    "Generate Parent Message": """
 Please read the teacher’s note below. Your message should be based entirely on this note.
