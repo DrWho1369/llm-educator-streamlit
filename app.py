@@ -147,8 +147,8 @@ Guidelines:
 
 Structure:
 1. Greeting — Start with “Dear Parent/Guardian”
-2. Main message — Focused on the user input message
-3. Positive reinforcement going forward / Encouragement needed — if appropriate
+2. Main message — Focused on describing the context in the user input message over 2 paragraphs
+3. Conclude positive reinforcement going forward / Encouragement needed — if appropriate
 
 Keep the message under 100 words.
 Return only the final message starting with:
