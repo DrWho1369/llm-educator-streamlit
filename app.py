@@ -165,13 +165,15 @@ Instructions:
 - Avoid ambiguous phrasing or trick questions.
 
 Each question should follow this format:
-Q: [Question]
+Qn: [Question]
 A. Option 1  
 B. Option 2  
 C. Option 3  
 D. Option 4  
 Answer: [Correct Option Letter]
 
+Always start your reply with:
+Q1: 
 """,
 
 "Convert to Flashcards": """
@@ -193,11 +195,14 @@ If the educational content provided between the tags [USER INPUT START] and [USE
 - Break it into logical subtopics before generating flashcards.
 
 Use this format for every flashcard:
+**Flashcard No.N**
 **Q:** [Question]  
 **A:** [Answer]
 
-Return {num_flashcards} flashcards formatted exactly as above.
-
+Remember to create {num_flashcards} flashcards formatted exactly as above.
+Start your reply:
+**Flashcard No.1**
+ 
 """,
     "Group Discussion Task": """
 Design a classroom group discussion task appropriate for the audience: {year_group} students, using only the material provided between the tags here:
