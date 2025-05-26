@@ -52,7 +52,7 @@ system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
     "Plan & Print": "You are an expert curriculum designer who creates age-appropriate lesson materials. Your task is to help teachers prepare for a topic by generating a topic guide, a structured lesson plan, and a slide-based presentation.",
     "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Maintain a respectful, human tone that suits the nature of the user input message (positive or negative).",
-    "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students.",
+    "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students. You will always create num_mcq questions",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
     "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
 }
@@ -153,11 +153,12 @@ Guidelines:
 """,
 
     "Convert to MCQ": """
-Create {num_mcq} multiple-choice questions for the target audience: {year_group} students, based only on the educational content shared in the user input message before.
+Create num_mcq = {num_mcq} multiple-choice questions for the target audience: {year_group} students, based only on the educational content shared in the user input message before.
 
-If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
+If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified target audience: {year_group} students.
 
 Instructions:
+- Create {num_mcq} multiple choice questions.
 - Ensure each question tests understanding of the input content.
 - Include a mix of easy, medium, and hard difficulty levels.
 - Avoid ambiguous phrasing or trick questions.
@@ -170,6 +171,7 @@ C. Option 3
 D. Option 4  
 Answer: [Correct Option Letter]
 
+num_mcq = {num_mcq}
 Always start your reply with:
 Q1: 
 """,
