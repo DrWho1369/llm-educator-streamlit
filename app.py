@@ -62,7 +62,7 @@ user_prompts = {
 "Differentiated Resource": """
 Your task is to differentiate the following educational content into three versions for different ability levels. 
 
-Topic: {user_input}
+Topic: See user input message.
 
 Use only the content provided above as your base material. Do not fabricate unrelated facts.
 
@@ -72,7 +72,7 @@ If the topic is very short (e.g. “Computers” or “Volcanoes”), you must:
 3. Clearly define your interpreted scope before writing.
 
 Create 3 differentiated versions of the content:
-1. **Advanced Level** – For high-attaining or older students. Use precise terminology, explore nuance, include critical thinking prompts or real-world applications.
+1. **Advanced Level** – For high-attaining or older students. Use precise terminology, explore nuance, and include critical thinking prompts or real-world applications.
 2. **Middle Level** – For general learners. Use mid-level vocabulary, include relevant examples, and explain key ideas clearly.
 3. **Junior Level** – For younger or lower-ability students. Use simple language, short sentences, concrete examples or metaphors. Make it playful and friendly.
 
@@ -100,7 +100,7 @@ For each level, follow this exact structure:
 ,
    "Plan & Print": """You are helping a teacher prepare a full lesson based on a single topic. Use the information below to design the lesson plan and student slides.
 
-Topic: {user_input}
+Topic: see user input message
 
 Year Group: {year_group}  
 Duration: {duration} minutes
@@ -129,13 +129,8 @@ Always start your output with:
 **Teacher Guide**
 """,
    "Generate Parent Message": """
-Please read the teacher’s note below. Your message should be based entirely on this note.
-
-[TEACHER NOTE]
-{user_input}
-[/TEACHER NOTE]
-
-Now write a short message to the student’s parent or guardian.
+Please read the teacher’s note above in the user input message (sent before). Your message should be based entirely on this note.
+Write a short message to the student’s parent or guardian.
 
 Guidelines:
 - First person (“I” or “We”), from the teacher’s perspective.
@@ -158,10 +153,7 @@ Dear Parent/Guardian,
 """,
 
     "Convert to MCQ": """
-Create {num_mcq} multiple-choice questions for the target audience: {year_group} students, based only on the educational content between the tags here: 
-[USER INPUT START]  
-{user_input}
-[USER INPUT END].
+Create {num_mcq} multiple-choice questions for the target audience: {year_group} students, based only on the educational content shared in the user input message before.
 
 If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
@@ -183,10 +175,7 @@ Q1:
 """,
 
 "Convert to Flashcards": """
-Create exactly {num_flashcards} flashcards appropriate for the target audience: {year_group} students based only on the educational content provided between the tags here:
-[USER INPUT START] 
-{user_input}
-[USER INPUT END].
+Create exactly {num_flashcards} flashcards appropriate for the target audience: {year_group} students based only on the educational content provided in the user input message before.
 
 If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
@@ -203,10 +192,8 @@ Use this format for everyone of the {num_flashcards} flashcards:
 Remember to create {num_flashcards} flashcards formatted exactly as above.
 """,
     "Group Discussion Task": """
-Design a classroom group discussion task appropriate for the audience: {year_group} students, using only the material provided between the tags here:
-[USER INPUT START]
-{user_input}
-[USER INPUT END].
+Design a classroom group discussion task appropriate for the audience: {year_group} students, using only the material provided in the user input message before
+
 If the user input is very short (e.g. just one word), you must interpret the topic in a way that fits the curriculum for the specified year group.
 
 Goal: Spark thoughtful peer dialogue and cooperative learning. The activity should be achievable in 15–20 minutes.
@@ -279,7 +266,7 @@ if st.session_state["selected_task"]:
     <script>
     const buttons = window.parent.document.querySelectorAll('button[kind="secondary"]');
     buttons.forEach(btn => {{
-        if (btn.innerText === "{st.session_state['selected_task']}") {{
+        if (btn.innerText === '{st.session_state['selected_task']}') {{
             btn.classList.add("selected");
         }}
     }});
@@ -361,10 +348,10 @@ with generate_col:
 if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
+    user_input = f"User Input: {user_input}"
 
     user_prompt_template = user_prompts[task_key]
     user_prompt = user_prompt_template.format(
-        user_input=user_input.strip(),
         year_group=year_group if 'year_group' in user_prompt_template else "",
         duration=duration if 'duration' in user_prompt_template else "",
         num_mcq=num_mcq if 'num_mcq' in user_prompt_template else "",
@@ -380,6 +367,7 @@ if selected_task and generate_now:
                 json={
                     "messages": [
                         {"role": "system", "content": system_prompt.strip()},
+                        {"role": "user", "content": user_input.strip()},
                         {"role": "user", "content": user_prompt.strip()}
                     ]
                 }
@@ -399,7 +387,7 @@ if selected_task and generate_now:
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
 
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Prompt]\n{user_prompt}", language="markdown")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input.strip()}\n\n[User Prompt]\n{user_prompt}", language="markdown")
 
 # --- Styling ---
 st.markdown("""
