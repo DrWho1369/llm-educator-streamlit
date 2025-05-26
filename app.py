@@ -132,7 +132,7 @@ C. Lesson Plan Outline
 D. Full complete slide deck for lesson
 """,
    "Generate Parent Message": """
-Write an email to the student’s parent or guardian.
+Your task is to write an email to the student’s parent or guardian.
 
 Read the user input message (sent before). Your email should be based entirely on this user input message.
 
@@ -142,12 +142,11 @@ Guidelines:
 - Use a respectful and appropriate tone:
     • If input message = Praise → warm and thankful.
     • If input message = Concern → factual, supportive and collaborative, without sugarcoating.
-- Only suggest a meeting if clearly requested in the user input message.
 
 Structure:
 1. Greeting — Start with “Dear Parent/Guardian”
 2. Main message — Focused on describing the context in the user input message over 2 paragraphs
-3. Conclude positive reinforcement going forward / Encouragement needed — if appropriate
+3. Conclude positive reinforcement / Encouragement — if appropriate
 
 Keep the email under 100 words.
 Return only the final email.
