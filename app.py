@@ -31,7 +31,7 @@ warning_placeholder = st.empty()
 
 # Only show warning if input is too short
 if word_count < 10:
-    warning_placeholder.warning("✏️ Please expand your input with more context so the AI can generate a meaningful response.")
+    warning_placeholder.warning("✏️ Please try to expand your input with more context so the AI can generate a meaningful response.")
 else:
     warning_placeholder.empty()  # Clears the warning once the condition is met
 
