@@ -8,19 +8,67 @@ st.set_page_config(page_title="Prompt Tester", layout="centered")
 
 st.title("OI-TA")
 
-# --- Available task buttons ---
-tasks = [
+# Define task labels and descriptions
+task_labels = [
     "Differentiate Resource",
     "Generate Parent Message",
     "Plan & Print",
     "Reformat & Repurpose Resource"
 ]
 
-# Buttons to select the task
+task_descriptions = {
+    "Differentiate Resource": "Tailor a teaching resource into 3 ability levels",
+    "Generate Parent Message": "Create a message to update parents",
+    "Plan & Print": "Generate lesson plan + printable resources",
+    "Reformat & Repurpose Resource": "Convert into flashcards, MCQs, etc."
+}
+
+# Display buttons in columns
+
+st.markdown("""
+<style>
+.task-button {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+.task-button:hover {
+    background-color: #e0e0e0;
+}
+.task-button-selected {
+    background-color: #3498db !important;
+    color: white !important;
+    border: 2px solid #2980b9;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 st.subheader("Choose a task:")
-for task in tasks:
-    if st.button(task):
-        st.session_state.selected_task = task
+cols = st.columns(4)
+for i, label in enumerate(task_labels):
+    with cols[i]:
+        button_class = "task-button-selected" if st.session_state.get("selected_task") == label else "task-button"
+        if st.button(f"{label}", key=label, help=task_descriptions[label]):
+            st.session_state["selected_task"] = label
+            st.session_state["selected_subtask"] = None
+
+# Forcefully update the style of the selected button using JavaScript
+if st.session_state["selected_task"]:
+    st.markdown(f"""
+    <script>
+    const buttons = window.parent.document.querySelectorAll('button[kind="secondary"]');
+    buttons.forEach(btn => {{
+        if (btn.innerText === '{st.session_state['selected_task']}') {{
+            btn.classList.add("selected");
+        }}
+    }});
+    </script>
+    """, unsafe_allow_html=True)
 
 # Show content input only if a task is selected
 if "selected_task" in st.session_state:
@@ -60,12 +108,8 @@ if "selected_task" not in st.session_state:
 if "selected_subtask" not in st.session_state:
     st.session_state["selected_subtask"] = None
 
-# --- User Input ---
-st.subheader("Paste Your Content")
-user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
-
 # Track the warning state and input word count
-word_count = len(user_input.strip().split())
+word_count = len(user_text.strip().split())
 warning_placeholder = st.empty()
 
 # Only show warning if input is too short
@@ -80,12 +124,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.subheader("Choose a Task")
 
-task_labels = [
-    "Differentiate Resource",
-    "Generate Parent Message",
-    "Plan & Print",
-    "Reformat & Repurpose Resource"
-]
 
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
@@ -274,48 +312,6 @@ task_descriptions = {
     "Reformat & Repurpose Resource": "Convert a resource into MCQs, flashcards, or a group task."
 }
 
-st.markdown("""
-<style>
-.task-button {
-    background-color: #f0f0f0;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    padding: 0.5rem;
-    text-align: center;
-    font-weight: bold;
-    cursor: pointer;
-}
-.task-button:hover {
-    background-color: #e0e0e0;
-}
-.task-button-selected {
-    background-color: #3498db !important;
-    color: white !important;
-    border: 2px solid #2980b9;
-}
-</style>
-""", unsafe_allow_html=True)
-
-cols = st.columns(4)
-for i, label in enumerate(task_labels):
-    with cols[i]:
-        button_class = "task-button-selected" if st.session_state["selected_task"] == label else "task-button"
-        if st.button(f"{label}", key=label, help=task_descriptions[label]):
-            st.session_state["selected_task"] = label
-            st.session_state["selected_subtask"] = None
-
-# Forcefully update the style of the selected button using JavaScript
-if st.session_state["selected_task"]:
-    st.markdown(f"""
-    <script>
-    const buttons = window.parent.document.querySelectorAll('button[kind="secondary"]');
-    buttons.forEach(btn => {{
-        if (btn.innerText === '{st.session_state['selected_task']}') {{
-            btn.classList.add("selected");
-        }}
-    }});
-    </script>
-    """, unsafe_allow_html=True)
 
 # Handle Reformat & Repurpose subtasks
 selected_task = st.session_state["selected_task"]
