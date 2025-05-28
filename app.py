@@ -58,6 +58,10 @@ if "selected_subtask" not in st.session_state:
 
 
 st.subheader("Choose a task:")
+
+# Show nothing else if no task is selected yet
+if not st.session_state["selected_task"]:
+    st.stop()
 cols = st.columns(4)
 for i, label in enumerate(task_labels):
     with cols[i]:
@@ -101,6 +105,11 @@ if st.session_state["selected_task"]:
         input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
 
         if input_method == "Upload PDF":
+            if uploaded_file:
+                import PyPDF2
+                reader = PyPDF2.PdfReader(uploaded_file)
+                pdf_text = "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
+                user_input = pdf_text
             uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
             if uploaded_file:
                 import PyPDF2
@@ -117,7 +126,7 @@ if st.session_state["selected_task"]:
 # Safely handle missing user_text
 try:
     word_count = len(user_text.strip().split())
-except NameError:
+except:
     word_count = 0
 
 warning_placeholder = st.empty()
