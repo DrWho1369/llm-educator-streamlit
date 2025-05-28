@@ -30,7 +30,7 @@ st.subheader("Paste or Upload Your Content")
 user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
 
 # --- Enforce Max Word Limit ---
-max_words_allowed = 800
+max_words_allowed = 900
 words = user_text.strip().split()
 
 if len(words) > max_words_allowed:
@@ -54,7 +54,7 @@ if uploaded_file:
 
         # Chunk by 1500 words if needed
         all_words = all_pdf_text.strip().split()
-        chunk_size = 1500
+        chunk_size = 950
         st.markdown("### Summarizing PDF...")
         for i in range(0, len(all_words), chunk_size):
             chunk = " ".join(all_words[i:i+chunk_size])
