@@ -72,10 +72,11 @@ for i, label in enumerate(task_labels):
             "Reformat & Repurpose Resource"
         ]:
             uploaded_file = st.file_uploader(
-                "Upload an educational PDF to summarize",
+                f"Upload an educational PDF for: {st.session_state['selected_task']}",
                 type="pdf",
-                key="pdf_uploader_summary"
-            )        
+                key=f"pdf_uploader_{st.session_state['selected_task'].replace(' ', '_')}"
+            )
+                
             if uploaded_file:
                 st.info("Extracting and summarizing content...")
                 summaries = summarize_uploaded_pdf(uploaded_file)
