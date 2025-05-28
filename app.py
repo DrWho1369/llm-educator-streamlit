@@ -1,13 +1,13 @@
 import streamlit as st
 import requests
 import PyPDF2
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.text_rank import TextRankSummarizer
 import nltk
+from nltk.tokenize import sent_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
-nltk.data.path.append("/tmp")
-nltk.download("punkt", download_dir="/tmp")
+nltk.download("punkt")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
@@ -47,12 +47,18 @@ else:
 # Optional PDF upload
 uploaded_file = st.file_uploader("Or upload a PDF (text will be summarised and combined)", type="pdf")
 
-# --- TextRank Summarizer ---
+# --- Native TextRank Summarizer using NLTK + Sklearn ---
 def textrank_summary(text, sentence_count=5):
-    parser = PlaintextParser.from_string(text, Tokenizer("english"))
-    summarizer = TextRankSummarizer()
-    summary = summarizer(parser.document, sentence_count)
-    return " ".join(str(sentence) for sentence in summary)
+    sentences = sent_tokenize(text)
+    if len(sentences) <= sentence_count:
+        return text  # Not enough to summarize
+
+    vectorizer = TfidfVectorizer().fit_transform(sentences)
+    sim_matrix = cosine_similarity(vectorizer)
+    scores = sim_matrix.sum(axis=1)
+    ranked_sentences = [sentences[i] for i in np.argsort(scores, axis=0)[::-1]]
+
+    return " ".join(ranked_sentences[:sentence_count])
 
 # --- Summarize PDF Content Using TextRank ---
 summarized_chunks = []
