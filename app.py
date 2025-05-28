@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from pdf_summarizer import summarize_uploaded_pdf
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
@@ -56,6 +57,23 @@ for i, label in enumerate(task_labels):
         if st.button(f"{label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
+        # --- PDF Upload and Summarization Logic ---
+        if st.session_state["selected_task"] in [
+            "Differentiate Resource",
+            "Plan & Print",
+            "Reformat & Repurpose Resource"
+        ]:
+            uploaded_file = st.file_uploader("Upload an educational PDF to summarize", type="pdf")
+        
+            if uploaded_file:
+                st.info("Extracting and summarizing content...")
+                summaries = summarize_uploaded_pdf(uploaded_file)
+        
+                st.header("📝 Summarized Key Points")
+                for i, summary in enumerate(summaries):
+                    st.markdown(f"### Chunk {i+1}")
+                    st.markdown(summary, unsafe_allow_html=True)
+
 
 # Forcefully update the style of the selected button using JavaScript
 if st.session_state["selected_task"]:
