@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from pdf_summarizer import summarize_uploaded_pdf
+from pdf_simmariser import summarize_uploaded_pdf
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
