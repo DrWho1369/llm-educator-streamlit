@@ -2,14 +2,8 @@ import streamlit as st
 import requests
 import PyPDF2
 import nltk
-from nltk.tokenize import sent_tokenize
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 import os
 
-
-# Ensure punkt is downloaded and available
 nltk.download("punkt")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
@@ -42,56 +36,30 @@ max_words_allowed = 800
 words = user_text.strip().split()
 
 if len(words) > max_words_allowed:
-    st.error(f"Your pasted input is too long ({len(words)} words). Please shorten it to {max_words_allowed} words or upload as a PDF to use chunk-wise processing.")
+    st.error(f"Your pasted input is too long ({len(words)} words). Please shorten it to {max_words_allowed} words or upload as a PDF to use extended content.")
     allow_generate = False
 else:
     allow_generate = True
 
 # Optional PDF upload
-uploaded_file = st.file_uploader("Or upload a PDF (text will be summarised and combined)", type="pdf")
+uploaded_file = st.file_uploader("Or upload a PDF (text will be appended to your input)", type="pdf")
 
-# --- Native TextRank Summarizer using NLTK + Sklearn ---
-def textrank_summary(text, sentence_count=5):
-    sentences = sent_tokenize(text)
-    if len(sentences) <= sentence_count:
-        return text  # Not enough to summarize
-
-    vectorizer = TfidfVectorizer().fit_transform(sentences)
-    sim_matrix = cosine_similarity(vectorizer)
-    scores = sim_matrix.sum(axis=1)
-    ranked_sentences = [sentences[i] for i in np.argsort(scores, axis=0)[::-1]]
-
-    return " ".join(ranked_sentences[:sentence_count])
-
-# --- Summarize PDF Content Using TextRank ---
-summarized_chunks = []
+# --- Extract Full PDF Text ---
 all_pdf_text = ""
-
 if uploaded_file:
     try:
         reader = PyPDF2.PdfReader(uploaded_file)
         for page in reader.pages:
             page_text = page.extract_text() or ""
             all_pdf_text += page_text + "\n"
-
-        # Split full text into 1500-word chunks
-        all_words = all_pdf_text.strip().split()
-        chunk_size = 1500
-        st.markdown("### Summarizing PDF using TextRank...")
-        for i in range(0, len(all_words), chunk_size):
-            chunk = " ".join(all_words[i:i+chunk_size])
-            summary = textrank_summary(chunk, sentence_count=5)
-            summarized_chunks.append(summary)
-
-        st.success("✅ Summarisation complete.")
-
+        st.success("✅ PDF text successfully extracted.")
     except Exception as e:
         st.error(f"Error reading PDF: {e}")
 
-# --- Combine all summaries with user text ---
+# --- Combine all content ---
 combined_input = user_text.strip()
-if summarized_chunks:
-    combined_input += "\n\n[Summarised PDF Content]\n" + "\n\n".join(summarized_chunks)
+if all_pdf_text:
+    combined_input += "\n\n[PDF Content]\n" + all_pdf_text.strip()
 
 # --- Truncate if too long ---
 max_words = 1500
