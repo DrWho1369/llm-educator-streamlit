@@ -81,6 +81,7 @@ if st.session_state["selected_task"]:
     """, unsafe_allow_html=True)
 
 # Show content input only if a task is selected
+
 if "selected_task" in st.session_state:
     selected_task = st.session_state.selected_task
     st.markdown(f"### Task Selected: {selected_task}")
@@ -112,7 +113,12 @@ if "selected_task" in st.session_state:
         user_text = st.text_area("Enter your input text here:", height=300)
 
 # Track the warning state and input word count
-word_count = len(user_text.strip().split())
+# Safely handle missing user_text
+try:
+    word_count = len(user_text.strip().split())
+except NameError:
+    word_count = 0
+
 warning_placeholder = st.empty()
 
 # Only show warning if input is too short
