@@ -8,9 +8,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import os
 
-nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
-nltk.download("punkt", download_dir=nltk_data_path)
-nltk.data.path.append(nltk_data_path)
+
+# Ensure punkt is downloaded and available
+nltk.download("punkt")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
