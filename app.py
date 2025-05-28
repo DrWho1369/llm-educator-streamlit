@@ -1,10 +1,7 @@
 import streamlit as st
 import requests
 import PyPDF2
-import nltk
 import os
-
-nltk.download("punkt")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
