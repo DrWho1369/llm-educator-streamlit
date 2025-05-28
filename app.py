@@ -59,7 +59,7 @@ if all_pdf_text:
     combined_input += "\n\n[PDF Content]\n" + all_pdf_text.strip()
 
 # --- Truncate if too long ---
-max_words = 1500
+max_words = 950
 if len(combined_input.split()) > max_words:
     combined_input = " ".join(combined_input.split()[:max_words])
     st.warning(f"⚠️ Input truncated to {max_words} words to fit model limits.")
