@@ -28,15 +28,6 @@ st.subheader("Paste or Upload Your Content")
 # Text box input
 user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
 
-# --- Enforce Max Word Limit ---
-max_words_allowed = 800
-words = user_text.strip().split()
-
-if len(words) > max_words_allowed:
-    st.error(f"Your pasted input is too long ({len(words)} words). Please shorten it to {max_words_allowed} words or upload as a PDF to use extended content.")
-    allow_generate = False
-else:
-    allow_generate = True
 
 # Optional PDF upload
 uploaded_file = st.file_uploader("Or upload a PDF (text will be appended to your input)", type="pdf")
@@ -378,11 +369,9 @@ with generate_col:
     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
-if not allow_generate:
-    st.markdown("⚠️ Please shorten your input or upload a PDF to continue.")
 
 
-if allow_generate and selected_task and generate_now:
+if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
     user_input = combined_input
