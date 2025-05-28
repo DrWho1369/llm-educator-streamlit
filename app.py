@@ -1,6 +1,12 @@
 import streamlit as st
 import requests
 import PyPDF2
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.text_rank import TextRankSummarizer
+import nltk
+
+nltk.download("punkt")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
@@ -16,8 +22,6 @@ st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
 """, unsafe_allow_html=True)
 
-
-# --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
 
@@ -30,7 +34,7 @@ st.subheader("Paste or Upload Your Content")
 user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
 
 # --- Enforce Max Word Limit ---
-max_words_allowed = 900
+max_words_allowed = 800
 words = user_text.strip().split()
 
 if len(words) > max_words_allowed:
@@ -40,9 +44,16 @@ else:
     allow_generate = True
 
 # Optional PDF upload
-uploaded_file = st.file_uploader("Or upload a PDF (text will be extracted and summarised)", type="pdf")
+uploaded_file = st.file_uploader("Or upload a PDF (text will be summarised and combined)", type="pdf")
 
-# --- Summarize Entire PDF in Chunks ---
+# --- TextRank Summarizer ---
+def textrank_summary(text, sentence_count=5):
+    parser = PlaintextParser.from_string(text, Tokenizer("english"))
+    summarizer = TextRankSummarizer()
+    summary = summarizer(parser.document, sentence_count)
+    return " ".join(str(sentence) for sentence in summary)
+
+# --- Summarize PDF Content Using TextRank ---
 summarized_chunks = []
 all_pdf_text = ""
 
@@ -53,30 +64,14 @@ if uploaded_file:
             page_text = page.extract_text() or ""
             all_pdf_text += page_text + "\n"
 
-        # Chunk by 1500 words if needed
+        # Split full text into 1500-word chunks
         all_words = all_pdf_text.strip().split()
-        chunk_size = 950
-        st.markdown("### Summarizing PDF...")
+        chunk_size = 1500
+        st.markdown("### Summarizing PDF using TextRank...")
         for i in range(0, len(all_words), chunk_size):
             chunk = " ".join(all_words[i:i+chunk_size])
-            summary_prompt = f"Summarise the following for use in a classroom resource:\n\n{chunk}"
-
-            response = requests.post(
-                LLM_API_URL,
-                json={
-                    "messages": [
-                        {"role": "system", "content": "You are an expert at summarising educational materials."},
-                        {"role": "user", "content": summary_prompt.strip()}
-                    ]
-                }
-            )
-
-            try:
-                chunk_output = response.json()["choices"][0]["message"]["content"]
-            except Exception as e:
-                chunk_output = f"❌ Error: {e}"
-
-            summarized_chunks.append(chunk_output)
+            summary = textrank_summary(chunk, sentence_count=5)
+            summarized_chunks.append(summary)
 
         st.success("✅ Summarisation complete.")
 
@@ -89,7 +84,7 @@ if summarized_chunks:
     combined_input += "\n\n[Summarised PDF Content]\n" + "\n\n".join(summarized_chunks)
 
 # --- Truncate if too long ---
-max_words = 950
+max_words = 1500
 if len(combined_input.split()) > max_words:
     combined_input = " ".join(combined_input.split()[:max_words])
     st.warning(f"⚠️ Input truncated to {max_words} words to fit model limits.")
