@@ -82,7 +82,7 @@ if st.session_state["selected_task"]:
 
 # Show content input only if a task is selected
 
-if "selected_task" in st.session_state:
+if st.session_state["selected_task"]:
     selected_task = st.session_state.selected_task
     st.markdown(f"### Task Selected: {selected_task}")
 
