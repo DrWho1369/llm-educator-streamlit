@@ -3,8 +3,6 @@ import requests
 from pdf_summariser import summarize_uploaded_pdf
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
-input_method = None
-pdf_text = None
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
@@ -97,6 +95,7 @@ if "selected_task" in st.session_state:
 
     input_method = None
     pdf_text = None
+    user_input = ""
 
     if allow_pdf_upload:
         input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
