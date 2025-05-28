@@ -6,8 +6,11 @@ from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import os
 
-nltk.download("punkt")
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+nltk.download("punkt", download_dir=nltk_data_path)
+nltk.data.path.append(nltk_data_path)
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
