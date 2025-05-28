@@ -41,25 +41,24 @@ else:
 
 # Optional PDF upload
 uploaded_file = st.file_uploader("Or upload a PDF (text will be extracted and combined)", type="pdf")
-
-# --- Chunk and Summarize PDF Pages ---
+# --- Summarize Entire PDF in Chunks ---
 summarized_chunks = []
-progress_bar = st.empty()
+all_pdf_text = ""
 
 if uploaded_file:
     try:
         reader = PyPDF2.PdfReader(uploaded_file)
-        total_pages = len(reader.pages)
-
-        st.markdown("### Step 1: Summarizing each page of the PDF...")
-
-        for i, page in enumerate(reader.pages):
+        for page in reader.pages:
             page_text = page.extract_text() or ""
-            if not page_text.strip():
-                continue
+            all_pdf_text += page_text + "\n"
 
-            page_input = f"[Page {i+1}]\n{page_text.strip()}"
-            summary_prompt = f"Summarise the following for use in a classroom resource:\n\n{page_input}"
+        # Chunk by 1500 words if needed
+        all_words = all_pdf_text.strip().split()
+        chunk_size = 1500
+        st.markdown("### Summarizing PDF...")
+        for i in range(0, len(all_words), chunk_size):
+            chunk = " ".join(all_words[i:i+chunk_size])
+            summary_prompt = f"Summarise the following for use in a classroom resource:\n\n{chunk}"
 
             response = requests.post(
                 LLM_API_URL,
@@ -74,10 +73,9 @@ if uploaded_file:
             try:
                 chunk_output = response.json()["choices"][0]["message"]["content"]
             except Exception as e:
-                chunk_output = f"[Page {i+1}] ❌ Error: {e}"
+                chunk_output = f"❌ Error: {e}"
 
             summarized_chunks.append(chunk_output)
-            progress_bar.progress((i + 1) / total_pages)
 
         st.success("✅ Summarisation complete.")
 
