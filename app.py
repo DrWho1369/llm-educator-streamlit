@@ -24,6 +24,15 @@ task_descriptions = {
     "Reformat & Repurpose Resource": "Convert into flashcards, MCQs, etc."
 }
 
+st.subheader("Choose a task:")
+cols = st.columns(4)
+for i, label in enumerate(task_labels):
+    with cols[i]:
+        button_class = "task-button-selected" if st.session_state.get("selected_task") == label else "task-button"
+        if st.button(f"{label}", key=label, help=task_descriptions[label]):
+            st.session_state["selected_task"] = label
+            st.session_state["selected_subtask"] = None
+
 # Display buttons in columns
 
 st.markdown("""
@@ -57,18 +66,10 @@ if "selected_subtask" not in st.session_state:
     st.session_state["selected_subtask"] = None
 
 
-st.subheader("Choose a task:")
 
 # Show nothing else if no task is selected yet
 if not st.session_state["selected_task"]:
     st.stop()
-cols = st.columns(4)
-for i, label in enumerate(task_labels):
-    with cols[i]:
-        button_class = "task-button-selected" if st.session_state.get("selected_task") == label else "task-button"
-        if st.button(f"{label}", key=label, help=task_descriptions[label]):
-            st.session_state["selected_task"] = label
-            st.session_state["selected_subtask"] = None
 
 
 # Forcefully update the style of the selected button using JavaScript
