@@ -49,6 +49,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+# --- Initialize state for task highlight ---
+if "selected_task" not in st.session_state:
+    st.session_state["selected_task"] = None
+
+if "selected_subtask" not in st.session_state:
+    st.session_state["selected_subtask"] = None
+
+
 st.subheader("Choose a task:")
 cols = st.columns(4)
 for i, label in enumerate(task_labels):
@@ -118,13 +126,6 @@ if "selected_task" in st.session_state:
 
     if input_method == "Text Input":
         user_text = st.text_area("Enter your input text here:", height=300)
-
-# --- Initialize state for task highlight ---
-if "selected_task" not in st.session_state:
-    st.session_state["selected_task"] = None
-
-if "selected_subtask" not in st.session_state:
-    st.session_state["selected_subtask"] = None
 
 # Track the warning state and input word count
 word_count = len(user_text.strip().split())
