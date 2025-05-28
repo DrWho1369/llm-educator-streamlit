@@ -5,15 +5,54 @@ LLM_API_URL = st.secrets["LLM_API_URL"]
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
+
 st.title("OI-TA")
-st.markdown("""
-<div style="padding:0.5rem 1rem; background-color:#ecf0f1; border-left:5px solid #3498db; font-size:1rem; color:#2c3e50;">
-    Empowering every teacher, AI-Powered Support for Educators.
-</div>
-""", unsafe_allow_html=True)
-st.markdown("""
-    <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
-""", unsafe_allow_html=True)
+
+# --- Available task buttons ---
+tasks = [
+    "Differentiate Resource",
+    "Generate Parent Message",
+    "Plan & Print",
+    "Reformat & Repurpose Resource"
+]
+
+# Buttons to select the task
+st.subheader("Choose a task:")
+for task in tasks:
+    if st.button(task):
+        st.session_state.selected_task = task
+
+# Show content input only if a task is selected
+if "selected_task" in st.session_state:
+    selected_task = st.session_state.selected_task
+    st.markdown(f"### Task Selected: {selected_task}")
+
+    # For 3 of the tasks, show PDF upload as well
+    allow_pdf_upload = selected_task in [
+        "Differentiate Resource",
+        "Plan & Print",
+        "Reformat & Repurpose Resource"
+    ]
+
+    input_method = None
+    pdf_text = None
+
+    if allow_pdf_upload:
+        input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
+
+        if input_method == "Upload PDF":
+            uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+            if uploaded_file:
+                import PyPDF2
+                reader = PyPDF2.PdfReader(uploaded_file)
+                pdf_text = "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
+                st.text_area("Extracted PDF Text", value=pdf_text, height=300)
+    else:
+        input_method = "Text Input"
+
+    if input_method == "Text Input":
+        user_text = st.text_area("Enter your input text here:", height=300)
+
 # --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
