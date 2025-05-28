@@ -6,7 +6,8 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.text_rank import TextRankSummarizer
 import nltk
 
-nltk.download("punkt")
+nltk.data.path.append("/tmp")
+nltk.download("punkt", download_dir="/tmp")
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
