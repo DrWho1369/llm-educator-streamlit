@@ -1,5 +1,2 @@
 streamlit
 requests
-PyPDF2
-nltk
-scikit-learn
