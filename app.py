@@ -398,6 +398,14 @@ with generate_col:
 if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
+    # Ensure user_input is set correctly based on input method
+    if input_method == "Upload PDF" and pdf_text:
+        user_input = pdf_text
+    elif input_method == "Text Input":
+        pass  # user_input is already set
+    else:
+        user_input = ""
+
     user_input = f"User Input: {user_input}"
 
     user_prompt_template = user_prompts[task_key]
