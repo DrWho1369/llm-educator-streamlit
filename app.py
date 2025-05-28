@@ -40,7 +40,8 @@ else:
     allow_generate = True
 
 # Optional PDF upload
-uploaded_file = st.file_uploader("Or upload a PDF (text will be extracted and combined)", type="pdf")
+uploaded_file = st.file_uploader("Or upload a PDF (text will be extracted and summarised)", type="pdf")
+
 # --- Summarize Entire PDF in Chunks ---
 summarized_chunks = []
 all_pdf_text = ""
@@ -88,7 +89,7 @@ if summarized_chunks:
     combined_input += "\n\n[Summarised PDF Content]\n" + "\n\n".join(summarized_chunks)
 
 # --- Truncate if too long ---
-max_words = 1500
+max_words = 950
 if len(combined_input.split()) > max_words:
     combined_input = " ".join(combined_input.split()[:max_words])
     st.warning(f"⚠️ Input truncated to {max_words} words to fit model limits.")
