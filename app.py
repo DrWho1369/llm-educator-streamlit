@@ -71,8 +71,11 @@ for i, label in enumerate(task_labels):
             "Plan & Print",
             "Reformat & Repurpose Resource"
         ]:
-            uploaded_file = st.file_uploader("Upload an educational PDF to summarize", type="pdf")
-        
+            uploaded_file = st.file_uploader(
+                "Upload an educational PDF to summarize",
+                type="pdf",
+                key="pdf_uploader_summary"
+            )        
             if uploaded_file:
                 st.info("Extracting and summarizing content...")
                 summaries = summarize_uploaded_pdf(uploaded_file)
