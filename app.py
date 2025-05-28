@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import PyPDF2
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
@@ -14,6 +15,8 @@ st.markdown("""
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
 """, unsafe_allow_html=True)
+
+
 # --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
@@ -21,19 +24,76 @@ if "selected_task" not in st.session_state:
 if "selected_subtask" not in st.session_state:
     st.session_state["selected_subtask"] = None
 
-# --- User Input ---
-st.subheader("Paste Your Content")
-user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
+st.subheader("Paste or Upload Your Content")
 
-# Track the warning state and input word count
-word_count = len(user_input.strip().split())
-warning_placeholder = st.empty()
+# Text box input
+user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
 
-# Only show warning if input is too short
-if word_count < 10:
-    warning_placeholder.warning("✏️ Please try to expand your input with more context so the AI can generate a meaningful response.")
+# --- Enforce Max Word Limit ---
+max_words_allowed = 800
+words = user_text.strip().split()
+
+if len(words) > max_words_allowed:
+    st.error(f"Your pasted input is too long ({len(words)} words). Please shorten it to {max_words_allowed} words or upload as a PDF to use chunk-wise processing.")
+    allow_generate = False
 else:
-    warning_placeholder.empty()  # Clears the warning once the condition is met
+    allow_generate = True
+
+# Optional PDF upload
+uploaded_file = st.file_uploader("Or upload a PDF (text will be extracted and combined)", type="pdf")
+
+# --- Chunk and Summarize PDF Pages ---
+summarized_chunks = []
+progress_bar = st.empty()
+
+if uploaded_file:
+    try:
+        reader = PyPDF2.PdfReader(uploaded_file)
+        total_pages = len(reader.pages)
+
+        st.markdown("### Step 1: Summarizing each page of the PDF...")
+
+        for i, page in enumerate(reader.pages):
+            page_text = page.extract_text() or ""
+            if not page_text.strip():
+                continue
+
+            page_input = f"[Page {i+1}]\n{page_text.strip()}"
+            summary_prompt = f"Summarise the following for use in a classroom resource:\n\n{page_input}"
+
+            response = requests.post(
+                LLM_API_URL,
+                json={
+                    "messages": [
+                        {"role": "system", "content": "You are an expert at summarising educational materials."},
+                        {"role": "user", "content": summary_prompt.strip()}
+                    ]
+                }
+            )
+
+            try:
+                chunk_output = response.json()["choices"][0]["message"]["content"]
+            except Exception as e:
+                chunk_output = f"[Page {i+1}] ❌ Error: {e}"
+
+            summarized_chunks.append(chunk_output)
+            progress_bar.progress((i + 1) / total_pages)
+
+        st.success("✅ Summarisation complete.")
+
+    except Exception as e:
+        st.error(f"Error reading PDF: {e}")
+
+# --- Combine all summaries with user text ---
+combined_input = user_text.strip()
+if summarized_chunks:
+    combined_input += "\n\n[Summarised PDF Content]\n" + "\n\n".join(summarized_chunks)
+
+# --- Truncate if too long ---
+max_words = 1500
+if len(combined_input.split()) > max_words:
+    combined_input = " ".join(combined_input.split()[:max_words])
+    st.warning(f"⚠️ Input truncated to {max_words} words to fit model limits.")
 
 # --- Task Selection Buttons ---
 st.markdown("""
@@ -67,7 +127,7 @@ Topic: See user input message.
 Use only the content provided above as your base material. Do not fabricate unrelated facts.
 
 If the topic is very short (e.g. “Computers” or “Volcanoes”), you must:
-1. Interpret the topic in a way that makes sense for curriculum and age level.
+1. Interpret the topic in a way that makes sense for the curriculum and age level.
 2. Break it into logical, curriculum-appropriate subtopics.
 3. Clearly define your interpreted scope before writing.
 
@@ -349,11 +409,14 @@ with generate_col:
     generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
+if not allow_generate:
+    st.markdown("⚠️ Please shorten your input or upload a PDF to continue.")
 
-if selected_task and generate_now:
+
+if allow_generate and selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
-    user_input = f"User Input: {user_input}"
+    user_input = combined_input
 
     user_prompt_template = user_prompts[task_key]
     user_prompt = user_prompt_template.format(
@@ -367,6 +430,11 @@ if selected_task and generate_now:
         st.warning("⚠️ Please enter some content above.")
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
+            max_words = 1500
+            if len(user_input.split()) > max_words:
+                user_input = " ".join(user_input.split()[:max_words])
+                st.warning(f"⚠️ Input truncated to first {max_words} words to fit model limits.")
+            
             response = requests.post(
                 LLM_API_URL,
                 json={
