@@ -1,7 +1,5 @@
 import streamlit as st
 import requests
-import PyPDF2
-import os
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
@@ -16,44 +14,26 @@ st.markdown("""
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
 """, unsafe_allow_html=True)
-
+# --- Initialize state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
 
 if "selected_subtask" not in st.session_state:
     st.session_state["selected_subtask"] = None
 
-st.subheader("Paste or Upload Your Content")
+# --- User Input ---
+st.subheader("Paste Your Content")
+user_input = st.text_area("Add here your Lesson content, Parent update, or any material you wish to convert:", height=250)
 
-# Text box input
-user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
+# Track the warning state and input word count
+word_count = len(user_input.strip().split())
+warning_placeholder = st.empty()
 
-
-# Optional PDF upload
-uploaded_file = st.file_uploader("Or upload a PDF (text will be appended to your input)", type="pdf")
-
-# --- Extract Full PDF Text ---
-all_pdf_text = ""
-if uploaded_file:
-    try:
-        reader = PyPDF2.PdfReader(uploaded_file)
-        for page in reader.pages:
-            page_text = page.extract_text() or ""
-            all_pdf_text += page_text + "\n"
-        st.success("✅ PDF text successfully extracted.")
-    except Exception as e:
-        st.error(f"Error reading PDF: {e}")
-
-# --- Combine all content ---
-combined_input = user_text.strip()
-if all_pdf_text:
-    combined_input += "\n\n[PDF Content]\n" + all_pdf_text.strip()
-
-# --- Truncate if too long ---
-max_words = 950
-if len(combined_input.split()) > max_words:
-    combined_input = " ".join(combined_input.split()[:max_words])
-    st.warning(f"⚠️ Input truncated to {max_words} words to fit model limits.")
+# Only show warning if input is too short
+if word_count < 10:
+    warning_placeholder.warning("✏️ Please try to expand your input with more context so the AI can generate a meaningful response.")
+else:
+    warning_placeholder.empty()  # Clears the warning once the condition is met
 
 # --- Task Selection Buttons ---
 st.markdown("""
@@ -87,7 +67,7 @@ Topic: See user input message.
 Use only the content provided above as your base material. Do not fabricate unrelated facts.
 
 If the topic is very short (e.g. “Computers” or “Volcanoes”), you must:
-1. Interpret the topic in a way that makes sense for the curriculum and age level.
+1. Interpret the topic in a way that makes sense for curriculum and age level.
 2. Break it into logical, curriculum-appropriate subtopics.
 3. Clearly define your interpreted scope before writing.
 
@@ -370,11 +350,10 @@ with generate_col:
     st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
 
-
 if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
-    user_input = combined_input
+    user_input = f"User Input: {user_input}"
 
     user_prompt_template = user_prompts[task_key]
     user_prompt = user_prompt_template.format(
@@ -388,11 +367,6 @@ if selected_task and generate_now:
         st.warning("⚠️ Please enter some content above.")
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
-            max_words = 1500
-            if len(user_input.split()) > max_words:
-                user_input = " ".join(user_input.split()[:max_words])
-                st.warning(f"⚠️ Input truncated to first {max_words} words to fit model limits.")
-            
             response = requests.post(
                 LLM_API_URL,
                 json={
@@ -434,4 +408,3 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
