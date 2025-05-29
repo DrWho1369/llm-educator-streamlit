@@ -29,6 +29,15 @@ task_descriptions = {
 
 st.subheader("Choose a task:")
 
+# --- Initialize state for task highlight ---
+if "selected_task" not in st.session_state:
+    st.session_state["selected_task"] = None
+
+if "selected_subtask" not in st.session_state:
+    st.session_state["selected_subtask"] = None
+
+
+
 cols_per_row = 4
 for i, label in enumerate(task_labels):
     if i % cols_per_row == 0:
@@ -62,14 +71,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-# --- Initialize state for task highlight ---
-if "selected_task" not in st.session_state:
-    st.session_state["selected_task"] = None
-
-if "selected_subtask" not in st.session_state:
-    st.session_state["selected_subtask"] = None
 
 
 
