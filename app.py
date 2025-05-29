@@ -114,12 +114,11 @@ if st.session_state["selected_task"]:
     if input_method == "Upload PDF":
         uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
         if uploaded_file:
-            reader = PyPDF2.PdfReader(uploaded_file)
-            pdf_text = "\n".join(
-                page.extract_text() or "" for page in reader.pages
-            )
-            st.text_area("Extracted PDF Text", value=pdf_text, height=300)
-            user_input = pdf_text  # feed this to the LLM below
+            summarized_chunks = summarize_uploaded_pdf(uploaded_file)
+            summarized_text = "\n".join(summarized_chunks)
+            st.text_area("Summarized PDF Text", value=summarized_text, height=300)
+            user_input = summarized_text
+
 
     # — Handle text input path —
     elif input_method == "Text Input":
