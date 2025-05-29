@@ -130,21 +130,6 @@ if st.session_state["selected_task"]:
     if word_count < 10:
         st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
 
-# Track the warning state and input word count
-# Safely handle missing user_input
-try:
-    word_count = len(user_input.strip().split())
-except:
-    word_count = 0
-
-warning_placeholder = st.empty()
-
-# Only show warning if input is too short
-if word_count < 10:
-    warning_placeholder.warning("✏️ Please try to expand your input with more context so the AI can generate a meaningful response.")
-else:
-    warning_placeholder.empty()  # Clears the warning once the condition is met
-
 # --- Task Selection Buttons ---
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
