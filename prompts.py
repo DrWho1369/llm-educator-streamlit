@@ -185,9 +185,9 @@ Return only the full activity as structured text.
 Create {num_templates} distinct student-friendly emotion check-in templates that include:
 
 1. A clear heading or title
-2. A sentence stem for identifying feelings (e.g., “Today I feel: [ ]” with checkboxes for emotions)
-3. A short sentence stem for explanation (e.g., “I feel this way because: __________”)
-4. A support request prompt (e.g., “I need: [ ]” with options like [A break], [To talk to someone], [Nothing right now])
+2. A sentence stem for identifying feelings (with checkboxes for emotions)
+3. A short sentence stem for explanation
+4. A support request prompt (e.g., “I need: [ ]” with options to select)
 
 Guidelines:
 - Use simple, age-appropriate vocabulary.
