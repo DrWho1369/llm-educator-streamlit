@@ -64,8 +64,19 @@ Extract {i+1}:
     return prompts
 
 def call_llm_api(prompt, api_url):
-    response = requests.post(api_url, json={"prompt": prompt})
-    return response.json().get("summary", "⚠️ Error: No summary returned.")
+    payload = {
+        "messages": [
+            {"role": "system", "content": "You are an assistant summarizing educational content for teachers."},
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    response = requests.post(api_url, json=payload)
+
+    try:
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"⚠️ Error parsing LLM response: {e}\n{response.text}"
 
 def summarize_uploaded_pdf(uploaded_file, api_url):
     paragraphs = extract_pdf_text(uploaded_file)
