@@ -28,10 +28,13 @@ task_descriptions = {
 }
 
 st.subheader("Choose a task:")
-cols = st.columns(4)
+
+cols_per_row = 4
 for i, label in enumerate(task_labels):
-    with cols[i]:
-        button_class = "task-button-selected" if st.session_state.get("selected_task") == label else "task-button"
+    if i % cols_per_row == 0:
+        cols = st.columns(cols_per_row)
+    with cols[i % cols_per_row]:
+        button_class = "task-button-selected" if st.session_state["selected_task"] == label else "task-button"
         if st.button(f"{label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
