@@ -182,7 +182,7 @@ Constraints:
 Return only the full activity as structured text.
 """,
     "Emotion Check-in Templates": """
-Create {num_templates} student-friendly emotion check-in templates that include:
+Create {num_templates} distinct student-friendly emotion check-in templates that include:
 
 1. A clear heading or title
 2. A sentence stem for identifying feelings (e.g., “Today I feel: [ ]” with checkboxes for emotions)
@@ -196,6 +196,6 @@ Guidelines:
 - Keep formatting clean and clear (bullets, brackets, spacing).
 - Do NOT invent fictional names or examples.
 
-Return only the final formatted {num_templates} templates.
+Return only the final independent formatted {num_templates} templates.
 """
 }
