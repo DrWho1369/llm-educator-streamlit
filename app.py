@@ -138,12 +138,6 @@ if st.session_state["selected_task"]:
     if word_count < 10:
         st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
 
-# --- Task Selection Buttons ---
-st.markdown("""
-    <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
-""", unsafe_allow_html=True)
-st.subheader("Choose a Task")
-
 
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in adaptive instruction. Your job is to rewrite classroom materials in three distinct formats: simplified, scaffolded, and challenge versions. You always follow the teacher’s original intent and never add unrelated content.",
