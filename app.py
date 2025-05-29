@@ -129,15 +129,14 @@ if st.session_state["selected_task"]:
     # — Handle text input path —
     elif input_method == "Text Input":
         if st.session_state.get("selected_task") != "Emotion Check-in Templates":
-            user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
+            user_input = st.text_area("Paste lesson content, parent update, etc:", height=250)
+            word_count = len(user_input.split())
+            if word_count < 10:
+                st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
         else:
-            user_text = ""
-
-    # From here on, use `user_input` for word counts, validation, and final API call
-    word_count = len(user_input.split())
-    if word_count < 10:
-        st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
-
+            user_input = ""
+    
+        
 
 system_prompts = {
     "Differentiate Resource": "You are a specialist teaching assistant trained in adaptive instruction. Your job is to rewrite classroom materials in three distinct formats: simplified, scaffolded, and challenge versions. You always follow the teacher’s original intent and never add unrelated content.",
