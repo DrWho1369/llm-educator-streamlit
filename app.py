@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import PyPDF2
 from pdf_summariser import summarize_uploaded_pdf
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
@@ -88,45 +89,51 @@ if st.session_state["selected_task"]:
 # Show content input only if a task is selected
 
 if st.session_state["selected_task"]:
-    selected_task = st.session_state.selected_task
+    selected_task = st.session_state["selected_task"]
     st.markdown(f"### Task Selected: {selected_task}")
 
-    # For 3 of the tasks, show PDF upload as well
     allow_pdf_upload = selected_task in [
         "Differentiate Resource",
         "Plan & Print",
-        "Reformat & Repurpose Resource"
+        "Reformat & Repurpose Resource",
     ]
 
+    # — Initialize shared variables —
     input_method = None
-    pdf_text = None
     user_input = ""
+    uploaded_file = None
+    pdf_text = None
 
+    # — Let user pick input method if PDF is allowed —
     if allow_pdf_upload:
         input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
-
-        if input_method == "Upload PDF":
-            if uploaded_file:
-                import PyPDF2
-                reader = PyPDF2.PdfReader(uploaded_file)
-                pdf_text = "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
-                user_input = pdf_text
-            uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
-            if uploaded_file:
-                import PyPDF2
-                reader = PyPDF2.PdfReader(uploaded_file)
-                pdf_text = "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
-                st.text_area("Extracted PDF Text", value=pdf_text, height=300)
     else:
         input_method = "Text Input"
 
-    if input_method == "Text Input":
-        user_text = st.text_area("Enter your input text here:", height=300)
+    # — Handle PDF upload path —
+    if input_method == "Upload PDF":
+        uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
+        if uploaded_file:
+            reader = PyPDF2.PdfReader(uploaded_file)
+            pdf_text = "\n".join(
+                page.extract_text() or "" for page in reader.pages
+            )
+            st.text_area("Extracted PDF Text", value=pdf_text, height=300)
+            user_input = pdf_text  # feed this to the LLM below
+
+    # — Handle text input path —
+    elif input_method == "Text Input":
+        user_input = st.text_area("Enter your input text here:", height=300)
+
+    # From here on, use `user_input` for word counts, validation, and final API call
+    word_count = len(user_input.split())
+    if word_count < 10:
+        st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
 
 # Track the warning state and input word count
-# Safely handle missing user_text
+# Safely handle missing user_input
 try:
-    word_count = len(user_text.strip().split())
+    word_count = len(user_input.strip().split())
 except:
     word_count = 0
 
@@ -407,14 +414,7 @@ with generate_col:
 
 if selected_task and generate_now:
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
-    system_prompt = system_prompts[task_key]
-    # Ensure user_input is set correctly based on input method
-    if input_method == "Upload PDF" and pdf_text:
-        user_input = pdf_text
-    elif input_method == "Text Input":
-        pass  # user_input is already set
-    else:
-        user_input = ""
+    system_prompt = system_prompts[task_key] 
 
     user_input = f"User Input: {user_input}"
 
