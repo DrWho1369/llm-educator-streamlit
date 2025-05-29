@@ -6,7 +6,7 @@ import requests
 
 CHUNK_TOKEN_LIMIT = 1000
 OVERLAP_TOKENS = 100
-LLM_API_URL = "http://your-llama-api-endpoint.com/generate"  # replace as needed
+LLM_API_URL =  st.secrets["LLM_API_URL"]  
 
 def count_tokens(text, model="gpt-3.5-turbo"):
     enc = tiktoken.encoding_for_model(model)
