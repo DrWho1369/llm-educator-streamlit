@@ -2,7 +2,9 @@ import streamlit as st
 import requests
 import PyPDF2
 from pdf_summariser import summarize_uploaded_pdf
+from prompts.py import *
 
+# --- Set API call URL ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
 # --- Page Config ---
