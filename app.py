@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import PyPDF2
-from pdf_summariser import summarize_uploaded_pdf
+from pdf_summariser import summarize_uploaded_pdf_async
 from prompts import system_prompts, user_prompts
 
 # --- Set API call URL ---
@@ -120,7 +120,7 @@ if st.session_state["selected_task"]:
     if input_method == "Upload PDF":
         uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
         if uploaded_file:
-            summarized_chunks = summarize_uploaded_pdf(uploaded_file, LLM_API_URL)
+            summarized_chunks = summarize_uploaded_pdf_async(uploaded_file, LLM_API_URL)
             summarized_text = "\n".join(summarized_chunks)
             st.text_area("Summarized PDF Text", value=summarized_text, height=300)
             user_input = summarized_text
