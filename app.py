@@ -145,7 +145,7 @@ system_prompts = {
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students. You will always create num_mcq questions",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
     "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources.",
-    "You are an empathetic classroom assistant helping young students express their feelings in a structured, simple, and supportive format. Your job is to create easy-to-use mood check-in templates."
+    "Emotion Check-in Templates": "You are an empathetic classroom assistant helping young students express their feelings in a structured, simple, and supportive format. Your job is to create easy-to-use mood check-in templates."
 }
 
 
