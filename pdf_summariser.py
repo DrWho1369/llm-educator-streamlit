@@ -1,5 +1,6 @@
 # pdf_summarizer.py
-
+import asyncio
+import aiohttp
 import fitz  # PyMuPDF
 import tiktoken
 import requests
@@ -196,24 +197,26 @@ Extract {i+1}:
         prompts.append(prompt)
     return prompts
 
-def call_llm_api(prompt, api_url):
+
+async def call_llm_api_async(prompt, api_url):
     payload = {
         "messages": [
             {"role": "system", "content": "You are an assistant summarizing educational content for teachers."},
             {"role": "user", "content": prompt}
         ]
     }
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.post(api_url, json=payload) as response:
+                response.raise_for_status()
+                data = await response.json()
+                return data["choices"][0]["message"]["content"]
+        except aiohttp.ClientError as e:
+            return f"⚠️ Request error: {e}"
+        except (KeyError, IndexError) as e:
+            return f"⚠️ Parsing error: {e}"
 
-    try:
-        response = requests.post(api_url, json=payload)
-        response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
-    except requests.RequestException as req_err:
-        return f"⚠️ Request error: {req_err}"
-    except (KeyError, IndexError) as parse_err:
-        return f"⚠️ Parsing error: {parse_err}\n{response.text if 'response' in locals() else ''}"
-
-def summarize_uploaded_pdf(uploaded_file, api_url):
+async def summarize_uploaded_pdf_async(uploaded_file, api_url):
     paragraphs = extract_pdf_text(uploaded_file)
     if not paragraphs:
         return ["⚠️ No text found in uploaded PDF."]
@@ -221,8 +224,37 @@ def summarize_uploaded_pdf(uploaded_file, api_url):
     chunks = chunk_text(paragraphs)
     prompts = prepare_prompts(chunks)
 
-    summaries = []
-    for prompt in prompts:
-        summary = call_llm_api(prompt, api_url)
-        summaries.append(summary)
+    tasks = [call_llm_api_async(prompt, api_url) for prompt in prompts]
+    summaries = await asyncio.gather(*tasks)
     return summaries
+
+# def call_llm_api(prompt, api_url):
+#     payload = {
+#         "messages": [
+#             {"role": "system", "content": "You are an assistant summarizing educational content for teachers."},
+#             {"role": "user", "content": prompt}
+#         ]
+#     }
+
+#     try:
+#         response = requests.post(api_url, json=payload)
+#         response.raise_for_status()
+#         return response.json()["choices"][0]["message"]["content"]
+#     except requests.RequestException as req_err:
+#         return f"⚠️ Request error: {req_err}"
+#     except (KeyError, IndexError) as parse_err:
+#         return f"⚠️ Parsing error: {parse_err}\n{response.text if 'response' in locals() else ''}"
+
+# def summarize_uploaded_pdf(uploaded_file, api_url):
+#     paragraphs = extract_pdf_text(uploaded_file)
+#     if not paragraphs:
+#         return ["⚠️ No text found in uploaded PDF."]
+
+#     chunks = chunk_text(paragraphs)
+#     prompts = prepare_prompts(chunks)
+
+#     summaries = []
+#     for prompt in prompts:
+#         summary = call_llm_api(prompt, api_url)
+#         summaries.append(summary)
+#     return summaries
