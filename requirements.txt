@@ -3,3 +3,5 @@ requests
 PyMuPDF
 tiktoken
 PyPDF2
+asyncio
+aiohttp
