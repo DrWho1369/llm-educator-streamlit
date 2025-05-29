@@ -6,7 +6,6 @@ import requests
 
 CHUNK_TOKEN_LIMIT = 1000
 OVERLAP_TOKENS = 100
-LLM_API_URL =  st.secrets["LLM_API_URL"]  
 
 def count_tokens(text, model="gpt-3.5-turbo"):
     enc = tiktoken.encoding_for_model(model)
@@ -64,17 +63,17 @@ Extract {i+1}:
         prompts.append(prompt)
     return prompts
 
-def call_llm_api(prompt):
-    response = requests.post(LLM_API_URL, json={"prompt": prompt})
+def call_llm_api(prompt, api_url):
+    response = requests.post(api_url, json={"prompt": prompt})
     return response.json().get("summary", "⚠️ Error: No summary returned.")
 
-def summarize_uploaded_pdf(uploaded_file):
+def summarize_uploaded_pdf(uploaded_file, api_url):
     paragraphs = extract_pdf_text(uploaded_file)
     chunks = chunk_text(paragraphs)
     prompts = prepare_prompts(chunks)
 
     summaries = []
     for prompt in prompts:
-        summary = call_llm_api(prompt)
+        summary = call_llm_api(prompt, api_url)
         summaries.append(summary)
     return summaries
