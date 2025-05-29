@@ -128,7 +128,10 @@ if st.session_state["selected_task"]:
 
     # — Handle text input path —
     elif input_method == "Text Input":
-        user_input = st.text_area("Enter your input text here:", height=300)
+        if st.session_state.get("selected_task") != "Emotion Check-in Templates":
+            user_text = st.text_area("Paste lesson content, parent update, etc:", height=250)
+        else:
+            user_text = ""
 
     # From here on, use `user_input` for word counts, validation, and final API call
     word_count = len(user_input.split())
