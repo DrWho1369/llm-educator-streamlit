@@ -137,7 +137,7 @@ st.subheader("Choose a Task")
 
 
 system_prompts = {
-    "Differentiate Resource": "You are a specialist teaching assistant trained in curriculum adaptation. Your role is to adjust educational content to suit different learner levels.",
+    "Differentiate Resource": "You are a specialist teaching assistant trained in adaptive instruction. Your job is to rewrite classroom materials in three distinct formats: simplified, scaffolded, and challenge versions. You always follow the teacher’s original intent and never add unrelated content.",
     "Plan & Print": "You are an expert curriculum designer who creates age-appropriate lesson materials. Your task is to help teachers prepare for a topic by generating a topic guide, a structured lesson plan, and a slide-based presentation.",
     "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Maintain a respectful, human tone that suits the nature of the user input message (positive or negative).",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students. You will always create num_mcq questions",
@@ -147,43 +147,46 @@ system_prompts = {
 
 
 user_prompts = {
-"Differentiate Resource": """
-Your task is to differentiate the following educational content into three versions for different ability levels. 
+"Differentiate Resource": """Your task is to transform the previous teaching content input message into **three differentiated versions**, each tailored to a different student need:
 
-Topic: See user input message.
+1. **Simplified Version**  
+   - Use **simpler vocabulary**, shorter sentences, and direct language.  
+   - Aim for a **lower reading age**.  
+   - Remove complex or abstract phrasing.  
 
-Use only the content provided above as your base material. Do not fabricate unrelated facts.
+2. **Scaffolded Version**  
+   - Keep the original vocabulary, but **add sentence starters**, **guiding questions**, and a **vocabulary box**.  
+   - The goal is to support students who benefit from extra structure.
 
-If the topic is very short (e.g. “Computers” or “Volcanoes”), you must:
-1. Interpret the topic in a way that makes sense for curriculum and age level.
-2. Break it into logical, curriculum-appropriate subtopics.
-3. Clearly define your interpreted scope before writing.
-
-Create 3 differentiated versions of the content:
-1. **Advanced Level** – For high-attaining or older students. Use precise terminology, explore nuance, and include critical thinking prompts or real-world applications.
-2. **Middle Level** – For general learners. Use mid-level vocabulary, include relevant examples, and explain key ideas clearly.
-3. **Junior Level** – For younger or lower-ability students. Use simple language, short sentences, concrete examples or metaphors. Make it playful and friendly.
-
-For each level, follow this exact structure:
----
-
-### Level Name
-
-**Intent:** [1 sentence summary of how this level is adapted]
-
-**Summary for Teacher:**
-- [3–5 bullet points summarising the key ideas this level covers]
-- [Include important terms or phrases that a teacher should highlight]
-
-**Content:**
-[The rewritten content suitable for this level.]
+3. **Challenge Version**  
+   - Expand on the original ideas to encourage **critical thinking** or **real-world application**.  
+   - Include **stretch questions**, comparisons, or deeper analysis.  
+   - Use more **sophisticated vocabulary** and academic tone.
 
 ---
 
-**Important:** Return the sections in this order:  
-1. Advanced Level  
-2. Middle Level  
-3. Junior Level
+**Important Guidelines:**
+- Use only the content provided in the input — **do not add unrelated facts**.
+- If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
+- Format each version using this structure:
+
+### [Version Name]
+
+**Intent:** One sentence summary of how this version supports learners.
+
+**Teacher Summary:**
+- Bullet points describing how and why the version was adapted.
+- Highlight key features, vocabulary, or focus.
+
+**Student-Facing Version:**
+[Rewritten content suitable for students.]
+
+---
+
+Return the versions in this exact order:   
+1. Challenge Version
+2. Scaffolded Version 
+3. Simplified Version  
 """
 ,
    "Plan & Print": """You are helping a teacher prepare a full lesson plan and slides based on a single topic. Use the information in the user inpput message to design the lesson plan and student slides.
