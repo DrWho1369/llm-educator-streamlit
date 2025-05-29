@@ -15,14 +15,16 @@ task_labels = [
     "Differentiate Resource",
     "Generate Parent Message",
     "Plan & Print",
-    "Reformat & Repurpose Resource"
+    "Reformat & Repurpose Resource",
+    "Emotion Check-in Templates"
 ]
 
 task_descriptions = {
     "Differentiate Resource": "Tailor a teaching resource into 3 ability levels",
     "Generate Parent Message": "Create a message to update parents",
     "Plan & Print": "Generate lesson plan + printable resources",
-    "Reformat & Repurpose Resource": "Convert into flashcards, MCQs, etc."
+    "Reformat & Repurpose Resource": "Convert into flashcards, MCQs, etc.",
+    "Emotion Check-in Templates": "Create easy-to-use mood check-in templates."
 }
 
 st.subheader("Choose a task:")
@@ -142,7 +144,8 @@ system_prompts = {
     "Generate Parent Message": "You are a compassionate and professional school teacher writing a message to parents or guardians. Maintain a respectful, human tone that suits the nature of the user input message (positive or negative).",
     "Convert to MCQ": "You are an expert exam question writer who designs age-appropriate high-quality multiple-choice questions for students. You will always create num_mcq questions",
     "Convert to Flashcards": "You are an expert educational content designer who creates age-appropriate flashcards to support student learning.",
-    "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources."
+    "Group Discussion Task": "You are an expert classroom teacher who designs age-appropriate collaborative discussion tasks for students based on curriculum-aligned resources.",
+    "You are an empathetic classroom assistant helping young students express their feelings in a structured, simple, and supportive format. Your job is to create easy-to-use mood check-in templates."
 }
 
 
@@ -316,6 +319,23 @@ Constraints:
 - Do not fabricate facts not found in the provided material
 
 Return only the full activity as structured text.
+""",
+    "Emotion Check-in Templates": """
+Create a student-friendly emotion check-in template that includes:
+
+1. A clear heading or title
+2. A sentence stem for identifying feelings (e.g., “Today I feel: [ ]” with checkboxes for emotions)
+3. A short sentence stem for explanation (e.g., “I feel this way because: __________”)
+4. A support request prompt (e.g., “I need: [ ]” with options like [A break], [To talk to someone], [Nothing right now])
+
+Guidelines:
+- Use simple, age-appropriate vocabulary.
+- Include 4–6 emotion checkboxes (mix of positive/neutral/negative).
+- Include exactly 3–4 support options.
+- Keep formatting clean and clear (bullets, brackets, spacing).
+- Do NOT invent fictional names or examples.
+
+Return only the final formatted template.
 """
 }
 
