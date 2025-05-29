@@ -328,7 +328,7 @@ Constraints:
 Return only the full activity as structured text.
 """,
     "Emotion Check-in Templates": """
-Create a student-friendly emotion check-in template that includes:
+Create {num_templates} student-friendly emotion check-in templates that include:
 
 1. A clear heading or title
 2. A sentence stem for identifying feelings (e.g., “Today I feel: [ ]” with checkboxes for emotions)
@@ -342,7 +342,7 @@ Guidelines:
 - Keep formatting clean and clear (bullets, brackets, spacing).
 - Do NOT invent fictional names or examples.
 
-Return only the final formatted template.
+Return only the final formatted {num_templates} templates.
 """
 }
 
@@ -402,6 +402,11 @@ if selected_task == "Reformat & Repurpose Resource" and selected_subtask in [
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Convert to MCQ", "Convert to Flashcards"]:
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
 
+if st.session_state.get("selected_task") == "Emotion Check-in Templates":
+    num_templates = st.slider("Number of check-in templates to generate", 1, 10, value=3)
+else:
+    num_templates = 0  # fallback to avoid errors in other prompt templates
+
 #--- Generation Button ---
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
@@ -438,6 +443,7 @@ if selected_task and generate_now:
         duration=duration if 'duration' in user_prompt_template else "",
         num_mcq=num_mcq if 'num_mcq' in user_prompt_template else "",
         num_flashcards=num_mcq if 'num_flashcards' in user_prompt_template else "",
+        num_templates=num_templates if 'num_templates' in user_prompt_template else ""
     )
 
     if not user_input.strip():
