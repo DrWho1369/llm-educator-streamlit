@@ -246,7 +246,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{full_input.strip()}\n\n[User Prompt]\n{user_prompt}", language="markdown")
+        st.code(f"[System Prompt]\n{user_prompt}\n\n[User Input]\n{full_input.strip()}\n\n, language="markdown")
         st.session_state["extracted_keywords"] = {}
 
 st.markdown("""
