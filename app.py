@@ -110,6 +110,7 @@ if input_method == "Upload PDF":
         action = st.radio("What would you like to do with the text?", ["Summarize", "Generate Word Cloud"])
         if st.button("🚀 Run Analysis"):
             with st.spinner("Analyzing PDF..."):
+                text = extract_text_from_pdf(uploaded_file)
                 result, img_base64, keywords = analyze_pdf(uploaded_file, action)
 
             if action == "Generate Word Cloud" and img_base64:
