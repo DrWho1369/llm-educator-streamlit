@@ -113,6 +113,7 @@ if input_method == "Upload PDF":
                 result_data = analyze_pdf(text)
     
                 img_base64 = result_data["wordcloud"]
+                keywords = result_data["keywords"]
                 st.session_state["extracted_keywords"] = result_data["keywords"]
     
             if img_base64:
