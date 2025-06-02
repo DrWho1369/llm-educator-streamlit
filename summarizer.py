@@ -86,6 +86,7 @@ def word_cloud(text):
 
 # --- Main Analysis Function ---
 def analyze_pdf(text, num_keywords=10):
+    num_keywords = int(num_keywords)  # ✅ Force type conversion
     summary = text_summarize(text)
     keywords = {
         "TF-IDF": extract_keywords_tfidf(text, num_keywords),
