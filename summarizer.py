@@ -1,7 +1,11 @@
 import re
+import base64
 from collections import Counter
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 # --- Regex-based tokenizers ---
 
@@ -71,18 +75,27 @@ def text_summarize(text, num_sentences=3):
 
     return " ".join(top_sentences)
 
-# --- Main Analysis Function ---
+# --- Word Cloud Generation ---
+def word_cloud(text):
+    wc = WordCloud(width=800, height=400, background_color='white', stopwords=STOPWORDS)
+    wc.generate(text)
+    buffer = BytesIO()
+    wc.to_image().save(buffer, format='PNG')
+    encoded = base64.b64encode(buffer.getvalue()).decode()
+    return encoded
 
+# --- Main Analysis Function ---
 def analyze_text(text, num_keywords=10):
     summary = text_summarize(text)
-    
     keywords = {
         "TF-IDF": extract_keywords_tfidf(text, num_keywords),
         "Frequency": extract_keywords_freq(text, num_keywords),
         "Noun Phrases": extract_noun_phrases(text, num_keywords)
     }
+    wordcloud_img = word_cloud(text)
 
     return {
         "summary": summary,
-        "keywords": keywords
+        "keywords": keywords,
+        "wordcloud": wordcloud_img
     }
