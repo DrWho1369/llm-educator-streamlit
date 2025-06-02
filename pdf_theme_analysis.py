@@ -20,7 +20,7 @@ def extract_text_from_pdf(pdf_bytes):
     return " ".join([page.get_text() for page in doc])
 
 def extract_sentences(text):
-    return sent_tokenize(text)
+    return sent_tokenize(text, language="english")
 
 def embed_sentences(sentences):
     model = SentenceTransformer('all-MiniLM-L6-v2')
