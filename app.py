@@ -100,7 +100,8 @@ uploaded_file = None
 keywords = {}
 
 if allow_pdf_upload:
-    input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
+    st.subheader("Choose input method:")
+    input_method = st.radio("", ["Text Input", "Upload PDF"])
 else:
     input_method = "Text Input"
 
