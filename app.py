@@ -108,10 +108,11 @@ if input_method == "Upload PDF":
     uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
     if uploaded_file:
         action = st.radio("What would you like to do with the text?", ["Summarize", "Generate Word Cloud"])
+        num_keywords = st.slider("Number of keywords to extract", 5, 30, value=10)
+
         if st.button("🚀 Run Analysis"):
             with st.spinner("Analyzing PDF..."):
                 text = extract_text_from_pdf(uploaded_file)
-                num_keywords = st.slider("Number of keywords to extract", 5, 30, value=10)
                 result_data = analyze_pdf(text, num_keywords=num_keywords)
                 
                 result = result_data["summary"]
