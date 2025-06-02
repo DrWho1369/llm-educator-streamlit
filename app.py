@@ -122,12 +122,36 @@ if st.session_state["selected_task"]:
         uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
         if uploaded_file:
             with st.spinner("Analyzing PDF..."):
-                summarized_chunks, img_base64 = process_uploaded_pdf(uploaded_file)
-                summarized_text = "\n\n".join(summarized_chunks)
-                st.text_area("Extracted Themes", value=summarized_text, height=300)
-                st.markdown("### Cluster Visualization")
-                st.image(f"data:image/png;base64,{img_base64}")
-                user_input = summarized_text
+                text = extract_text_from_pdf(uploaded_file)
+            action = st.radio("What would you like to do with the text?", ["Summarize", "Sentiment Analysis", "Generate Word Cloud"])
+            result_display = None
+    
+            if st.button("🚀 Run Analysis"):
+                if action == "Summarize":
+                    with st.spinner("Summarizing..."):
+                        result = text_summarize(text)
+                    result_display = ("📄 Summarized Text", result)
+    
+                elif action == "Sentiment Analysis":
+                    with st.spinner("Analyzing sentiment..."):
+                        result = sentiment_analysis(text)
+                    result_display = ("🔍 Sentiment Analysis", result)
+    
+                elif action == "Generate Word Cloud":
+                    with st.spinner("Generating word cloud..."):
+                        filename = "wordcloud.png"
+                        word_cloud(text, filename)  # Save to local file
+                        with open(filename, "rb") as f:
+                            img_bytes = f.read()
+                            encoded = base64.b64encode(img_bytes).decode()
+                        result_display = ("🌥 Word Cloud", None)
+                        st.image(f"data:image/png;base64,{encoded}", caption="Generated Word Cloud")
+    
+            if result_display and result_display[1] is not None:
+                st.markdown(f"### {result_display[0]}")
+                st.text_area(label="", value=result_display[1], height=250)
+
+
 
 
 
