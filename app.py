@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from summarizer import analyze_pdf 
 from pdf_extractor import extract_text_from_pdf
-from prompts import system_prompts, user_prompts
+from prompts import user_prompts
 
 
 # --- Set API call URL ---
@@ -190,7 +190,6 @@ st.markdown("### Now Generate the Output")
 
 if st.button("🚀 Generate Output", key="generate_btn"):
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
-    system_prompt = system_prompts[task_key]
 
     # --- Determine user_input based on method ---
     if input_method == "Upload PDF":
@@ -230,9 +229,8 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 LLM_API_URL,
                 json={
                     "messages": [
-                        {"role": "system", "content": system_prompt.strip()},
+                        {"role": "system", "content": user_prompt.strip()},
                         {"role": "user", "content": full_input.strip()},
-                        {"role": "user", "content": user_prompt.strip()}
                     ]
                 }
             )
