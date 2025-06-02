@@ -211,7 +211,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
             flat_keywords.extend(word_list)
     
         # Deduplicate and trim
-        unique_keywords = list(dict.fromkeys(flat_keywords))[:300] 
+        unique_keywords = list(dict.fromkeys(flat_keywords))[:250] 
         keyword_summary = "\n\n" + ", ".join(unique_keywords)
 
     full_input = f"User Input: {user_input}{keyword_summary}"
