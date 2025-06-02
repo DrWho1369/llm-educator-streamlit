@@ -131,17 +131,8 @@ if input_method == "Upload PDF":
             st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
 
 
-        # ✅ Display extracted keywords from session state
         st.markdown("### 🧠 Extracted Keywords")
-        extracted_keywords = st.session_state.get("extracted_keywords", {})
-        
-        if extracted_keywords:
-            keyword_text = ""
-            for method, words in extracted_keywords.items():
-                keyword_text += f"**{method}**: {', '.join(words)}\n\n"
-            st.markdown(keyword_text)
-        else:
-            st.info("No keywords available.")
+        st.markdown(st.session_state.get("user_input", "_No keywords found._"))
 
 # — Handle text input path —
 elif input_method == "Text Input":
