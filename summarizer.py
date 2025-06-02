@@ -60,7 +60,7 @@ def extract_noun_phrases(text, top_n=10):
 def text_summarize(text, num_sentences=3):
     sentences = regex_sent_tokenize(text)
     if len(sentences) <= num_sentences:
-        return " ".join(sentences)
+        return "\n".join([f"{i+1}. {s}" for i, s in enumerate(sentences)])
 
     words = regex_word_tokenize(text)
     filtered = [w for w in words if w not in STOPWORDS]
@@ -72,6 +72,13 @@ def text_summarize(text, num_sentences=3):
         sent_words = regex_word_tokenize(sent)
         score = sum(word_freq[word] for word in sent_words if word in word_freq)
         sentence_scores[i] = score
+
+    # Get top sentence indices and sort them by original order
+    top_indices = sorted(
+        [i for i, _ in sorted(sentence_scores.items(), key=lambda x: x[1], reverse=True)[:num_sentences]]
+    )
+
+    return "\n".join([f"{j+1}. {sentences[i]}" for j, i in enumerate(top_indices)])
 
     # Get top sentence indices and sort them by original order
     top_indices = sorted(
