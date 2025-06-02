@@ -132,9 +132,15 @@ if input_method == "Upload PDF":
 
 
         st.markdown("### 🧠 Extracted Keywords")
-        for method, words in keywords.items():
-            st.markdown(f"**{method}**: {', '.join(words[:])}")
 
+        extracted_keywords = st.session_state.get("extracted_keywords", {})
+        if extracted_keywords:
+            keyword_text = "\n".join(
+                f"- {', '.join(words)}" for words in extracted_keywords.values()
+            )
+            st.markdown(keyword_text)
+        else:
+            st.info("No keywords found.")
 
 # — Handle text input path —
 elif input_method == "Text Input":
