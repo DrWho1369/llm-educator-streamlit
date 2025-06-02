@@ -122,9 +122,9 @@ if input_method == "Upload PDF":
         if img_base64:
             st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
 
-        st.markdown("### 🧠 Extracted Keywords")
-        for method, words in keywords.items():
-            st.markdown(f"**{method}**: {', '.join(words[:])}")
+        # st.markdown("### 🧠 Extracted Keywords")
+        # for method, words in keywords.items():
+        #     st.markdown(f"**{method}**: {', '.join(words[:])}")
 
 
 # — Handle text input path —
