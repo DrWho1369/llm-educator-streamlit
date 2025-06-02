@@ -1,5 +1,6 @@
 import fitz  # PyMuPDF
 import nltk
+nltk.download('punkt', quiet=True)
 from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
 import hdbscan
