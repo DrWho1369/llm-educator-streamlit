@@ -7,7 +7,6 @@ PyMuPDF
 PyPDF2
 
 # NLP & Text Processing
-nltk
 textblob
 scikit-learn
 
