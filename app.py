@@ -107,29 +107,21 @@ else:
 if input_method == "Upload PDF":
     uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
     if uploaded_file:
-        action = st.radio("What would you like to do with the text?", ["Summarize", "Generate Word Cloud"])
-        num_keywords = st.slider("Number of keywords to extract", 5, 30, value=10)
-
         if st.button("🚀 Run Analysis"):
             with st.spinner("Analyzing PDF..."):
                 text = extract_text_from_pdf(uploaded_file)
-                result_data = analyze_pdf(text, num_keywords=num_keywords)
-                
-                result = result_data["summary"]
+                result_data = analyze_pdf(text)
+    
                 img_base64 = result_data["wordcloud"]
                 keywords = result_data["keywords"]
-
-            if action == "Generate Word Cloud" and img_base64:
+    
+            if img_base64:
                 st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
+    
+            st.markdown("### 🧠 Extracted Keywords")
+            for method, words in keywords.items():
+                st.markdown(f"**{method}**: {', '.join(words[:10])}")
 
-            elif action == "Summarize":
-                st.markdown("### 📄 Summarized Text")
-                st.text_area(label="", value=result, height=250)
-
-                st.markdown("### 🧠 Extracted Keywords")
-                for method, words in keywords.items():
-                    st.markdown(f"**{method}**: {', '.join(words[:10])}")
-                user_input = result
 
 # — Handle text input path —
 elif input_method == "Text Input":
