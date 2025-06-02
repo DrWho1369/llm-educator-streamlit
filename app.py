@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from summarizer import text_summarize, sentiment_analysis, word_cloud  
+from summarizer import analyze_pdf 
 from pdf_extractor import extract_text_from_pdf
 from prompts import system_prompts, user_prompts
 
@@ -10,12 +10,9 @@ LLM_API_URL = st.secrets["LLM_API_URL"]
 
 # --- Page Config ---
 st.set_page_config(page_title="Prompt Tester", layout="centered")
-
 st.title("OI-TA")
 
-# --- INITAL TASK BUTTONS  ---
-
-# Define task buttons names and hover descriptions
+# --- TASK BUTTONS  ---
 task_labels = [
     "Differentiate Resource",
     "Generate Parent Message",
@@ -34,14 +31,12 @@ task_descriptions = {
 
 st.subheader("Choose a task:")
 
-# --- Initialise state for task highlight ---
 if "selected_task" not in st.session_state:
     st.session_state["selected_task"] = None
 
 if "selected_subtask" not in st.session_state:
     st.session_state["selected_subtask"] = None
 
-# --- Generating the actual buttons ---
 cols_per_row = 4
 for i, label in enumerate(task_labels):
     if i % cols_per_row == 0:
@@ -52,7 +47,7 @@ for i, label in enumerate(task_labels):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
 
-# --- Adding HTML/CSS button styling ---
+# --- STYLE ---
 st.markdown("""
 <style>
 .task-button {
@@ -75,7 +70,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Forcefully update the style of the selected button using JavaScript
+
 if st.session_state["selected_task"]:
     st.markdown(f"""
     <script>
@@ -88,89 +83,58 @@ if st.session_state["selected_task"]:
     </script>
     """, unsafe_allow_html=True)
 
-# --- UI to show nothing else until a task is selected ---
 if not st.session_state["selected_task"]:
     st.stop()
 
-# --- Show content input only if a task is selected ---
-
-# --- Functionality for PDF upload or Text Generation
-if st.session_state["selected_task"]:
-    selected_task = st.session_state["selected_task"]
-    st.markdown(f"### Task Selected: {selected_task}")
-
-    allow_pdf_upload = selected_task in [
+allow_pdf_upload = selected_task in [
         "Differentiate Resource",
         "Plan & Print",
         "Reformat & Repurpose Resource",
     ]
 
-    # — Initialize shared variables —
-    input_method = None
-    user_input = ""
-    uploaded_file = None
-    pdf_text = None
+input_method = None
+user_input = ""
+uploaded_file = None
+keywords = {}
 
-    # — Let user pick input method if PDF is allowed —
-    if allow_pdf_upload:
-        input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
-    else:
-        input_method = "Text Input"
+if allow_pdf_upload:
+    input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
+else:
+    input_method = "Text Input"
 
-    # — Handle PDF upload path —
-    if input_method == "Upload PDF":
-        uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
-        if uploaded_file:
+if input_method == "Upload PDF":
+    uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
+    if uploaded_file:
+        action = st.radio("What would you like to do with the text?", ["Summarize", "Generate Word Cloud"])
+        if st.button("🚀 Run Analysis"):
             with st.spinner("Analyzing PDF..."):
-                text = extract_text_from_pdf(uploaded_file)
-            action = st.radio("What would you like to do with the text?", ["Summarize", "Sentiment Analysis", "Generate Word Cloud"])
-            result_display = None
-    
-            if st.button("🚀 Run Analysis"):
-                if action == "Summarize":
-                    with st.spinner("Summarizing..."):
-                        result = text_summarize(text)
-                    result_display = ("📄 Summarized Text", result)
-    
-                elif action == "Sentiment Analysis":
-                    with st.spinner("Analyzing sentiment..."):
-                        result = sentiment_analysis(text)
-                    result_display = ("🔍 Sentiment Analysis", result)
-    
-                elif action == "Generate Word Cloud":
-                    with st.spinner("Generating word cloud..."):
-                        filename = "wordcloud.png"
-                        word_cloud(text, filename)  # Save to local file
-                        with open(filename, "rb") as f:
-                            img_bytes = f.read()
-                            encoded = base64.b64encode(img_bytes).decode()
-                        result_display = ("🌥 Word Cloud", None)
-                        st.image(f"data:image/png;base64,{encoded}", caption="Generated Word Cloud")
-    
-            if result_display and result_display[1] is not None:
-                st.markdown(f"### {result_display[0]}")
-                st.text_area(label="", value=result_display[1], height=250)
+                result, img_base64, keywords = analyze_pdf(uploaded_file, action)
 
+            if action == "Generate Word Cloud" and img_base64:
+                st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
 
+            elif action == "Summarize":
+                st.markdown("### 📄 Summarized Text")
+                st.text_area(label="", value=result, height=250)
 
+                st.markdown("### 🧠 Extracted Keywords")
+                for method, words in keywords.items():
+                    st.markdown(f"**{method}**: {', '.join(words[:10])}")
+                user_input = result
 
-
-    # — Handle text input path —
-    elif input_method == "Text Input":
-        if st.session_state.get("selected_task") != "Emotion Check-in Templates":
-            user_input = st.text_area("Paste lesson content, parent update, etc:", height=250)
-            word_count = len(user_input.split())
-            if word_count < 10:
-                st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
-        else:
-            user_input = ""
+# — Handle text input path —
+elif input_method == "Text Input":
+    if st.session_state.get("selected_task") != "Emotion Check-in Templates":
+        user_input = st.text_area("Paste lesson content, parent update, etc:", height=250)
+        word_count = len(user_input.split())
+        if word_count < 10:
+            st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
+    else:
+        user_input = ""
     
 
-
-# Handle Reformat & Repurpose subtasks
 selected_task = st.session_state["selected_task"]
 selected_subtask = st.session_state["selected_subtask"]
-
 
 if selected_task == "Reformat & Repurpose Resource":
     st.markdown("#### Choose how to repurpose the content:")
@@ -185,78 +149,47 @@ if selected_task == "Reformat & Repurpose Resource":
         if st.button("Group Discussion Task"):
             st.session_state["selected_subtask"] = "Group Discussion Task"
 
-selected_subtask = st.session_state["selected_subtask"]
-# Inputs for Plan & Print only
-if selected_task == "Plan & Print":
+if selected_task == "Plan & Print" or (selected_task == "Reformat & Repurpose Resource" and selected_subtask):
     year_group = st.selectbox("Age Category", [
-        "Early Years / KS1 (4–7)",
-        "Lower KS2 (7–9)",
-        "Upper KS2 (9–11)",
-        "KS3 / Lower Secondary (11–14)",
-        "KS4 / GCSE (14–16)",
-        "Post-16 / A-Level (16–18)"
-    ])
-    duration = st.slider("Lesson Duration (minutes)", min_value=15, max_value=60, value=30)
-
-# Inputs for Reformat & Repurpose subtasks only (no duration)
-if selected_task == "Reformat & Repurpose Resource" and selected_subtask in [
-    "Convert to MCQ", "Convert to Flashcards", "Group Discussion Task"
-]:
-    year_group = st.selectbox("Age Category", [
-        "Early Years / KS1 (4–7)",
-        "Lower KS2 (7–9)",
-        "Upper KS2 (9–11)",
-        "KS3 / Lower Secondary (11–14)",
-        "KS4 / GCSE (14–16)",
-        "Post-16 / A-Level (16–18)"
+        "Early Years / KS1 (4–7)", "Lower KS2 (7–9)", "Upper KS2 (9–11)",
+        "KS3 / Lower Secondary (11–14)", "KS4 / GCSE (14–16)", "Post-16 / A-Level (16–18)"
     ])
 
-# MCQ item count (only for MCQ and Flashcards)
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Convert to MCQ", "Convert to Flashcards"]:
     num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
+else:
+    num_mcq = 0
 
-if st.session_state.get("selected_task") == "Emotion Check-in Templates":
+if selected_task == "Emotion Check-in Templates":
     num_templates = st.slider("Number of check-in templates to generate", 1, 10, value=3)
 else:
-    num_templates = 0  # fallback to avoid errors in other prompt templates
+    num_templates = 0
 
 #--- Generation Button ---
 st.markdown("""
     <div style="margin-top:2rem;margin-bottom:1rem;border-bottom:2px solid #ccc;"></div>
 """, unsafe_allow_html=True)
 st.markdown("### Now Generate the Output")
-generate_col = st.container()
-with generate_col:
-    st.markdown("""
-        <style>
-        .generate-btn button {
-            background-color: #2ecc71 !important;
-            color: white !important;
-            font-size: 1.1rem !important;
-            font-weight: bold;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    generate_now = st.button("🚀 Generate Output", key="generate_btn", help="Send your content to the AI for generation")
-    st.markdown('<div class="generate-btn"></div>', unsafe_allow_html=True)
 
-
-if selected_task and generate_now:
+if st.button("🚀 Generate Output", key="generate_btn"):
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
-    system_prompt = system_prompts[task_key] 
+    system_prompt = system_prompts[task_key]
 
-    user_input = f"User Input: {user_input}"
+    keyword_summary = ""
+    if keywords:
+        keyword_summary = "\n\n[Extracted Keywords]\n"
+        for method, words in keywords.items():
+            keyword_summary += f"{method}: {', '.join(words[:10])}\n"
+
+    full_input = f"User Input: {user_input}{keyword_summary}"
 
     user_prompt_template = user_prompts[task_key]
     user_prompt = user_prompt_template.format(
         year_group=year_group if 'year_group' in user_prompt_template else "",
-        duration=duration if 'duration' in user_prompt_template else "",
-        num_mcq=num_mcq if 'num_mcq' in user_prompt_template else "",
-        num_flashcards=num_mcq if 'num_flashcards' in user_prompt_template else "",
-        num_templates=num_templates if 'num_templates' in user_prompt_template else ""
+        duration=duration if 'duration' in locals() else "",
+        num_mcq=num_mcq,
+        num_flashcards=num_mcq,
+        num_templates=num_templates
     )
 
     if not user_input.strip():
@@ -268,13 +201,11 @@ if selected_task and generate_now:
                 json={
                     "messages": [
                         {"role": "system", "content": system_prompt.strip()},
-                        {"role": "user", "content": user_input.strip()},
+                        {"role": "user", "content": full_input.strip()},
                         {"role": "user", "content": user_prompt.strip()}
                     ]
                 }
             )
-
-
 
             try:
                 output = response.json()["choices"][0]["message"]["content"]
@@ -286,11 +217,9 @@ if selected_task and generate_now:
         st.markdown(f"### AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
-
         st.markdown(f"### Prompt Sent to AI")
-        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{user_input.strip()}\n\n[User Prompt]\n{user_prompt}", language="markdown")
+        st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{full_input.strip()}\n\n[User Prompt]\n{user_prompt}", language="markdown")
 
-# --- Styling ---
 st.markdown("""
 <style>
 .prompt-box {
