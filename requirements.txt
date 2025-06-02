@@ -4,6 +4,10 @@ requests
 
 # PDF Handling
 PyMuPDF
+PyPDF2
+TextBlob
+wordcloud
+nltk
 
 
 # NLP and Clustering
