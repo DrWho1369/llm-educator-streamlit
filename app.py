@@ -111,7 +111,7 @@ if input_method == "Upload PDF":
         if st.button("🚀 Run Analysis"):
             with st.spinner("Analyzing PDF..."):
                 text = extract_text_from_pdf(uploaded_file)
-                result, img_base64, keywords = analyze_pdf(uploaded_file, action)
+                result, img_base64, keywords = analyze_pdf(text, action)
 
             if action == "Generate Word Cloud" and img_base64:
                 st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
