@@ -85,7 +85,7 @@ def word_cloud(text):
     return encoded
 
 # --- Main Analysis Function ---
-def analyze_text(text, num_keywords=10):
+def analyze_pdf(text, num_keywords=10):
     summary = text_summarize(text)
     keywords = {
         "TF-IDF": extract_keywords_tfidf(text, num_keywords),
