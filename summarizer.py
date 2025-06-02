@@ -1,71 +1,88 @@
+import re
+from collections import Counter
 from textblob import TextBlob
-import matplotlib as plt
-import matplotlib.pyplot as plt
-import nltk
-from wordcloud import WordCloud
-from nltk.tokenize import sent_tokenize, word_tokenize 
-from nltk.corpus import stopwords
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from nltk.tokenize.treebank import TreebankWordDetokenizer
-from nltk.probability import FreqDist
-import os
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Defensive punkt download
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+# --- Regex-based tokenizers ---
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+def regex_sent_tokenize(text):
+    pattern = re.compile(r'(?<=[.!?])\s+(?=[A-Z])')
+    return [s.strip() for s in pattern.split(text.strip()) if s.strip()]
 
+def regex_word_tokenize(text):
+    return re.findall(r'\b\w+\b', text.lower())
 
-def text_summarize(text):
-    sentences = sent_tokenize(text, language="english")
-    words = word_tokenize(text.lower())
-    stop_words = set(stopwords.words('english'))
-    words = [word for word in words if word.isalnum() and word not in stop_words]
+# --- Stopwords (simple static list) ---
 
-    frequency_dist = FreqDist(words)
-    max_freq = max(frequency_dist.values())
+STOPWORDS = set("""
+    a about above after again against all am an and any are aren't as at be because been
+    before being below between both but by can can't cannot could couldn't did didn't do
+    does doesn't doing don't down during each few for from further had hadn't has hasn't
+    have haven't having he he'd he'll he's her here here's hers herself him himself his
+    how how's i i'd i'll i'm i've if in into is isn't it it's its itself let's me more
+    most mustn't my myself no nor not of off on once only or other ought our ours
+    ourselves out over own same shan't she she'd she'll she's should shouldn't so some
+    such than that that's the their theirs them themselves then there there's these they
+    they'd they'll they're they've this those through to too under until up very was
+    wasn't we we'd we'll we're we've were weren't what what's when when's where where's
+    which while who who's whom why why's with won't would wouldn't you you'd you'll you're
+    you've your yours yourself yourselves
+""".split())
+
+# --- Keyword Extraction Methods ---
+
+def extract_keywords_freq(text, num_keywords=10):
+    words = regex_word_tokenize(text)
+    filtered = [w for w in words if w not in STOPWORDS and len(w) > 2]
+    freq = Counter(filtered)
+    return [word for word, _ in freq.most_common(num_keywords)]
+
+def extract_keywords_tfidf(text, num_keywords=10):
+    vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
+    tfidf_matrix = vectorizer.fit_transform([text])
+    feature_names = vectorizer.get_feature_names_out()
+    scores = tfidf_matrix.toarray()[0]
+    ranked = sorted(zip(feature_names, scores), key=lambda x: x[1], reverse=True)
+    return [term for term, _ in ranked[:num_keywords]]
+
+def extract_noun_phrases(text, top_n=10):
+    blob = TextBlob(text)
+    phrases = blob.noun_phrases
+    freq = Counter(phrases)
+    return [phrase for phrase, _ in freq.most_common(top_n)]
+
+# --- Text Summarization ---
+
+def text_summarize(text, num_sentences=3):
+    sentences = regex_sent_tokenize(text)
+    words = regex_word_tokenize(text)
+    filtered = [w for w in words if w not in STOPWORDS]
+
+    word_freq = Counter(filtered)
     sentence_scores = {}
 
-    for sentence in sentences:
-        for word in word_tokenize(sentence.lower()):
-            if word in frequency_dist.keys():
-                if sentence in sentence_scores:
-                    sentence_scores[sentence] += frequency_dist[word] / max_freq
-                else:
-                    sentence_scores[sentence] = frequency_dist[word] / max_freq
+    for i, sent in enumerate(sentences):
+        sent_words = regex_word_tokenize(sent)
+        score = sum(word_freq[word] for word in sent_words if word in word_freq)
+        sentence_scores[i] = score
 
-    summary_sentences = sorted(sentence_scores, key=sentence_scores.get, reverse=True)[:2]
-    summary = TreebankWordDetokenizer().detokenize(summary_sentences)
-    return summary
+    ranked = sorted(sentence_scores.items(), key=lambda x: x[1], reverse=True)
+    top_sentences = [sentences[i] for i, _ in ranked[:num_sentences]]
 
-def sentiment_analysis(text):
-    analysis = TextBlob(text)
-    sentiment = SentimentIntensityAnalyzer()
-    sent = sentiment.polarity_scores(text)
-    result = ""
-    if analysis.sentiment.polarity > 0:
-        result = "Positive"
-    elif analysis.sentiment.polarity < 0:
-        result = "Negative"
-    else:
-        result = "Neutral"
-    result = result + " : " + str(sent)
-    return result
-         
+    return " ".join(top_sentences)
 
-def word_cloud(text, filename):
-    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
-    plt.figure(figsize=(10, 5))
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.title("Word Cloud")
-    file = f'static/images/{filename}'
-    plt.savefig(file) 
-    plt.close() 
-    return file
+# --- Main Analysis Function ---
+
+def analyze_text(text, num_keywords=10):
+    summary = text_summarize(text)
+    
+    keywords = {
+        "TF-IDF": extract_keywords_tfidf(text, num_keywords),
+        "Frequency": extract_keywords_freq(text, num_keywords),
+        "Noun Phrases": extract_noun_phrases(text, num_keywords)
+    }
+
+    return {
+        "summary": summary,
+        "keywords": keywords
+    }
