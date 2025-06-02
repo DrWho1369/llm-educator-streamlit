@@ -116,7 +116,7 @@ if input_method == "Upload PDF":
             st.session_state["extracted_keywords"] = result_data["keywords"]
             keyword_summary = "\n\n[Extracted Keywords]\n"
             for method, words in keywords.items():
-                keyword_summary += f"{method}: {', '.join(words[:10])}\n"
+                keyword_summary += f"{method}: {', '.join(words[:])}\n"
             st.session_state["user_input"] = keyword_summary
             
         if img_base64:
@@ -124,7 +124,7 @@ if input_method == "Upload PDF":
 
         st.markdown("### 🧠 Extracted Keywords")
         for method, words in keywords.items():
-            st.markdown(f"**{method}**: {', '.join(words[:10])}")
+            st.markdown(f"**{method}**: {', '.join(words[:])}")
 
 
 # — Handle text input path —
