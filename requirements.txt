@@ -7,7 +7,6 @@ PyMuPDF
 PyPDF2
 
 # NLP & Text Processing
-textblob
 scikit-learn
 
 # Keyword Extraction & Clustering
