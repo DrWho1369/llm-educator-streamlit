@@ -108,22 +108,28 @@ else:
 if input_method == "Upload PDF":
     st.subheader("Upload a PDF")
     uploaded_file = st.file_uploader("", type="pdf", key="pdf_upload")
-    if uploaded_file:
-        with st.spinner("Analyzing PDF..."):
-            text = extract_text_from_pdf(uploaded_file)
-            result_data = analyze_pdf(text)
 
-            img_base64 = result_data["wordcloud"]
-            keywords = result_data["keywords"]
-            st.session_state["extracted_keywords"] = result_data["keywords"]
-            keyword_summary = "\n\n[Extracted Keywords]\n"
-            for method, words in keywords.items():
-                keyword_summary += f"{method}: {', '.join(words[:])}\n"
-            st.session_state["user_input"] = keyword_summary
-            
-        if img_base64:
+    if uploaded_file:
+        # Only run analysis if the file is newly uploaded
+        if st.session_state.get("last_uploaded_filename") != uploaded_file.name:
+            with st.spinner("Analyzing PDF..."):
+                text = extract_text_from_pdf(uploaded_file)
+                result_data = analyze_pdf(text)
+
+                # Save results in session state
+                st.session_state["extracted_keywords"] = result_data["keywords"]
+                st.session_state["user_input"] = (
+                    "\n\n[Extracted Keywords]\n" +
+                    "\n".join(", ".join(words) for words in result_data["keywords"].values())
+                )
+                st.session_state["img_base64"] = result_data["wordcloud"]
+                st.session_state["last_uploaded_filename"] = uploaded_file.name
+
+        # Always show the results from session state
+        if st.session_state.get("img_base64"):
             st.subheader("Generated Word Cloud")
-            st.image(f"data:image/png;base64,{img_base64}")
+            st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
+)
 
         # st.markdown("### 🧠 Extracted Keywords")
         # for method, words in keywords.items():
