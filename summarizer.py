@@ -35,13 +35,7 @@ STOPWORDS = set("""
 
 # --- Keyword Extraction Methods ---
 
-def extract_keywords_freq(text, num_keywords=10):
-    words = regex_word_tokenize(text)
-    filtered = [w for w in words if w not in STOPWORDS and len(w) > 2]
-    freq = Counter(filtered)
-    return [word for word, _ in freq.most_common(num_keywords)]
-
-def extract_keywords_tfidf(text, num_keywords=10):
+def extract_keywords_tfidf(text, num_keywords=30):
     vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
     tfidf_matrix = vectorizer.fit_transform([text])
     feature_names = vectorizer.get_feature_names_out()
@@ -49,7 +43,7 @@ def extract_keywords_tfidf(text, num_keywords=10):
     ranked = sorted(zip(feature_names, scores), key=lambda x: x[1], reverse=True)
     return [term for term, _ in ranked[:num_keywords]]
 
-def extract_noun_phrases(text, top_n=10):
+def extract_noun_phrases(text, top_n=30):
     from sklearn.feature_extraction.text import CountVectorizer
     vectorizer = CountVectorizer(ngram_range=(2, 2), stop_words='english')
     X = vectorizer.fit_transform([text])
@@ -57,29 +51,6 @@ def extract_noun_phrases(text, top_n=10):
     sorted_phrases = sorted(freqs, key=lambda x: x[1], reverse=True)
     return [phrase for phrase, count in sorted_phrases[:top_n]]
 
-def text_summarize(text, num_sentences=3):
-    sentences = regex_sent_tokenize(text)
-    if len(sentences) <= num_sentences:
-        return "\n".join([f"{i+1}. {s}" for i, s in enumerate(sentences)])
-
-    words = regex_word_tokenize(text)
-    filtered = [w for w in words if w not in STOPWORDS]
-
-    word_freq = Counter(filtered)
-    sentence_scores = {}
-
-    for i, sent in enumerate(sentences):
-        sent_words = regex_word_tokenize(sent)
-        score = sum(word_freq[word] for word in sent_words if word in word_freq)
-        sentence_scores[i] = score
-
-    # Get the indices of the top-ranked sentences
-    top_indices = sorted(
-        [i for i, _ in sorted(sentence_scores.items(), key=lambda x: x[1], reverse=True)[:num_sentences]]
-    )
-
-    # Return the top sentences in their original order, each numbered
-    return "\n".join([f"{j+1}. {sentences[i]}" for j, i in enumerate(top_indices)])
 
 # --- Word Cloud Generation ---
 def word_cloud(text):
@@ -91,18 +62,14 @@ def word_cloud(text):
     return encoded
 
 # --- Main Analysis Function ---
-def analyze_pdf(text, num_keywords=10):
-    num_keywords = int(num_keywords)  # ✅ Force type conversion
-    summary = text_summarize(text)
+def analyze_pdf(text):
     keywords = {
-        "TF-IDF": extract_keywords_tfidf(text, num_keywords),
-        "Frequency": extract_keywords_freq(text, num_keywords),
-        "Noun Phrases": extract_noun_phrases(text, num_keywords)
+        "TF-IDF": extract_keywords_tfidf(text),
+        "Noun Phrases": extract_noun_phrases(text)
     }
     wordcloud_img = word_cloud(text)
 
     return {
-        "summary": summary,
         "keywords": keywords,
         "wordcloud": wordcloud_img
     }
