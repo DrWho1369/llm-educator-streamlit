@@ -5,19 +5,18 @@ requests
 # PDF Handling
 PyMuPDF
 PyPDF2
-TextBlob
-wordcloud
+
+# NLP & Text Processing
 nltk
+textblob
+scikit-learn
 
-
-# NLP and Clustering
-
+# Keyword Extraction & Clustering
 sentence-transformers
 hdbscan
 keybert
-scikit-learn
 umap-learn
 
 # Visualization
+wordcloud
 matplotlib
-
