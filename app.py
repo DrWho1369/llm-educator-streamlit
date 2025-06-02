@@ -129,7 +129,7 @@ if input_method == "Upload PDF":
         if st.session_state.get("img_base64"):
             st.subheader("Generated Word Cloud")
             st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
-)
+
 
         # st.markdown("### 🧠 Extracted Keywords")
         # for method, words in keywords.items():
