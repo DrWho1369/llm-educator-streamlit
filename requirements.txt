@@ -8,6 +8,7 @@ PyMuPDF
 
 # NLP and Clustering
 nltk==3.8.1
+spacy
 sentence-transformers
 hdbscan
 keybert
