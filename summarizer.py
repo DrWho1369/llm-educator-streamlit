@@ -73,19 +73,13 @@ def text_summarize(text, num_sentences=3):
         score = sum(word_freq[word] for word in sent_words if word in word_freq)
         sentence_scores[i] = score
 
-    # Get top sentence indices and sort them by original order
+    # Get the indices of the top-ranked sentences
     top_indices = sorted(
         [i for i, _ in sorted(sentence_scores.items(), key=lambda x: x[1], reverse=True)[:num_sentences]]
     )
 
+    # Return the top sentences in their original order, each numbered
     return "\n".join([f"{j+1}. {sentences[i]}" for j, i in enumerate(top_indices)])
-
-    # Get top sentence indices and sort them by original order
-    top_indices = sorted(
-        [i for i, _ in sorted(sentence_scores.items(), key=lambda x: x[1], reverse=True)[:num_sentences]]
-    )
-
-    return " ".join([sentences[i] for i in top_indices])
 
 # --- Word Cloud Generation ---
 def word_cloud(text):
