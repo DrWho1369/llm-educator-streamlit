@@ -106,7 +106,8 @@ else:
     input_method = "Text Input"
 
 if input_method == "Upload PDF":
-    uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
+    st.subheader("Upload a PDF")
+    uploaded_file = st.file_uploader("", type="pdf", key="pdf_upload")
     if uploaded_file:
         with st.spinner("Analyzing PDF..."):
             text = extract_text_from_pdf(uploaded_file)
@@ -121,7 +122,8 @@ if input_method == "Upload PDF":
             st.session_state["user_input"] = keyword_summary
             
         if img_base64:
-            st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
+            st.subheader("Generated Word Cloud")
+            st.image(f"data:image/png;base64,{img_base64}")
 
         # st.markdown("### 🧠 Extracted Keywords")
         # for method, words in keywords.items():
@@ -162,18 +164,21 @@ if selected_task == "Reformat & Repurpose Resource":
             st.session_state["selected_subtask"] = "Group Discussion Task"
 
 if selected_task == "Plan & Print" or (selected_task == "Reformat & Repurpose Resource" and selected_subtask):
-    year_group = st.selectbox("Age Category", [
+    st.subheader("Age Category")
+    year_group = st.selectbox("", [
         "Early Years / KS1 (4–7)", "Lower KS2 (7–9)", "Upper KS2 (9–11)",
         "KS3 / Lower Secondary (11–14)", "KS4 / GCSE (14–16)", "Post-16 / A-Level (16–18)"
     ])
 
 if selected_task == "Reformat & Repurpose Resource" and selected_subtask in ["Convert to MCQ", "Convert to Flashcards"]:
-    num_mcq = st.slider("Number of Items to Generate", 1, 20, value=10)
+    st.subheader("Number of Items to Generate")
+    num_mcq = st.slider("", 1, 20, value=10)
 else:
     num_mcq = 0
 
 if selected_task == "Emotion Check-in Templates":
-    num_templates = st.slider("Number of check-in templates to generate", 1, 10, value=3)
+    st.subheader("Number of check-in templates to generate")
+    num_templates = st.slider("", 1, 10, value=3)
 else:
     num_templates = 0
 
