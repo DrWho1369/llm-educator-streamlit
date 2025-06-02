@@ -86,6 +86,8 @@ if st.session_state["selected_task"]:
 if not st.session_state["selected_task"]:
     st.stop()
 
+selected_task = st.session_state.get("selected_task")
+
 allow_pdf_upload = selected_task in [
         "Differentiate Resource",
         "Plan & Print",
