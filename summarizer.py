@@ -52,6 +52,9 @@ def extract_noun_phrases(text, top_n=150):
     return [phrase for phrase, count in sorted_phrases[:top_n]]
 
 
+def remove_keywords_with_digits(keyword_list):
+    return [kw for kw in keyword_list if not re.search(r'\d', kw)]
+
 # --- Word Cloud Generation ---
 def word_cloud(text):
     wc = WordCloud(width=800, height=400, background_color='white', stopwords=STOPWORDS)
@@ -63,10 +66,18 @@ def word_cloud(text):
 
 # --- Main Analysis Function ---
 def analyze_pdf(text):
+    tfidf = extract_keywords_tfidf(text)
+    noun_phrases = extract_noun_phrases(text)
+
+    # Remove keywords with digits
+    tfidf_clean = remove_keywords_with_digits(tfidf)
+    noun_phrases_clean = remove_keywords_with_digits(noun_phrases)
+
     keywords = {
-        "TF-IDF": extract_keywords_tfidf(text),
-        "Noun Phrases": extract_noun_phrases(text)
+        "TF-IDF": tfidf_clean,
+        "Noun Phrases": noun_phrases_clean
     }
+
     wordcloud_img = word_cloud(text)
 
     return {
