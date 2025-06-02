@@ -1,7 +1,20 @@
+# Core App
 streamlit
 requests
+
+# PDF Handling
 PyMuPDF
-tiktoken
 PyPDF2
-asyncio
-aiohttp
+tiktoken  # for token counting if using OpenAI
+
+# NLP and Clustering
+nltk
+sentence-transformers
+hdbscan
+keybert
+scikit-learn
+umap-learn
+
+# Visualization
+matplotlib
+
