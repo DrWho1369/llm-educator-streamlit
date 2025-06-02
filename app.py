@@ -2,10 +2,7 @@ import streamlit as st
 import requests
 from pdf_theme_analysis import process_uploaded_pdf 
 from prompts import system_prompts, user_prompts
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+
 
 # --- Set API call URL ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
