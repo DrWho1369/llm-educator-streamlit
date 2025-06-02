@@ -113,7 +113,7 @@ if input_method == "Upload PDF":
                 result_data = analyze_pdf(text)
     
                 img_base64 = result_data["wordcloud"]
-                keywords = result_data["keywords"]
+                st.session_state["extracted_keywords"] = result_data["keywords"]
     
             if img_base64:
                 st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
@@ -176,6 +176,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
 
+    keywords = st.session_state.get("extracted_keywords", {})
     keyword_summary = ""
     if keywords:
         keyword_summary = "\n\n[Extracted Keywords]\n"
@@ -220,6 +221,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
         st.markdown(f"### Prompt Sent to AI")
         st.code(f"[System Prompt]\n{system_prompt}\n\n[User Input]\n{full_input.strip()}\n\n[User Prompt]\n{user_prompt}", language="markdown")
+        st.session_state["extracted_keywords"] = {}
 
 st.markdown("""
 <style>
