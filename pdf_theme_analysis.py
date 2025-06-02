@@ -12,7 +12,6 @@ import base64
 
 from sklearn.metrics.pairwise import cosine_similarity
 
-nltk.download("punkt")
 
 # --- PDF Theme Extraction Functions ---
 
