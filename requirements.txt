@@ -4,8 +4,7 @@ requests
 
 # PDF Handling
 PyMuPDF
-PyPDF2
-tiktoken  # for token counting if using OpenAI
+
 
 # NLP and Clustering
 nltk
