@@ -35,7 +35,7 @@ STOPWORDS = set("""
 
 # --- Keyword Extraction Methods ---
 
-def extract_keywords_tfidf(text, num_keywords=50):
+def extract_keywords_tfidf(text, num_keywords=150):
     vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
     tfidf_matrix = vectorizer.fit_transform([text])
     feature_names = vectorizer.get_feature_names_out()
@@ -43,7 +43,7 @@ def extract_keywords_tfidf(text, num_keywords=50):
     ranked = sorted(zip(feature_names, scores), key=lambda x: x[1], reverse=True)
     return [term for term, _ in ranked[:num_keywords]]
 
-def extract_noun_phrases(text, top_n=50):
+def extract_noun_phrases(text, top_n=150):
     from sklearn.feature_extraction.text import CountVectorizer
     vectorizer = CountVectorizer(ngram_range=(2, 2), stop_words='english')
     X = vectorizer.fit_transform([text])
