@@ -107,21 +107,20 @@ else:
 if input_method == "Upload PDF":
     uploaded_file = st.file_uploader("Upload a PDF", type="pdf", key="pdf_upload")
     if uploaded_file:
-        if st.button("🚀 Run Analysis"):
-            with st.spinner("Analyzing PDF..."):
-                text = extract_text_from_pdf(uploaded_file)
-                result_data = analyze_pdf(text)
-    
-                img_base64 = result_data["wordcloud"]
-                keywords = result_data["keywords"]
-                st.session_state["extracted_keywords"] = result_data["keywords"]
-    
-            if img_base64:
-                st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
-    
-            st.markdown("### 🧠 Extracted Keywords")
-            for method, words in keywords.items():
-                st.markdown(f"**{method}**: {', '.join(words[:10])}")
+        with st.spinner("Analyzing PDF..."):
+            text = extract_text_from_pdf(uploaded_file)
+            result_data = analyze_pdf(text)
+
+            img_base64 = result_data["wordcloud"]
+            keywords = result_data["keywords"]
+            st.session_state["extracted_keywords"] = result_data["keywords"]
+
+        if img_base64:
+            st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
+
+        st.markdown("### 🧠 Extracted Keywords")
+        for method, words in keywords.items():
+            st.markdown(f"**{method}**: {', '.join(words[:10])}")
 
 
 # — Handle text input path —
