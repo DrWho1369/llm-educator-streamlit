@@ -50,10 +50,12 @@ def extract_keywords_tfidf(text, num_keywords=10):
     return [term for term, _ in ranked[:num_keywords]]
 
 def extract_noun_phrases(text, top_n=10):
-    blob = TextBlob(text)
-    phrases = blob.noun_phrases
-    freq = Counter(phrases)
-    return [phrase for phrase, _ in freq.most_common(top_n)]
+    from sklearn.feature_extraction.text import CountVectorizer
+    vectorizer = CountVectorizer(ngram_range=(2, 2), stop_words='english')
+    X = vectorizer.fit_transform([text])
+    freqs = zip(vectorizer.get_feature_names_out(), X.toarray()[0])
+    sorted_phrases = sorted(freqs, key=lambda x: x[1], reverse=True)
+    return [phrase for phrase, count in sorted_phrases[:top_n]]
 
 # --- Text Summarization ---
 
