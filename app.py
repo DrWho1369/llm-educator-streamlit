@@ -114,7 +114,11 @@ if input_method == "Upload PDF":
             img_base64 = result_data["wordcloud"]
             keywords = result_data["keywords"]
             st.session_state["extracted_keywords"] = result_data["keywords"]
-
+            keyword_summary = "\n\n[Extracted Keywords]\n"
+            for method, words in keywords.items():
+                keyword_summary += f"{method}: {', '.join(words[:10])}\n"
+            st.session_state["user_input"] = keyword_summary
+            
         if img_base64:
             st.image(f"data:image/png;base64,{img_base64}", caption="Generated Word Cloud")
 
@@ -128,10 +132,16 @@ elif input_method == "Text Input":
     if st.session_state.get("selected_task") != "Emotion Check-in Templates":
         user_input = st.text_area("Paste lesson content, parent update, etc:", height=250)
         word_count = len(user_input.split())
+
         if word_count < 10:
             st.warning("✏️ Try to expand your input so the AI can generate a meaningful response.")
+        
+        # ✅ Save to session_state
+        st.session_state["user_input"] = user_input
+
     else:
-        user_input = ""
+        st.session_state["user_input"] = ""  # Emotion Check-in generates content without needing input
+
     
 
 selected_task = st.session_state["selected_task"]
@@ -176,6 +186,13 @@ if st.button("🚀 Generate Output", key="generate_btn"):
     task_key = selected_subtask if selected_task == "Reformat & Repurpose Resource" else selected_task
     system_prompt = system_prompts[task_key]
 
+    # --- Determine user_input based on method ---
+    if input_method == "Upload PDF":
+        user_input = "[Text extracted from uploaded PDF]"
+    else:
+        user_input = st.session_state.get("user_input", "").strip()
+    
+    # --- Get extracted keywords from session ---
     keywords = st.session_state.get("extracted_keywords", {})
     keyword_summary = ""
     if keywords:
@@ -195,7 +212,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
     )
 
     if not user_input.strip():
-        st.warning("⚠️ Please enter some content above.")
+        st.warning("⚠️ Please enter some content or upload a PDF above.")
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
             response = requests.post(
