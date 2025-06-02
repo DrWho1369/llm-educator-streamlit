@@ -1,6 +1,7 @@
 from textblob import TextBlob
 import matplotlib as plt
 import matplotlib.pyplot as plt
+import nltk
 from wordcloud import WordCloud
 from nltk.tokenize import sent_tokenize, word_tokenize 
 from nltk.corpus import stopwords
@@ -9,8 +10,20 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 from nltk.probability import FreqDist
 import os
 
+# Defensive punkt download
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
+
+
 def text_summarize(text):
-    sentences = sent_tokenize(text)
+    sentences = sent_tokenize(text, language="english")
     words = word_tokenize(text.lower())
     stop_words = set(stopwords.words('english'))
     words = [word for word in words if word.isalnum() and word not in stop_words]
