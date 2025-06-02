@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
-from pdf_theme_analysis import process_uploaded_pdf 
+from summarizer import text_summarize, sentiment_analysis, word_cloud  
+from pdf_extractor import extract_text_from_pdf
 from prompts import system_prompts, user_prompts
 
 
