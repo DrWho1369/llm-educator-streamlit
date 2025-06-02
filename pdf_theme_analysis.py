@@ -1,6 +1,6 @@
 import fitz  # PyMuPDF
-import nltk
-nltk.download('punkt', quiet=True)
+# import nltk
+# nltk.download('punkt', quiet=True)
 from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
 import hdbscan
@@ -9,9 +9,13 @@ import umap
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+import spacy
 
 from sklearn.metrics.pairwise import cosine_similarity
 
+
+# Load English tokenizer + sentence segmenter
+nlp = spacy.load("en_core_web_sm")
 
 # --- PDF Theme Extraction Functions ---
 
@@ -20,8 +24,10 @@ def extract_text_from_pdf(pdf_bytes):
     return " ".join([page.get_text() for page in doc])
 
 def extract_sentences(text):
-    return sent_tokenize(text, language="english")
-
+    # return sent_tokenize(text, language="english")
+    doc = nlp(text)
+    return [sent.text.strip() for sent in doc.sents]
+    
 def embed_sentences(sentences):
     model = SentenceTransformer('all-MiniLM-L6-v2')
     return model.encode(sentences)
