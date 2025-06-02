@@ -196,9 +196,14 @@ if st.button("🚀 Generate Output", key="generate_btn"):
     keywords = st.session_state.get("extracted_keywords", {})
     keyword_summary = ""
     if keywords:
-        keyword_summary = "\n\n[Extracted Keywords]\n"
-        for method, words in keywords.items():
-            keyword_summary += f"{method}: {', '.join(words[:10])}\n"
+        # Flatten all keyword lists into one combined list
+        flat_keywords = []
+        for word_list in keywords.values():
+            flat_keywords.extend(word_list)
+    
+        # Deduplicate and trim
+        unique_keywords = list(dict.fromkeys(flat_keywords))[:50] 
+        keyword_summary = "\n\n" + ", ".join(unique_keywords)
 
     full_input = f"User Input: {user_input}{keyword_summary}"
 
