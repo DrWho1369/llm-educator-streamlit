@@ -1,4 +1,3 @@
-import streamlit as st
 import fitz  # PyMuPDF
 import nltk
 from nltk.tokenize import sent_tokenize
@@ -8,17 +7,13 @@ from keybert import KeyBERT
 import umap
 import matplotlib.pyplot as plt
 from io import BytesIO
-import openai
-import os
+import base64
 
 from sklearn.metrics.pairwise import cosine_similarity
 
-nltk.download('punkt')
+nltk.download("punkt")
 
-# Set your OpenAI API key
-openai.api_key = os.getenv("OPENAI_API_KEY")  # or use openai.api_key = "sk-..."
-
-# ---- Core Pipeline Functions ----
+# --- PDF Theme Extraction Functions ---
 
 def extract_text_from_pdf(pdf_bytes):
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
@@ -53,7 +48,6 @@ def extract_cluster_keywords(sentences, labels):
 def plot_clusters(embeddings, labels):
     reducer = umap.UMAP(n_neighbors=15, min_dist=0.1, metric='cosine')
     reduced = reducer.fit_transform(embeddings)
-
     fig, ax = plt.subplots(figsize=(10, 6))
     unique_labels = set(labels)
     for label in unique_labels:
@@ -68,13 +62,26 @@ def plot_clusters(embeddings, labels):
     ax.grid(True)
     return fig
 
-def call_llm_summary(themes):
-    cluster_summaries = []
-    for cluster_id, data in themes.items():
-        keywords = ", ".join(data['keywords'])
-        examples = "\n".join(data['examples'])
-        cluster_summaries.append(f"Cluster {cluster_id}:\nKeywords: {keywords}\nExamples:\n{examples}\n")
+def process_uploaded_pdf(file):
+    pdf_text = extract_text_from_pdf(file.read())
+    sentences = extract_sentences(pdf_text)
+    embeddings = embed_sentences(sentences)
+    labels = cluster_embeddings(embeddings)
+    themes = extract_cluster_keywords(sentences, labels)
+    fig = plot_clusters(embeddings, labels)
 
-    full_prompt = "The following are clusters of sentences extracted from a pdf with keywords and examples:\n\n" + "\n\n".join(cluster_summaries)
-    return full_prompt
+    # Convert plot to base64 image
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.read()).decode()
 
+    # Convert themes into readable summaries
+    summarized_chunks = []
+    for cluster_id, info in themes.items():
+        summary = f"Cluster {cluster_id} — Keywords: {', '.join(info['keywords'])}\n"
+        for ex in info['examples']:
+            summary += f"  → {ex}\n"
+        summarized_chunks.append(summary.strip())
+
+    return summarized_chunks, img_base64
