@@ -131,9 +131,9 @@ if input_method == "Upload PDF":
             st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
 
 
-        # st.markdown("### 🧠 Extracted Keywords")
-        # for method, words in keywords.items():
-        #     st.markdown(f"**{method}**: {', '.join(words[:])}")
+        st.markdown("### 🧠 Extracted Keywords")
+        for method, words in keywords.items():
+            st.markdown(f"**{method}**: {', '.join(words[:])}")
 
 
 # — Handle text input path —
@@ -213,7 +213,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
             flat_keywords.extend(word_list)
     
         # Deduplicate and trim
-        unique_keywords = list(dict.fromkeys(flat_keywords))[:50] 
+        unique_keywords = list(dict.fromkeys(flat_keywords))[:300] 
         keyword_summary = "\n\n" + ", ".join(unique_keywords)
 
     full_input = f"User Input: {user_input}{keyword_summary}"
