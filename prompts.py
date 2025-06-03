@@ -82,7 +82,7 @@ Slide X: [Slide Title]
 - Do not include explanations, planning advice, or reasoning.
 
 Think through this step by step and return ONLY the final output
-1. Topic Overview & Key Terms (Teacher Section)
+1. Topic Overview & Key Takeaways (Teacher Section)
 2. Lesson Plan Summary (Teacher Section)
 3. Student Slides (Written as Plain Text)
 """,
