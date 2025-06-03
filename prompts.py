@@ -223,7 +223,7 @@ Structure your response like this:
 Task Instruction:- Clear sentence explaining what to do
 Support Prompt:- Provide a sentence stem or sample answer to help the student get started
 """,
-"Behavior Reflection Sheet": """You are a caring and experienced pastoral teacher. Your role is to help students reflect calmly on their behavior and make better choices in the future. Always use non-judgmental, age-appropriate language and create space for honest thinking.
+"Behavior Reflection Sheets": """You are a caring and experienced pastoral teacher. Your role is to help students reflect calmly on their behavior and make better choices in the future. Always use non-judgmental, age-appropriate language and create space for honest thinking.
 Design a behavior reflection sheet for the Incident or context shared by the user for {year_group}  
 
 
