@@ -2,21 +2,21 @@
 
 user_prompts = {
 "Differentiate Resource": """
-You are a specialist teaching assistant trained in adaptive instruction. Your task is to transform the previous teaching content input message into **three differentiated versions**, each tailored to a different student need:
+You are a specialist teaching assistant trained in adaptive instruction. Your task is to transform the teaching content in the users message into **three differentiated versions**, each tailored to a different student need:
 
-1. **Simplified Version**  
-   - Use **simpler vocabulary**, shorter sentences, and direct language.  
-   - Aim for a **lower reading age**.  
-   - Remove complex or abstract phrasing.  
-
-2. **Scaffolded Version**  
-   - Keep the original vocabulary, but **add sentence starters**, **guiding questions**, and a **vocabulary box**.  
-   - The goal is to support students who benefit from extra structure.
-
-3. **Challenge Version**  
+1. **Challenge Version**  
    - Expand on the original ideas to encourage **critical thinking** or **real-world application**.  
    - Include **stretch questions**, comparisons, or deeper analysis.  
-   - Use more **sophisticated vocabulary** and academic tone.
+   - Use more **sophisticated vocabulary** and an academic tone.  
+
+2. **Sentence Starter & Vocab Support**  
+   - Keep the original vocabulary, but **add sentence starters**, **guiding questions**, and a **vocabulary box**.  
+   - Designed to support students who benefit from additional structure and language scaffolds.
+
+3. **Simplified Version**  
+   - Use **simpler vocabulary**, shorter sentences, and direct language.  
+   - Aim for a **lower reading age**.  
+   - Remove complex or abstract phrasing.
 
 ---
 
@@ -38,42 +38,65 @@ You are a specialist teaching assistant trained in adaptive instruction. Your ta
 
 ---
 
-Return the versions in this exact order:   
-1. Challenge Version
-2. Scaffolded Version 
+Return the versions in this exact order:  
+1. Challenge Version  
+2. Sentence Starter & Vocab Support  
 3. Simplified Version  
 
 Return ONLY the final output. Do not include comments, explanations, or reasoning.
 """
 ,
-   "Plan & Print": """You are helping a teacher prepare a full lesson plan and slides based on a single topic. Use the information in the user input message to design the lesson plan and student slides.
+   "Plan & Print": """
+You are a lesson planning assistant helping a teacher create a **full written lesson plan and printable student slides** based on a single topic. Your output will include a teacher overview, a detailed lesson plan, and complete slide content written in text (not just slide titles or suggestions).
 
-Topic will be provided below
+Use the topic and lesson information provided below:
 
-Year Group: {year_group}  
-Duration: {duration} minutes
+- **Topic:** {user_input}  
+- **Year Group:** {year_group}  
+- **Lesson Duration:** {duration} minutes
 
-Follow these steps to create your output:
-1. **Define the Lesson Scope:** If the topic is broad or vague, interpret it appropriately for the age group and specify your focus in Slide 1.
-2. **Create a Teacher Guide:** Start your output with a brief topic overview and 4–6 key terms or learning objectives.
-3. **Write a Lesson Plan Outline:** Include a short paragraph for the teacher explaining how the lesson will flow.
-4. **Generate Slides:** Create 6–10 slides following this structure:
-   - Slide Title (specific and relevant to the topic)
-   - Slide Content (5 bullet points or short paragraphs)
-   - [Optional: Teacher Notes or Activity Instructions]
-   Typical slides might include:
-   - Lesson Objectives  
-   - Hook or Starter  
-   - Core Explanation  
-   - Guided Example or Modelled Task  
-   - Student Activity Instructions  
-   - Recap or Exit Task  
-   - Optional Homework
+---
 
-Use age-appropriate, accurate language. Do **not** fabricate facts or examples. Focus only on the provided topic.
+### Your Output Should Include:
 
-Return ONLY the final output. Do not include comments, explanations, or reasoning.
+1. **Topic Overview & Key Terms (Teacher Section):**
+   - Write a short paragraph introducing the topic for the teacher.
+   - List 4–6 **key terms or learning objectives**.
 
+2. **Lesson Plan Summary (Teacher Section):**
+   - Write a brief paragraph describing how the lesson will flow.
+   - Mention any key activities, timing, and intended outcomes.
+
+3. **Student Slides (Written as Plain Text):**
+   - Write **6–10 clearly numbered slides** using this format:
+
+Slide X: [Slide Title]
+- Bullet point 1
+- Bullet point 2
+- Bullet point 3
+- Bullet point 4
+- Bullet point 5
+[Optional: Teacher Notes or Activity Instructions]
+
+
+- Use content appropriate for the year group.
+- Include typical lesson components like:
+     - Lesson Objectives
+     - Starter or Hook
+     - Explanation
+     - Guided Example
+     - Student Task Instructions
+     - Recap or Exit Task
+     - Homework (optional)
+
+---
+
+### Do Not:
+- Return a list of suggested resources (e.g., “Create a slide deck” or “Use AFL questions”).
+- Invent fictional links, file formats, or general placeholders.
+- Output anything other than the complete written content of the plan and slides.
+
+Return ONLY the final output. Do not include commentary or reasoning.
 """,
    "Generate Parent Message": """
 You are a compassionate and professional school teacher writing a message to parents or guardians. Maintain a respectful, human tone that suits the nature of the user input message (positive or negative).
