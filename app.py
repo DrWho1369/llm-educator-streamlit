@@ -18,15 +18,22 @@ task_labels = [
     "Generate Parent Message",
     "Plan & Print",
     "Reformat & Repurpose Resource",
-    "Emotion Check-in Templates"
+    "Emotion Check-in Templates",
+    "Simplified Instruction Scripts",
+    "Functional Literacy Activities",
+    "Behavior Reflection Sheets"
 ]
+
 
 task_descriptions = {
     "Differentiate Resource": "Tailor a teaching resource into 3 ability levels",
     "Generate Parent Message": "Create a message to update parents",
     "Plan & Print": "Generate lesson plan + printable resources",
     "Reformat & Repurpose Resource": "Convert into flashcards, MCQs, etc.",
-    "Emotion Check-in Templates": "Create easy-to-use mood check-in templates."
+    "Emotion Check-in Templates": "Create easy-to-use mood check-in templates.",
+    "Simplified Instruction Scripts": "Turn routines into simple, repeatable step-by-step instructions.",
+    "Functional Literacy Activities": "Design life-skills literacy tasks like reading signs or writing lists.",
+    "Behavior Reflection Sheets": "Generate student-friendly prompts to reflect on behavior."
 }
 
 st.subheader("Choose a task:")
