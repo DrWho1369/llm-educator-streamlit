@@ -4,6 +4,27 @@ from summarizer import analyze_pdf
 from pdf_extractor import extract_text_from_pdf
 from prompts import user_prompts
 
+def extract_flashcards(text):
+    lines = text.strip().split("\n")
+    cards = []
+    question, answer = "", ""
+    for line in lines:
+        if line.strip().startswith("Q:"):
+            question = line.strip()[2:].strip()
+        elif line.strip().startswith("A:"):
+            answer = line.strip()[2:].strip()
+            if question and answer:
+                cards.append((question, answer))
+                question, answer = "", ""
+    return cards
+
+def render_flashcard_grid(flashcards):
+    st.markdown("### 🃏 Flashcard View")
+    cols = st.columns(2)
+    for idx, (q, a) in enumerate(flashcards):
+        with cols[idx % 2]:
+            st.markdown(f"**Q:** {q}")
+            st.info(f"**A:** {a}")
 
 # --- Set API call URL ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
@@ -259,6 +280,13 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 output = "[No output returned]"
 
         st.markdown(f"### AI Output")
+        if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to Flashcards":
+            flashcards = extract_flashcards(output)
+            if flashcards:
+                render_flashcard_grid(flashcards)
+            else:
+                st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
+
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
         st.markdown(f"### Prompt Sent to AI")
