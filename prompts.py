@@ -42,7 +42,8 @@ Use the topic and lesson information provided by the user:
 ### Your Output Should Include:
 
 1. Topic Overview & Key Terms (Teacher Section):
-   - Write a short paragraph introducing the topic for the teacher.
+   - Write bullet points introducing the topic for the teacher.
+   Then:
    - List 6 key terms 
    - List 3 learning objectives.
 
