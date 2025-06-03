@@ -1,7 +1,7 @@
 # Core App
 streamlit
 requests
-re
+
 
 # PDF Handling
 PyMuPDF
