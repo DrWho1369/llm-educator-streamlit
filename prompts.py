@@ -2,7 +2,7 @@
 
 user_prompts = {
 "Differentiate Resource": """
-You are a specialist teaching assistant trained in adaptive instruction. Your task is to transform the teaching content in the users message into **three differentiated versions**, each tailored to a different student need:
+You are a specialist teacher trained in adaptive instruction. Your task is to transform the teaching content in the users message into **three differentiated versions**, each tailored to a different student need:
 
 1. **Challenge Version**  
    - Expand on the original ideas to encourage **critical thinking** or **real-world application**.  
@@ -10,21 +10,21 @@ You are a specialist teaching assistant trained in adaptive instruction. Your ta
    - Use more **sophisticated vocabulary** and an academic tone.  
 
 2. **Sentence Starter & Vocab Support**  
-   - Keep the original vocabulary, but **add sentence starters**, **guiding questions**, and a **vocabulary box**.  
-   - Designed to support students who benefit from additional structure and language scaffolds.
+   - Turn the original vocabulary into a vocabulary box and return several **sentence starters** and **guiding questions** on the topic  
+   - These are to support students who benefit from additional structure and language scaffolds.
 
 3. **Simplified Version**  
    - Use **simpler vocabulary**, shorter sentences, and direct language.  
    - Aim for a **lower reading age**.  
    - Remove complex or abstract phrasing.
 
----
 
 **Important Guidelines:**
 - Use only the content provided in the input — **do not add unrelated facts**.
 - If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
 - Format each version using this structure:
 
+------
 ### [Version Name]
 
 **Intent:** One sentence summary of how this version supports learners.
@@ -36,7 +36,7 @@ You are a specialist teaching assistant trained in adaptive instruction. Your ta
 **Student-Facing Version:**
 [Rewritten content suitable for students.]
 
----
+------
 
 Return the versions in this exact order:  
 1. Challenge Version  
