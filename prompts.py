@@ -207,9 +207,6 @@ Guidelines:
 - Assume the student will read or hear the instructions aloud.
 - Do not invent steps not mentioned by the user.
 
-Task:
-{user_input}
-
 Start your response like this:
 Step 1:
 """,
@@ -231,10 +228,8 @@ Structure your response like this:
 [Provide a sentence stem or sample answer to help the student get started]
 """,
 "Behavior Reflection Sheet": """You are a caring and experienced pastoral teacher. Your role is to help students reflect calmly on their behavior and make better choices in the future. Always use non-judgmental, age-appropriate language and create space for honest thinking.
-Design a behavior reflection sheet for the following context:
+Design a behavior reflection sheet for the Incident or context shared by the user for {year_group}  
 
-Age group: {year_group}  
-Incident or context: {user_input}
 
 Guidelines:
 - Use simple, supportive language appropriate for {year_group}.
