@@ -233,8 +233,9 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         num_templates=num_templates
     )
 
-    if not user_input.strip():
+    if selected_task != "Emotion Check-in Templates" and not user_input.strip():
         st.warning("⚠️ Please enter some content or upload a PDF above.")
+
     else:
         with st.spinner(f"Generating output for: {selected_task}..."):
             response = requests.post(
