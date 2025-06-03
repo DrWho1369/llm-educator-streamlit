@@ -120,18 +120,7 @@ Instructions:
 - Include a mix of easy, medium, and hard difficulty levels.
 - Avoid ambiguous phrasing or trick questions.
 
---------
-**Question format:**
-Question Number
-Q: [Question]
-A. Option 1  
-B. Option 2  
-C. Option 3  
-D. Option 4  
-Answer: [Correct Option Letter]
--------
-
-Return ONLY the final output. Do not include comments, explanations, or reasoning.
+Return ONLY the final output of {num_mcq} multiple choice questions. Do not include comments, explanations, or reasoning.
 """,
 
 "Convert to Flashcards": """
