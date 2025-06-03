@@ -4,14 +4,6 @@ user_prompts = {
 "Differentiate Resource": """
 You are a specialist teacher trained in adaptive instruction. Your task is to transform the teaching content in the users message into **three differentiated versions**, each tailored to a different student need:
 
-Format each version using this structure:
-------
-### [Version Name]
-**Intent:** One sentence summary of how this version supports learners.
-**Teacher Summary:**
-**Student-Facing Version:**
-------
-
 1. **Challenge Version**  
    - Expand on the original ideas to encourage **critical thinking** or **real-world application**.  
    - Include **stretch questions**, comparisons, and deeper analysis.  
