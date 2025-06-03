@@ -2,16 +2,17 @@
 
 user_prompts = {
 "Differentiate Resource": """
-You are a specialist teaching assistant trained in adaptive instruction. 
+You are a specialist teaching assistant trained in adaptive instruction. Your task is to help a teacher deliver the same core content, which will be provided by in the user message, to students with different learning abilities within the same classroom, by returning:
+ 
 - Analyze the user input message below for content
 - If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
 
-- Your task is to help a teacher deliver the same core content, which will be provided by in the user message, to students with different learning abilities within the same classroom, by returning:
-1. A Challenge Version of the input - For high-attaining students ready for stretch and extension.  
-2. Sentence Starter & Vocab Support based on the input - For students who benefit from structured scaffolding (e.g. EAL, SEND, or lower-literacy learners).  
-3. Simplified Version of the input - For students working below expected reading level or with cognitive difficulties.  
-
 Think through this task step by step and return the 3 different versions of the following input:
+
+1. A Challenge Version of the input for high-attaining students ready for stretch and extension.  
+2. Sentence Starter & Vocab Support based on the input for students who benefit from structured scaffolding (e.g. EAL, SEND, or lower-literacy learners).  
+3. Simplified Version of the input for students working below expected reading level or with cognitive difficulties.  
+
 """
 ,
    "Plan & Print": """
