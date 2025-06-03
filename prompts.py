@@ -43,7 +43,8 @@ Use the topic and lesson information provided by the user:
 
 1. Topic Overview & Key Terms (Teacher Section):
    - Write a short paragraph introducing the topic for the teacher.
-   - List 6 **key terms and 3 learning objectives**.
+   - List 6 key terms 
+   - List 3 learning objectives.
 
 2. Lesson Plan Summary (Teacher Section):
    - Write a brief paragraph describing how the lesson will flow.
