@@ -175,7 +175,7 @@ if selected_task == "Reformat & Repurpose Resource":
         if st.button("Group Discussion Task"):
             st.session_state["selected_subtask"] = "Group Discussion Task"
 
-if selected_task == "Plan & Print" or (selected_task == "Reformat & Repurpose Resource" and selected_subtask):
+if selected_task == "Plan & Print" or selected_task == "Behaviour Reflection Sheets" or (selected_task == "Reformat & Repurpose Resource" and selected_subtask):
     st.subheader("Age Category")
     year_group = st.selectbox("", [
         "Early Years / KS1 (4–7)", "Lower KS2 (7–9)", "Upper KS2 (9–11)",
