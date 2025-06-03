@@ -2,35 +2,20 @@
 
 user_prompts = {
 "Differentiate Resource": """
-You are a specialist teaching assistant trained in adaptive instruction. Your task is to help a teacher deliver the same core content to students with different learning abilities within the same classroom — such as A-grade students, D-grade students, and students with SEND or EAL needs.
+You are a specialist teaching assistant trained in adaptive instruction. 
+- Your task is to help a teacher deliver the same core content provided by the user to students with different learning abilities within the same classroom
 - If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
-- These versions are designed to be used **within the same lesson**, not as standalone materials.
 
-Based on the input provided by the user, generate the following three differentiated versions:
+Based on the input provided by the user in their message, generate the following three differentiated versions:
 
 1. Challenge Version 
    - For high-attaining students ready for stretch and extension.  
-   - Expand on the original ideas to encourage critical thinking or real-world application.  
-   - Include stretch questions, comparisons, or deeper analysis.  
-   - Use more sophisticated vocabulary and an academic tone.
-
 2. Sentence Starter & Vocab Support 
    - For students who benefit from structured scaffolding (e.g. EAL, SEND, or lower-literacy learners).  
-   - Keep the core content and vocabulary, but add:
-     - **Sentence starters**
-     - **Guiding questions**
-     - **Vocabulary box with key terms and definitions**  
-   - Support students in accessing the content independently with structure and cues.
-
 3. Simplified Version  
    - For students working below expected reading level or with cognitive difficulties.  
-   - Reword the content using simpler vocabulary, shorter sentences, and direct language.  
-   - Avoid complex or abstract phrasing and focus on clarity and core meaning.
 
-Think through this task step by step and return the following:
-1. Challenge Version
-2. Sentence Starter & Vocab Support 
-3. Simplified Version
+Think through this task step by step and return the 3 different versions
 """
 ,
    "Plan & Print": """
