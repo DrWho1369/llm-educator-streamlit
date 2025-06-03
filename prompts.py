@@ -12,7 +12,6 @@ Perform these steps:
 1. A Challenge Version of the input for high-attaining students ready for stretch and extension.  
 2. Sentence Starter & Vocab Support based on the input for students who benefit from structured scaffolding (e.g. EAL, SEND, or lower-literacy learners).  
 3. Simplified Version of the input for students working below expected reading level or with cognitive difficulties.  
-
 """
 ,
    "Plan & Print": """
