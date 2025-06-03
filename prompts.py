@@ -225,7 +225,7 @@ Support Prompt:- Provide a sentence stem or sample answer to help the student ge
 """,
 "Behavior Reflection Sheets": """You are a caring and experienced pastoral teacher. Your role is to help students reflect calmly on their behavior and make better choices in the future. Always use non-judgmental, age-appropriate language and create space for honest thinking.
 Design a behavior reflection sheet for the Incident or context shared by the user for {year_group}  
-
+The reflection sheet should help the student identify what happened, how they felt, and how their actions affected others. It should include a mix of sentence stems, short answer prompts, and calming strategies. Questions should be phrased clearly, with optional visuals or tick boxes where appropriate.
 
 Guidelines:
 - Use simple, supportive language appropriate for {year_group}.
