@@ -32,32 +32,6 @@ Based on the content provided below, generate **three differentiated versions** 
 - If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
 - These versions are designed to be used **within the same lesson**, not as standalone materials.
 
----
-
-### Format for Each Version:
-
-[Version Name]
-Intent: One sentence summary of how this version supports a specific student group.
-
-Teacher Summary:
-
-Bullet points describing how and why the version was adapted.
-
-Highlight key features, vocabulary, or scaffolds used.
-
-Student-Facing Version:
-[Rewritten content suitable for students.]
-
-yaml
-Copy code
-
----
-
-Return the versions in this exact order:  
-1. Challenge Version  
-2. Sentence Starter & Vocab Support  
-3. Simplified Version  
-
 Return ONLY the final output. Do not include comments, explanations, or reasoning.
 """
 ,
