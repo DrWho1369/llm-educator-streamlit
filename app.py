@@ -354,17 +354,6 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 render_flashcard_grid(flashcards)
             else:
                 st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
-        if selected_task == "Emotion Check-in Templates":
-            render_emotion_templates(output)
-        else:
-            if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to Flashcards":
-                flashcards = extract_flashcards(output)
-                if flashcards:
-                    render_flashcard_grid(flashcards)
-                else:
-                    st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
-            st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
-
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
         st.markdown(f"### Prompt Sent to AI")
