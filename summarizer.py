@@ -1,7 +1,6 @@
 import re
 import base64
 from collections import Counter
-from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
