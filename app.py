@@ -260,7 +260,8 @@ if st.button("🚀 Generate Output", key="generate_btn"):
 
     # --- Determine user_input based on method ---
     if input_method == "Upload PDF":
-        user_input = "[Text extracted from uploaded PDF]"
+        user_input = st.session_state.get("user_input", "").strip()
+
     else:
         user_input = st.session_state.get("user_input", "").strip()
         user_input = clean_user_input(user_input)
