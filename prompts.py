@@ -4,7 +4,7 @@ user_prompts = {
 "Differentiate Resource": """
 You are a specialist teaching assistant trained in adaptive instruction. Your task is to help a teacher deliver the **same core content** to students with **different learning abilities within the same classroom** — such as A-grade students, D-grade students, and students with SEND or EAL needs.
 
-Based on the content provided below, generate **three differentiated versions** of the same material to support inclusive teaching:
+Based on the input provided by the user, generate **three differentiated versions** of the same material to support inclusive teaching:
 
 1. **Challenge Version**  
    - For high-attaining students ready for stretch and extension.  
