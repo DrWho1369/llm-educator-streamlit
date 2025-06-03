@@ -4,47 +4,47 @@ from summarizer import analyze_pdf
 from pdf_extractor import extract_text_from_pdf
 from prompts import user_prompts
 
-import re
+# import re
 
-def render_emotion_templates(templates_output):
-    st.markdown("""
-        <style>
-        .template-box {
-            background-color: #fff8e1;
-            border: 2px solid #f39c12;
-            border-radius: 12px;
-            padding: 1.2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            white-space: pre-wrap;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .template-heading {
-            font-weight: bold;
-            color: #d35400;
-            margin-bottom: 0.5rem;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+# def render_emotion_templates(templates_output):
+#     st.markdown("""
+#         <style>
+#         .template-box {
+#             background-color: #fff8e1;
+#             border: 2px solid #f39c12;
+#             border-radius: 12px;
+#             padding: 1.2rem;
+#             margin-bottom: 1.5rem;
+#             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+#             white-space: pre-wrap;
+#             font-family: 'Segoe UI', sans-serif;
+#         }
+#         .template-heading {
+#             font-weight: bold;
+#             color: #d35400;
+#             margin-bottom: 0.5rem;
+#         }
+#         </style>
+#     """, unsafe_allow_html=True)
 
-    st.markdown("### 🧠 Emotion Check-In Templates")
+#     st.markdown("### 🧠 Emotion Check-In Templates")
 
-    # Find all templates starting with "Template X"
-    # This captures: Template X\n[content until next Template or end]
-    pattern = r"(Template\s+\d+.*?)(?=(Template\s+\d+)|\Z)"
-    matches = re.findall(pattern, templates_output, re.DOTALL | re.IGNORECASE)
+#     # Find all templates starting with "Template X"
+#     # This captures: Template X\n[content until next Template or end]
+#     pattern = r"(Template\s+\d+.*?)(?=(Template\s+\d+)|\Z)"
+#     matches = re.findall(pattern, templates_output, re.DOTALL | re.IGNORECASE)
 
-    if not matches:
-        st.warning("⚠️ Could not find any templates in the output.")
-        return
+#     if not matches:
+#         st.warning("⚠️ Could not find any templates in the output.")
+#         return
 
-    for idx, (template, _) in enumerate(matches, start=1):
-        st.markdown(f"""
-            <div class="template-box">
-                <div class="template-heading">Template {idx}</div>
-                {template.strip()}
-            </div>
-        """, unsafe_allow_html=True)
+#     for idx, (template, _) in enumerate(matches, start=1):
+#         st.markdown(f"""
+#             <div class="template-box">
+#                 <div class="template-heading">Template {idx}</div>
+#                 {template.strip()}
+#             </div>
+#         """, unsafe_allow_html=True)
 
 def extract_flashcards(text):
     lines = text.strip().split("\n")
