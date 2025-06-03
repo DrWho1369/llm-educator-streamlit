@@ -200,7 +200,7 @@ if input_method == "Upload PDF":
         if st.session_state.get("extracted_keywords"):
             st.markdown("### 🧠 Extracted Keywords")
             for label, words in st.session_state["extracted_keywords"].items():
-                st.markdown(f"**{label}**: {', '.join(words[:10])}")
+                st.markdown(f"**{label}**: {', '.join(words[:])}")
         else:
             st.markdown("⚠️ No keywords were extracted.")
 
