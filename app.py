@@ -4,47 +4,6 @@ from summarizer import analyze_pdf
 from pdf_extractor import extract_text_from_pdf
 from prompts import user_prompts
 
-# import re
-
-# def render_emotion_templates(templates_output):
-#     st.markdown("""
-#         <style>
-#         .template-box {
-#             background-color: #fff8e1;
-#             border: 2px solid #f39c12;
-#             border-radius: 12px;
-#             padding: 1.2rem;
-#             margin-bottom: 1.5rem;
-#             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-#             white-space: pre-wrap;
-#             font-family: 'Segoe UI', sans-serif;
-#         }
-#         .template-heading {
-#             font-weight: bold;
-#             color: #d35400;
-#             margin-bottom: 0.5rem;
-#         }
-#         </style>
-#     """, unsafe_allow_html=True)
-
-#     st.markdown("### 🧠 Emotion Check-In Templates")
-
-#     # Find all templates starting with "Template X"
-#     # This captures: Template X\n[content until next Template or end]
-#     pattern = r"(Template\s+\d+.*?)(?=(Template\s+\d+)|\Z)"
-#     matches = re.findall(pattern, templates_output, re.DOTALL | re.IGNORECASE)
-
-#     if not matches:
-#         st.warning("⚠️ Could not find any templates in the output.")
-#         return
-
-#     for idx, (template, _) in enumerate(matches, start=1):
-#         st.markdown(f"""
-#             <div class="template-box">
-#                 <div class="template-heading">Template {idx}</div>
-#                 {template.strip()}
-#             </div>
-#         """, unsafe_allow_html=True)
 
 def extract_flashcards(text):
     lines = text.strip().split("\n")
@@ -347,13 +306,14 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 st.code(response.text)
                 output = "[No output returned]"
 
-        st.markdown(f"### AI Output")
+        
         if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to Flashcards":
             flashcards = extract_flashcards(output)
             if flashcards:
                 render_flashcard_grid(flashcards)
             else:
                 st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
+        st.markdown(f"### Raw AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
         st.markdown(f"### Prompt Sent to AI")
