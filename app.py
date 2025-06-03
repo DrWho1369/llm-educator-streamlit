@@ -19,12 +19,38 @@ def extract_flashcards(text):
     return cards
 
 def render_flashcard_grid(flashcards):
+    st.markdown("""
+        <style>
+        .flashcard-box {
+            background-color: #f9f9f9;
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .flashcard-question {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .flashcard-answer {
+            color: #34495e;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     st.markdown("### 🃏 Flashcard View")
+
     cols = st.columns(2)
     for idx, (q, a) in enumerate(flashcards):
         with cols[idx % 2]:
-            st.markdown(f"**Q:** {q}")
-            st.info(f"**A:** {a}")
+            st.markdown(f"""
+                <div class="flashcard-box">
+                    <div class="flashcard-question">Q: {q}</div>
+                    <div class="flashcard-answer">A: {a}</div>
+                </div>
+            """, unsafe_allow_html=True)
 
 # --- Set API call URL ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
