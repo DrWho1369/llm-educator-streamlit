@@ -28,11 +28,8 @@ Based on the input provided by the user, generate **three differentiated version
 ---
 
 **Important Guidelines:**
-- Use only the content provided — **do not add unrelated facts**.
 - If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
 - These versions are designed to be used **within the same lesson**, not as standalone materials.
-
-Return ONLY the final output. Do not include comments, explanations, or reasoning.
 """
 ,
    "Plan & Print": """
