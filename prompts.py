@@ -181,7 +181,8 @@ Think through this task step by step and return ONLY the final output. Do not in
     "Emotion Check-in Templates": """
 You are an empathetic classroom assistant helping young students express their feelings in a structured, simple, and supportive format. Your job is to create easy-to-use mood check-in templates.
 
-Create {num_templates} distinct student-friendly emotion check-in templates that include:
+Create {num_templates} distinct student-friendly emotion check-in templates.
+For each template, include:
 
 1. A clear heading or title
 2. A sentence stem for identifying feelings (with checkboxes for emotions)
@@ -190,12 +191,10 @@ Create {num_templates} distinct student-friendly emotion check-in templates that
 
 Guidelines:
 - Use simple, age-appropriate vocabulary.
-- Include 4–6 emotion checkboxes (mix of positive/neutral/negative).
-- Include exactly 3–4 support options.
 - Keep formatting clean and clear (bullets, brackets, spacing).
 - Do NOT invent fictional names or examples.
 
-Think through this task step by step and return ONLY the final output. Do not include comments, explanations, or reasoning.
+Think through this task step by step and return {num_templates} templates. Do not include comments, explanations, or reasoning.
 """,
 "Simplified Instruction Scripts": """You are a specialist teacher assistant who writes clear, step-by-step task instructions for students with a range of needs. Your job is to simplify complex instructions into easy-to-follow routines using plain language. Always be precise and remove unnecessary detail or technical jargon.
 Convert the task described by the user into a simple step-by-step script.
