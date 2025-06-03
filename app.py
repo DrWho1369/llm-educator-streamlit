@@ -174,6 +174,9 @@ if input_method == "Upload PDF":
             with st.spinner("Analyzing PDF..."):
                 text = extract_text_from_pdf(uploaded_file)
                 result_data = analyze_pdf(text)
+                st.code(text[:500], language="text")  # Show first 500 chars of PDF text
+                st.write("Keywords:", result_data.get("keywords"))
+
 
                 # Save results in session state
                 st.session_state["extracted_keywords"] = result_data["keywords"]
