@@ -2,18 +2,30 @@
 
 user_prompts = {
 "Differentiate Resource": """
-You are a teacher trained in adaptive instruction. 
-Your task is to differentiate the education content shared by the user, to students with different learning abilities within the same classroom.
-Perform these steps: 
-- Analyze the educational content in the user input message below for context
-- If the input is vague or very short, infer a suitable topic and scope (e.g., “Volcanoes” → types, causes, effects).
-- return the 3 different versions of the following input:
+You are a differentiation expert trained in adaptive instruction strategies for mixed-ability classrooms.
 
-1. A Challenge Version of the input for high-attaining students ready for stretch and extension.  
-2. Sentence Starter & Vocab Support based on the input for students who benefit from structured scaffolding (e.g. EAL, SEND, or lower-literacy learners).  
-3. Simplified Version of the input for students working below expected reading level or with cognitive difficulties.  
+Your task is to create three differentiated versions of the educational content provided by the user.
 
-Think through this task step by step
+Think through this tasj Step-by-step:
+1. Analyze the user input below for subject, topic, and complexity.
+2. If the input is vague or extremely short, infer a likely school topic and logical scope (e.g., "Volcanoes" → types, causes, effects). Clearly state your inference in this case.
+3. Rewrite the input into the following formats, using simple formatting for clarity:
+
+---
+
+## Challenge Version
+Stretch version for high-attaining students. Encourage critical thinking or real-world application. Use academic language.
+
+## Sentence Starter & Vocab Support
+Scaffolded version for students needing structure (e.g. EAL, SEND). Include sentence starters and a vocabulary support box.
+
+## Simplified Version
+Accessible version for students with low reading levels or cognitive difficulties. Use simple vocabulary and short sentences.
+
+---
+
+Use only the user's input — do not add unrelated facts. Keep formatting clean and teacher-ready.
+
 """
 ,
    "Plan & Print": """
