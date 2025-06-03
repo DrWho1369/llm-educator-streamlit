@@ -4,6 +4,10 @@ from summarizer import analyze_pdf
 from pdf_extractor import extract_text_from_pdf
 from prompts import user_prompts
 
+import re
+
+def clean_user_input(text):
+    return re.sub(r"[^\w\s.,?!-]", "", text)
 
 def extract_flashcards(text):
     lines = text.strip().split("\n")
@@ -259,6 +263,8 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         user_input = "[Text extracted from uploaded PDF]"
     else:
         user_input = st.session_state.get("user_input", "").strip()
+        cleaned_input = clean_user_input(user_input)
+
     
     # --- Get extracted keywords from session ---
     keywords = st.session_state.get("extracted_keywords", {})
@@ -273,7 +279,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         unique_keywords = list(dict.fromkeys(flat_keywords))[:250] 
         keyword_summary = "\n\n" + ", ".join(unique_keywords)
 
-    full_input = f"User Input: {user_input}{keyword_summary}"
+    full_input = f"User Input: {cleaned_input}{keyword_summary}"
 
     user_prompt_template = user_prompts[task_key]
     user_prompt = user_prompt_template.format(
