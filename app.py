@@ -22,7 +22,27 @@ def extract_flashcards(text):
                 cards.append((question, answer))
                 question, answer = "", ""
     return cards
-
+    
+def extract_mcqs(text):
+    mcqs = []
+    blocks = text.strip().split("Q")
+    for block in blocks:
+        if not block.strip():
+            continue
+        lines = block.strip().split("\n")
+        if len(lines) < 3:
+            continue
+        question = lines[0].strip(": ").strip()
+        options = [line.strip() for line in lines[1:] if re.match(r"[A-D]\.", line.strip())]
+        answer_line = next((line for line in lines if line.startswith("Answer:")), "")
+        answer = answer_line.split(":")[-1].strip() if answer_line else None
+        mcqs.append({
+            "question": question,
+            "options": options,
+            "answer": answer
+        })
+    return mcqs
+    
 def render_flashcard_grid(flashcards):
     st.markdown("""
         <style>
@@ -56,6 +76,46 @@ def render_flashcard_grid(flashcards):
                     <div class="flashcard-answer">A: {a}</div>
                 </div>
             """, unsafe_allow_html=True)
+
+
+def render_mcq_cards(mcqs):
+    st.markdown("""
+        <style>
+        .mcq-box {
+            background-color: #f9f9f9;
+            border: 2px solid #7f8c8d;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .mcq-question {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .mcq-option {
+            margin-left: 1rem;
+            color: #34495e;
+        }
+        .mcq-answer {
+            margin-top: 0.5rem;
+            font-style: italic;
+            color: #16a085;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 🧠 Multiple Choice Questions")
+
+    for idx, mcq in enumerate(mcqs, 1):
+        st.markdown(f"""
+            <div class="mcq-box">
+                <div class="mcq-question">Q{idx}: {mcq['question']}</div>
+                {''.join(f"<div class='mcq-option'>{opt}</div>" for opt in mcq['options'])}
+                <div class="mcq-answer">Answer: {mcq['answer']}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
 # --- Set API call URL ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
@@ -193,16 +253,16 @@ if input_method == "Upload PDF":
                     st.session_state["user_input"] = "⚠️ No keywords could be extracted."
 
         # Always show stored results
-        if st.session_state.get("img_base64"):
-            st.subheader("Generated Word Cloud")
-            st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
+        # if st.session_state.get("img_base64"):
+        #     st.subheader("Generated Word Cloud")
+        #     st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
 
-        if st.session_state.get("extracted_keywords"):
-            st.markdown("### 🧠 Extracted Keywords")
-            for label, words in st.session_state["extracted_keywords"].items():
-                st.markdown(f"**{label}**: {', '.join(words[:])}")
-        else:
-            st.markdown("⚠️ No keywords were extracted.")
+        # if st.session_state.get("extracted_keywords"):
+        #     st.markdown("### 🧠 Extracted Keywords")
+        #     for label, words in st.session_state["extracted_keywords"].items():
+        #         st.markdown(f"**{label}**: {', '.join(words[:])}")
+        # else:
+        #     st.markdown("⚠️ No keywords were extracted.")
 
 # — Handle text input path —
 elif input_method == "Text Input":
@@ -331,6 +391,13 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 render_flashcard_grid(flashcards)
             else:
                 st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
+        if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to MCQ":
+            mcqs = extract_mcqs(output)
+            if mcqs:
+                render_mcq_cards(mcqs)
+            else:
+                st.markdown("❗ Could not extract MCQs. Displaying raw output below:")
+
         st.markdown(f"### Raw AI Output")
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
