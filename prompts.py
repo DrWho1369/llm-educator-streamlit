@@ -41,11 +41,11 @@ Use the topic and lesson information provided by the user:
 
 ### Your Output Should Include:
 
-1. Topic Overview & Key Terms (Teacher Section):
-   - Write bullet points introducing the topic for the teacher.
+1. Topic Overview & Key Takeaways (Teacher Section):
+   - Write 1 short paragraph introducing the topic for the teacher.
    Then:
-   - List 6 key terms 
-   - List 3 learning objectives.
+   - List 3 learning objectives
+   - List 6 key takeaways for the students
 
 2. Lesson Plan Summary (Teacher Section):
    - Write a brief paragraph describing how the lesson will flow.
