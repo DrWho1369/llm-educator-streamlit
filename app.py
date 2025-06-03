@@ -138,40 +138,22 @@ for i, label in enumerate(task_labels):
     if i % cols_per_row == 0:
         cols = st.columns(cols_per_row)
     with cols[i % cols_per_row]:
-        selected = st.session_state["selected_task"] == label
-        st.markdown(
-            f"""
-            <div class="task-button-wrapper">
-                <button class="task-button {'task-button-selected' if selected else ''}">{label}</button>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button(label, key=label, help=task_descriptions[label]):
+        button_class = "task-button-selected" if st.session_state["selected_task"] == label else "task-button"
+        if st.button(f"{label}", key=label, help=task_descriptions[label]):
             st.session_state["selected_task"] = label
             st.session_state["selected_subtask"] = None
 
 # --- STYLE ---
 st.markdown("""
 <style>
-.task-button-wrapper {
-    display: flex;
-    justify-content: center;
-}
 .task-button {
-    width: 100%;
-    min-height: 80px;
-    padding: 0.75rem;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
+    background-color: #f0f0f0;
     border: 2px solid #ccc;
     border-radius: 8px;
-    background-color: #f0f0f0;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    word-wrap: break-word;
-    white-space: normal;
 }
 .task-button:hover {
     background-color: #e0e0e0;
@@ -179,7 +161,7 @@ st.markdown("""
 .task-button-selected {
     background-color: #3498db !important;
     color: white !important;
-    border-color: #2980b9;
+    border: 2px solid #2980b9;
 }
 </style>
 """, unsafe_allow_html=True)
