@@ -154,6 +154,7 @@ elif input_method == "Text Input":
         st.session_state["user_input"] = user_input
 
     else:
+        user_input = st.text_area("Optional: Add context or focus area for the templates", height=150)
         st.session_state["user_input"] = ""  # Emotion Check-in generates content without needing input
 
     
