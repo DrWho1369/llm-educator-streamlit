@@ -29,22 +29,16 @@ def render_emotion_templates(templates_output):
 
     st.markdown("### 🧠 Emotion Check-In Templates")
 
-    # Extract from 'Template 1' onwards
-    match = re.search(r"(Template\s+1.*)", templates_output, re.DOTALL | re.IGNORECASE)
-    if not match:
+    # Find all templates starting with "Template X"
+    # This captures: Template X\n[content until next Template or end]
+    pattern = r"(Template\s+\d+.*?)(?=(Template\s+\d+)|\Z)"
+    matches = re.findall(pattern, templates_output, re.DOTALL | re.IGNORECASE)
+
+    if not matches:
         st.warning("⚠️ Could not find any templates in the output.")
         return
 
-    # Now split each Template X section
-    template_text = match.group(1)
-    templates = re.split(r"(Template\s+\d+)", template_text)
-
-    # Rejoin label with content: ['Template 1', 'body1', 'Template 2', 'body2', ...]
-    formatted_templates = [
-        templates[i] + templates[i+1] for i in range(0, len(templates)-1, 2)
-    ]
-
-    for idx, template in enumerate(formatted_templates, start=1):
+    for idx, (template, _) in enumerate(matches, start=1):
         st.markdown(f"""
             <div class="template-box">
                 <div class="template-heading">Template {idx}</div>
