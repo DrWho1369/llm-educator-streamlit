@@ -168,15 +168,15 @@ if selected_task == "Reformat & Repurpose Resource":
     with subtask_cols[0]:
         if st.button("Convert to MCQ"):
             st.session_state["selected_subtask"] = "Convert to MCQ"
-            st.experimental_rerun()
+            st.rerun()
     with subtask_cols[1]:
         if st.button("Convert to Flashcards"):
             st.session_state["selected_subtask"] = "Convert to Flashcards"
-            st.experimental_rerun()
+            st.rerun()
     with subtask_cols[2]:
         if st.button("Group Discussion Task"):
             st.session_state["selected_subtask"] = "Group Discussion Task"
-            st.experimental_rerun()
+            st.rerun()
 
 if selected_task == "Plan & Print" or selected_task == "Behavior Reflection Sheets" or (selected_task == "Reformat & Repurpose Resource" and selected_subtask):
     st.subheader("Age Category")
