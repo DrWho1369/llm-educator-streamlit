@@ -4,6 +4,54 @@ from summarizer import analyze_pdf
 from pdf_extractor import extract_text_from_pdf
 from prompts import user_prompts
 
+import re
+
+def render_emotion_templates(templates_output):
+    st.markdown("""
+        <style>
+        .template-box {
+            background-color: #fff8e1;
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .template-heading {
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 0.5rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 🧠 Emotion Check-In Templates")
+
+    # Extract from 'Template 1' onwards
+    match = re.search(r"(Template\s+1.*)", templates_output, re.DOTALL | re.IGNORECASE)
+    if not match:
+        st.warning("⚠️ Could not find any templates in the output.")
+        return
+
+    # Now split each Template X section
+    template_text = match.group(1)
+    templates = re.split(r"(Template\s+\d+)", template_text)
+
+    # Rejoin label with content: ['Template 1', 'body1', 'Template 2', 'body2', ...]
+    formatted_templates = [
+        templates[i] + templates[i+1] for i in range(0, len(templates)-1, 2)
+    ]
+
+    for idx, template in enumerate(formatted_templates, start=1):
+        st.markdown(f"""
+            <div class="template-box">
+                <div class="template-heading">Template {idx}</div>
+                {template.strip()}
+            </div>
+        """, unsafe_allow_html=True)
+
 def extract_flashcards(text):
     lines = text.strip().split("\n")
     cards = []
@@ -312,6 +360,16 @@ if st.button("🚀 Generate Output", key="generate_btn"):
                 render_flashcard_grid(flashcards)
             else:
                 st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
+        if selected_task == "Emotion Check-in Templates":
+            render_emotion_templates(output)
+        else:
+            if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to Flashcards":
+                flashcards = extract_flashcards(output)
+                if flashcards:
+                    render_flashcard_grid(flashcards)
+                else:
+                    st.markdown("❗ Could not extract flashcards. Displaying raw output below:")
+            st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
 
         st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
         st.download_button("Copy/Download Output", data=output, file_name="output.txt")
