@@ -169,32 +169,40 @@ if input_method == "Upload PDF":
     uploaded_file = st.file_uploader("", type="pdf", key="pdf_upload")
 
     if uploaded_file:
-        # Only run analysis if the file is newly uploaded
-        if st.session_state.get("last_uploaded_filename") != uploaded_file.name:
+        # Optional: Let user re-trigger analysis manually
+        reanalyze = st.button("🔁 Reanalyze PDF")
+
+        # Always process if: new file OR user forces reanalysis
+        if reanalyze or st.session_state.get("last_uploaded_filename") != uploaded_file.name:
             with st.spinner("Analyzing PDF..."):
                 text = extract_text_from_pdf(uploaded_file)
                 result_data = analyze_pdf(text)
-                st.code(text[:500], language="text")  # Show first 500 chars of PDF text
-                st.write("Keywords:", result_data.get("keywords"))
 
-
-                # Save results in session state
-                st.session_state["extracted_keywords"] = result_data["keywords"]
-                st.session_state["user_input"] = (
-                    "\n\n[Extracted Keywords]\n" +
-                    "\n".join(", ".join(words) for words in result_data["keywords"].values())
-                )
+                # Save image
                 st.session_state["img_base64"] = result_data["wordcloud"]
                 st.session_state["last_uploaded_filename"] = uploaded_file.name
 
-        # Always show the results from session state
+                # Save keywords and formatted user_input
+                keywords = result_data.get("keywords", {})
+                st.session_state["extracted_keywords"] = keywords
+
+                flat_keywords = [word for group in keywords.values() for word in group]
+                if flat_keywords:
+                    st.session_state["user_input"] = "\n\n[Extracted Keywords]\n" + ", ".join(flat_keywords)
+                else:
+                    st.session_state["user_input"] = "⚠️ No keywords could be extracted."
+
+        # Always show stored results
         if st.session_state.get("img_base64"):
             st.subheader("Generated Word Cloud")
             st.image(f"data:image/png;base64,{st.session_state['img_base64']}")
 
-
-        st.markdown("### 🧠 Extracted Keywords")
-        st.markdown(st.session_state.get("user_input", "_No keywords found._"))
+        if st.session_state.get("extracted_keywords"):
+            st.markdown("### 🧠 Extracted Keywords")
+            for label, words in st.session_state["extracted_keywords"].items():
+                st.markdown(f"**{label}**: {', '.join(words[:10])}")
+        else:
+            st.markdown("⚠️ No keywords were extracted.")
 
 # — Handle text input path —
 elif input_method == "Text Input":
