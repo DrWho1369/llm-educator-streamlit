@@ -35,24 +35,25 @@ def clean_user_input(text):
 spell = SpellChecker(distance=1)
 
 def spellcheck_and_correct(text):
-    words = text.split()
-    misspelled = spell.unknown(words)
+    # Split into words and non-words (punctuation, whitespace)
+    tokens = re.findall(r'\w+|[^\w\s]+|\s+', text)
+    corrected_tokens = []
     corrections = {}
-    corrected_words = []
-    for word in words:
-        if word in misspelled:
-            correction = spell.correction(word)
-            if correction is None:
-                # If no correction found, keep original word
-                corrected_words.append(word)
+    for token in tokens:
+        if token.strip() and token.isalpha():  # Only spellcheck alphabetic tokens
+            if token.lower() in spell:
+                corrected_tokens.append(token)
             else:
-                corrections[word] = correction
-                corrected_words.append(correction)
+                correction = spell.correction(token)
+                if correction and correction != token:
+                    corrections[token] = correction
+                    corrected_tokens.append(correction)
+                else:
+                    corrected_tokens.append(token)
         else:
-            corrected_words.append(word)
-    corrected_text = ' '.join(corrected_words)
+            corrected_tokens.append(token)
+    corrected_text = ''.join(corrected_tokens)
     return corrected_text, corrections
-
 
 # Streamlit UI
 st.title("Text Cleaner and Spellchecker")
