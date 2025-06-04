@@ -1,3 +1,33 @@
+import streamlit as st
+from transformers import T5Tokenizer, T5ForConditionalGeneration
+
+@st.cache_resource
+def load_spellchecker():
+    model_name = "willwade/t5-small-spoken-typo"
+    tokenizer = T5Tokenizer.from_pretrained(model_name)
+    model = T5ForConditionalGeneration.from_pretrained(model_name)
+    return tokenizer, model
+
+tokenizer, model = load_spellchecker()
+
+def transformer_spellcheck(text):
+    # Add grammar correction prefix as expected by the model
+    input_text = "grammar: " + text
+    input_ids = tokenizer.encode(input_text, return_tensors="pt")
+    outputs = model.generate(input_ids, max_length=256)
+    corrected = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return corrected
+
+# Example Streamlit UI
+st.title("Lightweight Transformer Spellchecker Demo")
+user_input = st.text_area("Enter text to correct:", height=150)
+
+if st.button("Spellcheck"):
+    corrected = transformer_spellcheck(user_input)
+    st.subheader("Corrected Text")
+    st.write(corrected)
+
+
 # import streamlit as st
 # import re
 # from transformers import T5Tokenizer, T5ForConditionalGeneration
