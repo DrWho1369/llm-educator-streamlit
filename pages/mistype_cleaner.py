@@ -114,7 +114,8 @@ user_input = st.text_area("Enter text:", height=150)
 if st.button("Process Text"):
     # Step 1: Extract and protect names
     protected_text, protected_names = extract_and_protect_names(user_input)
-    
+    st.subheader("Debug: Protected Names")
+    st.write(protected_names)  # This will display the list of (placeholder, name) tuples
     # Step 2: Clean text (with protected names)
     cleaned_text = clean_user_input(protected_text)
     
