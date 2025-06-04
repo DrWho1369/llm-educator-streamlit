@@ -1,6 +1,7 @@
 import streamlit as st
 import re
 from spellchecker import SpellChecker
+st.set_page_config(layout="wide")
 
 def clean_user_input(text):
     protected = []  # List of tuples: (type, content)
