@@ -2,24 +2,25 @@ import streamlit as st
 import re
 from spellchecker import SpellChecker
 
+# Your existing cleaning function (with protection and punctuation removal)
 def clean_user_input(text):
     protected = []
     def protect(match):
         protected.append(match.group(0))
         return f"__PROTECTED{len(protected)-1}__"
     
-    # Protect quoted text (unchanged)
+    # Protect quoted text
     text = re.sub(r'(["\'])(?:(?=(\\?))\2.)*?\1', protect, text)
     
-    # Protect file paths with at least one internal slash/backslash
+    # Protect file paths with internal slashes/backslashes
     text = re.sub(
         r'([A-Za-z]:[\\/](?:[^\s"\']+[\\/])+[^\s"\']+|[\\/](?:[^\s"\']+[\\/])+[^\s"\']+)', 
         protect, 
         text
     )
     
-    # Remove stray punctuation including backslash inside words
-    text = re.sub(r'(?<=\w)[,.;:!?\\\\/](?=\w)', '', text)
+    # Remove stray punctuation including backslash and forward slash inside words
+    text = re.sub(r'(?<=\w)[,.;:!?\\/](?=\w)', '', text)
     
     def restore(match):
         idx = int(match.group(1))
@@ -27,8 +28,6 @@ def clean_user_input(text):
     text = re.sub(r'__PROTECTED(\d+)__', restore, text)
     
     return text
-
-
 
 # Initialize spellchecker once
 spell = SpellChecker(distance=1)
@@ -49,10 +48,9 @@ def spellcheck_and_correct(text):
     return corrected_text, corrections
 
 # Streamlit UI
-st.title("Intelligent Mistype Cleaner")
-st.write("Enter your text below. The app will clean common mistypes while preserving important context (quotes, file paths, etc).")
+st.title("Text Cleaner and Spellchecker")
 
-user_input = st.text_area("Your input:", height=150)
+user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Clean and Spellcheck"):
     cleaned = clean_user_input(user_input)
