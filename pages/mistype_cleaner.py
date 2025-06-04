@@ -155,7 +155,11 @@ if st.button("Process Text"):
     # Step 1: Extract and protect names
     protected_text, protected_names = extract_and_protect_names(user_input)
     st.subheader("Debug: Protected Names")
-    st.write(protected_names)  # This will display the list of (placeholder, name) tuples
+    # st.write(protected_names)  # This will display the list of (placeholder, name) tuples
+    if protected_names:
+        st.markdown("**Protected Names:**")
+        for ph, name in protected_names:
+            st.write(f"🔒 {name}")
     # Step 2: Clean text (with protected names)
     cleaned_text = clean_user_input(protected_text)
     
@@ -188,10 +192,6 @@ if st.button("Process Text"):
     with col3:
         st.subheader("Final Output")
         st.write(corrected_text)
-        if protected_names:
-            st.markdown("**Protected Names:**")
-            for ph, name in protected_names:
-                st.write(f"🔒 {name}")
         if corrections:
             st.subheader("Spelling Corrections")
             for wrong, right in corrections.items():
