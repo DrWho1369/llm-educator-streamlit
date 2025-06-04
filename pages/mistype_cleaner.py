@@ -56,7 +56,7 @@ user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Clean and Spellcheck"):
     cleaned = clean_user_input(user_input)
-    corrected_text, corrections = spellcheck_and_correct(cleaned)
+    # corrected_text, corrections = spellcheck_and_correct(cleaned)
     
     st.subheader("Cleaned Text")
     st.write(cleaned)
