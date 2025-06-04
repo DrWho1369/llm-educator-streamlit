@@ -2,6 +2,7 @@ import streamlit as st
 import re
 from transformers import pipeline
 from spellchecker import SpellChecker
+st.set_page_config(layout="wide")
 
 # Initialize NER pipeline once (cached for performance)
 @st.cache_resource
@@ -106,7 +107,6 @@ def spellcheck_and_correct(text, protected_names):
     return ''.join(corrected_tokens), corrections
 
 # Streamlit UI
-st.set_page_config(layout="wide")
 st.title("Smart Text Processor")
 
 user_input = st.text_area("Enter text:", height=150)
