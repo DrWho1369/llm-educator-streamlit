@@ -31,23 +31,23 @@ def clean_user_input(text):
     
 
 
-# # Initialize spellchecker once
-# spell = SpellChecker(distance=1)
+# Initialize spellchecker once
+spell = SpellChecker(distance=1)
 
-# def spellcheck_and_correct(text):
-#     words = text.split()
-#     misspelled = spell.unknown(words)
-#     corrections = {}
-#     corrected_words = []
-#     for word in words:
-#         if word in misspelled:
-#             correction = spell.correction(word)
-#             corrections[word] = correction
-#             corrected_words.append(correction)
-#         else:
-#             corrected_words.append(word)
-#     corrected_text = ' '.join(corrected_words)
-#     return corrected_text, corrections
+def spellcheck_and_correct(text):
+    words = text.split()
+    misspelled = spell.unknown(words)
+    corrections = {}
+    corrected_words = []
+    for word in words:
+        if word in misspelled:
+            correction = spell.correction(word)
+            corrections[word] = correction
+            corrected_words.append(correction)
+        else:
+            corrected_words.append(word)
+    corrected_text = ' '.join(corrected_words)
+    return corrected_text, corrections
 
 # Streamlit UI
 st.title("Text Cleaner and Spellchecker")
@@ -56,13 +56,13 @@ user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Clean and Spellcheck"):
     cleaned = clean_user_input(user_input)
-    # corrected_text, corrections = spellcheck_and_correct(cleaned)
+    corrected_text, corrections = spellcheck_and_correct(cleaned)
     
     st.subheader("Cleaned Text")
     st.write(cleaned)
     
-    # st.subheader("Spellchecked and Corrected Text")
-    # st.write(corrected_text)
+    st.subheader("Spellchecked and Corrected Text")
+    st.write(corrected_text)
     
     # if corrections:
     #     st.subheader("Corrections Made")
