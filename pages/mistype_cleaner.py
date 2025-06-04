@@ -1,6 +1,7 @@
 import streamlit as st
 import re
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
+import torch
 from spellchecker import SpellChecker
 st.set_page_config(layout="wide")
 
@@ -75,6 +76,29 @@ def clean_user_input(text):
     text = re.sub(r'__PROTECTED(\d+)__', restore, text)
     return text
 
+
+
+# Cache the model and tokenizer to avoid reloading on every rerun
+@st.cache_resource
+def load_t5_spellchecker():
+    tokenizer = AutoTokenizer.from_pretrained("Bhuvana/t5-base-spellchecker")
+    model = AutoModelForSeq2SeqLM.from_pretrained("Bhuvana/t5-base-spellchecker")
+    return tokenizer, model
+
+tokenizer, model = load_t5_spellchecker()
+
+def t5_spellcheck(text):
+    input_ids = tokenizer.encode(text, return_tensors='pt')
+    with torch.no_grad():
+        sample_output = model.generate(
+            input_ids,
+            do_sample=True,
+            max_length=100,
+            top_p=0.99,
+            num_return_sequences=1
+        )
+    result = tokenizer.decode(sample_output[0], skip_special_tokens=True)
+    return result
 def spellcheck_and_correct(text, protected_names):
     """Spellcheck while preserving protected names"""
     # Convert protected names to dict for lookup
@@ -113,15 +137,16 @@ user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Process Text"):
     # Step 1: Extract and protect names
-    protected_text, protected_names = extract_and_protect_names(user_input)
-    st.subheader("Debug: Protected Names")
-    st.write(protected_names)  # This will display the list of (placeholder, name) tuples
+    # protected_text, protected_names = extract_and_protect_names(user_input)
+    # st.subheader("Debug: Protected Names")
+    # st.write(protected_names)  # This will display the list of (placeholder, name) tuples
     # Step 2: Clean text (with protected names)
     cleaned_text = clean_user_input(protected_text)
     
     # Step 3: Spellcheck (while preserving protected names)
-    corrected_text, corrections = spellcheck_and_correct(cleaned_text, protected_names)
-    
+    # corrected_text, corrections = spellcheck_and_correct(cleaned_text, protected_names)
+    corrected_text = t5_spellcheck(cleaned)
+
     # Display results
     col1, col2, col3 = st.columns(3)
     
