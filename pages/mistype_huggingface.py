@@ -118,7 +118,7 @@ if st.button("Process Text"):
     
     # Step 2: Extract protected names (from your NER logic)
     # For this example, we'll use a simplified version
-    protected_names = 
+    protected_text, protected_names = extract_and_protect_names(user_input)
     
     # Step 3: Apply transformer spellcheck
     corrected_text = transformer_spellcheck(cleaned, protected_names)
