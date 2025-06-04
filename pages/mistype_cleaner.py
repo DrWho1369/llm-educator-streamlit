@@ -69,9 +69,9 @@ if st.button("Clean and Spellcheck"):
     st.subheader("Spellchecked and Corrected Text")
     st.write(corrected_text)
     
-    # if corrections:
-    #     st.subheader("Corrections Made")
-    #     for wrong, right in corrections.items():
-    #         st.write(f"**{wrong}** → {right}")
-    # else:
-    #     st.write("No spelling corrections needed.")
+    if corrections:
+        st.subheader("Corrections Made")
+        for wrong, right in corrections.items():
+            st.write(f"**{wrong}** → {right}")
+    else:
+        st.write("No spelling corrections needed.")
