@@ -42,12 +42,17 @@ def spellcheck_and_correct(text):
     for word in words:
         if word in misspelled:
             correction = spell.correction(word)
-            corrections[word] = correction
-            corrected_words.append(correction)
+            if correction is None:
+                # If no correction found, keep original word
+                corrected_words.append(word)
+            else:
+                corrections[word] = correction
+                corrected_words.append(correction)
         else:
             corrected_words.append(word)
     corrected_text = ' '.join(corrected_words)
     return corrected_text, corrections
+
 
 # Streamlit UI
 st.title("Text Cleaner and Spellchecker")
