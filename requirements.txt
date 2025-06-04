@@ -5,7 +5,7 @@ pyspellchecker
 transformers
 torch
 autocorrect
-hunspell
+
 
 # PDF Handling
 PyMuPDF
