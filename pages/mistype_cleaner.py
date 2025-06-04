@@ -135,8 +135,7 @@ st.title("Smart Text Processor")
 
 st.markdown("""
 **Test Sample:**  
-Below is a paragraph containing 30 diverse names and 5 intentionally misspelled words.  
-Try pasting this into the input box to see how the processor handles names and spelling errors.
+Below are 10 examples to test the text cleaning, and also a paragraph containing 30 diverse names and 5 intentionally misspelled words. Try pasting this into the input box to see how the processor handles names and spelling errors.
 
 **Test text cleaning and context preservation:**  
 - exa,ple
