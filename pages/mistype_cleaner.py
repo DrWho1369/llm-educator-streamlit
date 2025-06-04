@@ -76,11 +76,11 @@ if st.button("Clean and Spellcheck"):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("Cleaned Text")
+        st.subheader("First Clean Text")
         st.write(cleaned)
     
     with col2:
-        st.subheader("Spellchecked Text")
+        st.subheader("Then Spellcheck Text")
         st.write(corrected_text)
     
     st.markdown("---")  # Optional: horizontal line for separation
