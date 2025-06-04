@@ -7,10 +7,15 @@ def clean_user_input(text):
         protected.append(match.group(0))
         return f"__PROTECTED{len(protected)-1}__"
     
-    # Protect quoted text
+    # Protect quoted text (unchanged)
     text = re.sub(r'(["\'])(?:(?=(\\?))\2.)*?\1', protect, text)
-    # Protect file paths
-    text = re.sub(r'([A-Za-z]:[\\/][^\s"\']+|[\\/][^\s"\']+)', protect, text)
+    
+    # Protect file paths with at least one internal slash/backslash
+    text = re.sub(
+        r'([A-Za-z]:[\\/](?:[^\s"\']+[\\/])+[^\s"\']+|[\\/](?:[^\s"\']+[\\/])+[^\s"\']+)', 
+        protect, 
+        text
+    )
     
     # Remove stray punctuation including backslash inside words
     text = re.sub(r'(?<=\w)[,.;:!?\\\\](?=\w)', '', text)
