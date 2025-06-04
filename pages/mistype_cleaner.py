@@ -146,7 +146,7 @@ Try pasting this into the input box to see how the processor handles names and s
 - `scedule` → schedule
 
 ---
-**Text**
+**Text:**
 John and Maria were exci-ted to meet their new classmates: François, Ahmed, Szymon, and Nguyen. Hyeon-woo and Xi arrived early, chatting with Barack and Jose about the upcomming project. Olamide, Svetlana, and Fatima joi'ned the group, soon followed by Yuki, Priya, and Lars. Anna and Soren brought snaks, while Mikhail and Isabella set up the presentation. Chinedu, Helena, and Rashid discussed their ideas with Leandro and Duong, as Aisha and Zeynep reviewed the scedule. Vladislav, Sara, and Laszlo made sure everyone felt welcome, ensuring the team was ready to collaborate on their assignment.
 """)
 user_input = st.text_area("Enter text:", height=150)
