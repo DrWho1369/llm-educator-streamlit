@@ -18,7 +18,7 @@ def clean_user_input(text):
     )
     
     # Remove stray punctuation including backslash inside words
-    text = re.sub(r'(?<=\w)[,.;:!?\\\\](?=\w)', '', text)
+    text = re.sub(r'(?<=\w)[,.;:!?\\\\/](?=\w)', '', text)
     
     def restore(match):
         idx = int(match.group(1))
