@@ -139,16 +139,16 @@ Below is a paragraph containing 30 diverse names and 5 intentionally misspelled 
 Try pasting this into the input box to see how the processor handles names and spelling errors.
 
 **Test text cleaning and context preservation:**  
-exa,ple
-"This is important"
-C/file/pathdirectory
-He said, "exa,ple" is wrong
-test.ing
-Check this path: D:\Documents\file.txt
-but\this backslas\h shouldn't be here
-but/this backslas/h shouldn't be here
-Hello, world!
-Mistyped,word with, commas inside
+- exa,ple
+- "This is important"
+- C/file/pathdirectory
+- He said, "exa,ple" is wrong
+- test.ing
+- Check this path: D:\Documents\file.txt
+- but\this backslas\h shouldn't be here
+- but/this backslas/h shouldn't be here
+- Hello, world!
+- Mistyped,word with, commas inside
 
 ---
 
