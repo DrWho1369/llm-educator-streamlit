@@ -73,18 +73,21 @@ if st.button("Clean and Spellcheck"):
     cleaned = clean_user_input(user_input)
     corrected_text, corrections = spellcheck_and_correct(cleaned)
     
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.subheader("First Clean Text")
-        st.write(cleaned)
+        st.subheader("Original Input")
+        st.write(user_input)
     
     with col2:
-        st.subheader("Then Spellcheck Text")
+        st.subheader("1st Step - Clean")
+        st.write(cleaned)
+    
+    with col3:
+        st.subheader("2nd Step - Spellcheck")
         st.write(corrected_text)
     
-    st.markdown("---")  # Optional: horizontal line for separation
-
+    st.markdown("---")  
     if corrections:
         st.subheader("Corrections Made")
         for wrong, right in corrections.items():
