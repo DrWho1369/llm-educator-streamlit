@@ -1,7 +1,7 @@
 # Core App
 streamlit
 requests
-spellchecker
+pyspellchecker
 
 # PDF Handling
 PyMuPDF
