@@ -146,29 +146,38 @@ if st.button("Process Text"):
     # Step 3: Spellcheck (while preserving protected names)
     # corrected_text, corrections = spellcheck_and_correct(cleaned_text, protected_names)
     corrected_text = t5_spellcheck(cleaned)
-
-    # Display results
     col1, col2, col3 = st.columns(3)
-    
     with col1:
         st.subheader("Original Input")
         st.write(user_input)
-    
     with col2:
         st.subheader("Cleaned Text")
-        st.write(cleaned_text)
-    
+        st.write(cleaned)
     with col3:
-        st.subheader("Final Output")
+        st.subheader("Corrected Text")
         st.write(corrected_text)
-        if protected_names:
-            st.markdown("**Protected Names:**")
-            for ph, name in protected_names:
-                st.write(f"🔒 {name}")
-        if corrections:
-            st.subheader("Spelling Corrections")
-            for wrong, right in corrections.items():
-                st.write(f"**{wrong}** → {right}")
+    # Display results
+    # col1, col2, col3 = st.columns(3)
+    
+    # with col1:
+    #     st.subheader("Original Input")
+    #     st.write(user_input)
+    
+    # with col2:
+    #     st.subheader("Cleaned Text")
+    #     st.write(cleaned_text)
+    
+    # with col3:
+    #     st.subheader("Final Output")
+    #     st.write(corrected_text)
+    #     if protected_names:
+    #         st.markdown("**Protected Names:**")
+    #         for ph, name in protected_names:
+    #             st.write(f"🔒 {name}")
+    #     if corrections:
+    #         st.subheader("Spelling Corrections")
+    #         for wrong, right in corrections.items():
+    #             st.write(f"**{wrong}** → {right}")
 
 
 # # Initialize spellchecker once
