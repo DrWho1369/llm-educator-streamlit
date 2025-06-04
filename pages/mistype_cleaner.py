@@ -1,8 +1,8 @@
 import streamlit as st
 import re
-from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
-import torch
+from transformers import pipeline
 from spellchecker import SpellChecker
+
 st.set_page_config(layout="wide")
 
 # Initialize NER pipeline once (cached for performance)
@@ -78,27 +78,27 @@ def clean_user_input(text):
 
 
 
-# Cache the model and tokenizer to avoid reloading on every rerun
-@st.cache_resource
-def load_t5_spellchecker():
-    tokenizer = AutoTokenizer.from_pretrained("Bhuvana/t5-base-spellchecker")
-    model = AutoModelForSeq2SeqLM.from_pretrained("Bhuvana/t5-base-spellchecker")
-    return tokenizer, model
+# # Cache the model and tokenizer to avoid reloading on every rerun
+# @st.cache_resource
+# def load_t5_spellchecker():
+#     tokenizer = AutoTokenizer.from_pretrained("Bhuvana/t5-base-spellchecker")
+#     model = AutoModelForSeq2SeqLM.from_pretrained("Bhuvana/t5-base-spellchecker")
+#     return tokenizer, model
 
-tokenizer, model = load_t5_spellchecker()
+# tokenizer, model = load_t5_spellchecker()
 
-def t5_spellcheck(text):
-    input_ids = tokenizer.encode(text, return_tensors='pt')
-    with torch.no_grad():
-        sample_output = model.generate(
-            input_ids,
-            do_sample=True,
-            max_length=100,
-            top_p=0.99,
-            num_return_sequences=1
-        )
-    result = tokenizer.decode(sample_output[0], skip_special_tokens=True)
-    return result
+# def t5_spellcheck(text):
+#     input_ids = tokenizer.encode(text, return_tensors='pt')
+#     with torch.no_grad():
+#         sample_output = model.generate(
+#             input_ids,
+#             do_sample=True,
+#             max_length=100,
+#             top_p=0.99,
+#             num_return_sequences=1
+#         )
+#     result = tokenizer.decode(sample_output[0], skip_special_tokens=True)
+#     return result
 def spellcheck_and_correct(text, protected_names):
     """Spellcheck while preserving protected names"""
     # Convert protected names to dict for lookup
@@ -137,47 +137,49 @@ user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Process Text"):
     # Step 1: Extract and protect names
-    # protected_text, protected_names = extract_and_protect_names(user_input)
-    # st.subheader("Debug: Protected Names")
-    # st.write(protected_names)  # This will display the list of (placeholder, name) tuples
+    protected_text, protected_names = extract_and_protect_names(user_input)
+    st.subheader("Debug: Protected Names")
+    st.write(protected_names)  # This will display the list of (placeholder, name) tuples
     # Step 2: Clean text (with protected names)
     cleaned_text = clean_user_input(protected_text)
     
     # Step 3: Spellcheck (while preserving protected names)
-    # corrected_text, corrections = spellcheck_and_correct(cleaned_text, protected_names)
-    corrected_text = t5_spellcheck(cleaned)
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.subheader("Original Input")
-        st.write(user_input)
-    with col2:
-        st.subheader("Cleaned Text")
-        st.write(cleaned)
-    with col3:
-        st.subheader("Corrected Text")
-        st.write(corrected_text)
-    # Display results
+    corrected_text, corrections = spellcheck_and_correct(cleaned_text, protected_names)
+
+    # corrected_text = t5_spellcheck(cleaned)
     # col1, col2, col3 = st.columns(3)
-    
     # with col1:
     #     st.subheader("Original Input")
     #     st.write(user_input)
-    
     # with col2:
     #     st.subheader("Cleaned Text")
-    #     st.write(cleaned_text)
-    
+    #     st.write(cleaned)
     # with col3:
-    #     st.subheader("Final Output")
+    #     st.subheader("Corrected Text")
     #     st.write(corrected_text)
-    #     if protected_names:
-    #         st.markdown("**Protected Names:**")
-    #         for ph, name in protected_names:
-    #             st.write(f"🔒 {name}")
-    #     if corrections:
-    #         st.subheader("Spelling Corrections")
-    #         for wrong, right in corrections.items():
-    #             st.write(f"**{wrong}** → {right}")
+    # Display results
+
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.subheader("Original Input")
+        st.write(user_input)
+    
+    with col2:
+        st.subheader("Cleaned Text")
+        st.write(cleaned_text)
+    
+    with col3:
+        st.subheader("Final Output")
+        st.write(corrected_text)
+        if protected_names:
+            st.markdown("**Protected Names:**")
+            for ph, name in protected_names:
+                st.write(f"🔒 {name}")
+        if corrections:
+            st.subheader("Spelling Corrections")
+            for wrong, right in corrections.items():
+                st.write(f"**{wrong}** → {right}")
 
 
 # # Initialize spellchecker once
