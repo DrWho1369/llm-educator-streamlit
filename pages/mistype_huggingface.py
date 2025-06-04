@@ -3,6 +3,36 @@ import re
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 import torch
 
+st.set_page_config(layout="wide")
+
+# Initialize NER pipeline once (cached for performance)
+@st.cache_resource
+def load_ner_model():
+    return pipeline("ner", 
+                   model="Davlan/distilbert-base-multilingual-cased-ner-hrl",
+                   aggregation_strategy="simple")
+
+
+ner = load_ner_model()
+
+def extract_and_protect_names(text):
+    """Extract names and replace with placeholders"""
+    entities = ner(text)
+    protected = []
+    protected_names = []
+    
+    # Sort entities by start position (reverse order for safe replacement)
+    sorted_entities = sorted(entities, key=lambda x: x['start'], reverse=True)
+    
+    for i, entity in enumerate(sorted_entities):
+        if entity['entity_group'] == 'PER':
+            # Replace name with placeholder
+            placeholder = f"__NAME_{i}__"
+            text = text[:entity['start']] + placeholder + text[entity['end']:]
+            protected_names.append((placeholder, entity['word']))
+    
+    return text, protected_names
+
 # Cache model and tokenizer to avoid reloading on every interaction
 @st.cache_resource
 def load_spellchecker():
@@ -88,7 +118,7 @@ if st.button("Process Text"):
     
     # Step 2: Extract protected names (from your NER logic)
     # For this example, we'll use a simplified version
-    protected_names = ["John", "Maria", "François", "Ahmed"]
+    protected_names = 
     
     # Step 3: Apply transformer spellcheck
     corrected_text = transformer_spellcheck(cleaned, protected_names)
