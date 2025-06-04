@@ -57,7 +57,7 @@ def clean_user_input(text):
     )
 
     # Remove stray punctuation including backslash and forward slash inside words
-    text = re.sub(r'(?<=\w)[,.;:!?\\\\/](?=\w)', '', text)
+    text = re.sub(r"(?<=\w)[,.;:!?\\\\/'-](?=\w)", '', text)
 
     # Restore protected content
     def restore(match):
