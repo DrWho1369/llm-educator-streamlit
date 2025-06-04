@@ -133,9 +133,24 @@ def spellcheck_and_correct(text, protected_names):
 # Streamlit UI
 st.title("Smart Text Processor")
 
-st.subheader("Here is a test sample with 30 names, and 5 Misspelled words to test: exci-ted → excited | upcomming → upcoming | joi'ned → joined | snaks → snacks | scedule → schedule")
+st.markdown("""
+**Test Sample:**  
+Below is a paragraph containing 30 diverse names and 5 intentionally misspelled words.  
+Try pasting this into the input box to see how the processor handles names and spelling errors.
 
-st.text("John and Maria were exci-ted to meet their new classmates: François, Ahmed, Szymon, and Nguyen. Hyeon-woo and Xi arrived early, chatting with Barack and Jose about the upcomming project. Olamide, Svetlana, and Fatima joi'ned the group, soon followed by Yuki, Priya, and Lars. Anna and Soren brought snaks, while Mikhail and Isabella set up the presentation. Chinedu, Helena, and Rashid discussed their ideas with Leandro and Duong, as Aisha and Zeynep reviewed the scedule. Vladislav, Sara, and Laszlo made sure everyone felt welcome, ensuring the team was ready to collaborate on their assignment.")
+**Misspelled words to test:**  
+- `exci-ted` → excited  
+- `upcomming` → upcoming  
+- `joi'ned` → joined  
+- `snaks` → snacks  
+- `scedule` → schedule
+
+---
+
+John and Maria were exci-ted to meet their new classmates: François, Ahmed, Szymon, and Nguyen. Hyeon-woo and Xi arrived early, chatting with Barack and Jose about the upcomming project. Olamide, Svetlana, and Fatima joi'ned the group, soon followed by Yuki, Priya, and Lars. Anna and Soren brought snaks, while Mikhail and Isabella set up the presentation. Chinedu, Helena, and Rashid discussed their ideas with Leandro and Duong, as Aisha and Zeynep reviewed the scedule. Vladislav, Sara, and Laszlo made sure everyone felt welcome, ensuring the team was ready to collaborate on their assignment.
+
+text
+""")
 user_input = st.text_area("Enter text:", height=150)
 
 if st.button("Process Text"):
