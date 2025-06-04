@@ -90,7 +90,7 @@ if st.button("Clean and Spellcheck"):
     
     st.markdown("---")  
     if corrections:
-        st.subheader("Corrections Made")
+        st.subheader("Spelling Corrections Made")
         for wrong, right in corrections.items():
             st.write(f"**{wrong}** → {right}")
     else:
