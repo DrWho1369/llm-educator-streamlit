@@ -3,33 +3,42 @@ import re
 from spellchecker import SpellChecker
 
 def clean_user_input(text):
-    protected = []
-    def protect(match):
-        protected.append(match.group(0))
+    protected = []  # List of tuples: (type, content)
+    def protect_quotes(match):
+        protected.append(('quote', match.group(0)))
         return f"__PROTECTED{len(protected)-1}__"
-    
-    # Protect quoted text (unchanged)
-    text = re.sub(r'(["\'])(?:(?=(\\?))\2.)*?\1', protect, text)
-    
+    def protect_paths(match):
+        protected.append(('path', match.group(0)))
+        return f"__PROTECTED{len(protected)-1}__"
+
+    # Protect quoted text FIRST (so we don't protect paths inside quotes)
+    text = re.sub(r'(["\'])(?:(?=(\\?))\2.)*?\1', protect_quotes, text)
     # Protect file paths with at least one internal slash/backslash
     text = re.sub(
-        r'([A-Za-z]:[\\/](?:[^\s"\']+[\\/])+[^\s"\']+|[\\/](?:[^\s"\']+[\\/])+[^\s"\']+)', 
-        protect, 
+        r'([A-Za-z]:[\\/](?:[^\s"\']+[\\/])+[^\s"\']+|[\\/](?:[^\s"\']+[\\/])+[^\s"\']+)',
+        protect_paths,
         text
     )
-    
-    # Remove stray punctuation including backslash inside words
+
+    # Remove stray punctuation including backslash and forward slash inside words
     text = re.sub(r'(?<=\w)[,.;:!?\\\\/](?=\w)', '', text)
-    
+
+    # Restore protected content
     def restore(match):
         idx = int(match.group(1))
-        return protected[idx]
-    text = re.sub(r'__PROTECTED(\d+)__', restore, text)
-    
-    return text
-    
-    
+        typ, content = protected[idx]
+        if typ == 'quote':
+            # Recursively clean inside the quotes, but keep the quotes
+            quote_char = content[0]
+            inner = content[1:-1]
+            cleaned_inner = clean_user_input(inner)
+            return f"{quote_char}{cleaned_inner}{quote_char}"
+        else:
+            # For paths, just restore as-is
+            return content
 
+    text = re.sub(r'__PROTECTED(\d+)__', restore, text)
+    return text
 
 # Initialize spellchecker once
 spell = SpellChecker(distance=1)
