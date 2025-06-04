@@ -4,6 +4,7 @@ requests
 pyspellchecker
 transformers
 torch
+sentencepiece
 
 # PDF Handling
 PyMuPDF
