@@ -158,8 +158,14 @@ if st.button("Process Text"):
     # st.write(protected_names)  # This will display the list of (placeholder, name) tuples
     if protected_names:
         st.markdown("**Protected Names:**")
-        for ph, name in protected_names:
-            st.write(f"🔒 {name}")
+        names = [name for _, name in protected_names]
+        n_cols = 6  # Adjust as needed
+        rows = [names[i:i+n_cols] for i in range(0, len(names), n_cols)]
+        for row in rows:
+            cols = st.columns(len(row))
+            for col, name in zip(cols, row):
+                col.write(f"🔒 {name}")
+
     # Step 2: Clean text (with protected names)
     cleaned_text = clean_user_input(protected_text)
     
