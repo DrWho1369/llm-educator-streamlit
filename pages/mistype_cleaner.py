@@ -88,7 +88,7 @@ if st.button("Clean and Spellcheck"):
         st.subheader("2nd Step - Spellcheck")
         st.write(corrected_text)
         if corrections:
-            st.markdown("**Corrections Made:**")
+            st.subheader("Corrections Made:")
             for wrong, right in corrections.items():
                 st.write(f"**{wrong}** → {right}")
         else:
