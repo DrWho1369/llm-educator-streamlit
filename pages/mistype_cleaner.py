@@ -13,7 +13,7 @@ def clean_user_input(text):
     text = re.sub(r'([A-Za-z]:[\\/][^\s"\']+|[\\/][^\s"\']+)', protect, text)
     
     # Remove stray punctuation including backslash inside words
-    text = re.sub(r'(?<=\w)[,.;:!?\\](?=\w)', '', text)
+    text = re.sub(r'(?<=\w)[,.;:!?\\\\](?=\w)', '', text)
     
     def restore(match):
         idx = int(match.group(1))
@@ -21,6 +21,7 @@ def clean_user_input(text):
     text = re.sub(r'__PROTECTED(\d+)__', restore, text)
     
     return text
+
 
 
 # Streamlit UI
