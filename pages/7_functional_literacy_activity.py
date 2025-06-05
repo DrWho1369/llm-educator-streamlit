@@ -130,14 +130,17 @@ if st.button("Generate Activity"):
     with st.spinner("Generating..."):
         prompt = revised_functional_lit_prompt + user_input
         output = call_llm(prompt)
-        task_instruction, support_prompt = parse_functional_lit_output(output)
+        objective, activity, support_prompt = parse_functional_lit_output(output)
 
-    st.markdown("#### Task Instruction")
-    st.success(task_instruction if task_instruction else "Not found.")
+    st.markdown("#### Objective")
+    st.success(objective if objective else "Not found.")
+
+    st.markdown("#### Activity")
+    st.info(activity if activity else "Not found.")
+
     st.markdown("#### Support Prompt")
     st.info(support_prompt if support_prompt else "Not found.")
-    st.markdown("#### Raw Output")
-    st.code(output, language="markdown")
+
 
     st.download_button("Download Activity", data=output, file_name="functional_literacy_activity.txt")
 
