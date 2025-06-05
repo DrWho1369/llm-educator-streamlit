@@ -98,6 +98,7 @@ if st.button("Generate Reflection Sheet"):
                 checked[i] = st.checkbox(f"{i+1}. {q}", key=f"q_{i}")
         else:
             st.info("No questions found.")
+
     with col2:
         st.markdown("#### Calming Strategies")
         if strategies:
