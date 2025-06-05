@@ -144,7 +144,7 @@ st.markdown("""
 |---------------|------------------------------------------------------------------------------|
 | NER           | Finds and protects names with placeholders                                   |
 | Cleaning      | Removes stray punctuation, protects quoted text and file paths               |
-| Spellchecking | Corrects spelling, skips protected names                                     |
+| Spellchecking | Corrects spelling, skips protected names, uses spellchecker module           |
 | UI            | Lets user input text, shows results and corrections in a clear, structured way|
 """)
 

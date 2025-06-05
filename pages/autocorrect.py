@@ -103,6 +103,15 @@ def spellcheck_and_correct(text, protected_names):
 st.title("Smart Text Processor")
 
 st.markdown("""
+| Step          | What Happens                                                                 |
+|---------------|------------------------------------------------------------------------------|
+| NER           | Finds and protects names with placeholders                                   |
+| Cleaning      | Removes stray punctuation, protects quoted text and file paths               |
+| Spellchecking | Corrects spelling, skips protected names, uses autocorrect module            |
+| UI            | Lets user input text, shows results and corrections in a clear, structured way|
+""")
+
+st.markdown("""
 **Test Sample:**  
 Below are 10 examples to test the text cleaning, and also a paragraph containing 30 diverse names and 5 intentionally misspelled words. Try pasting this into the input box to see how the processor handles names and spelling errors.
 
