@@ -96,7 +96,7 @@ if st.button("Generate Reflection Sheet"):
             for i, q in enumerate(questions):
                 st.markdown(f"- **{i+1}. {q}**")
         else:
-            st.info("No questions found."))
+            st.info("No questions found.")
 
     with col2:
         st.markdown("#### Calming Strategies")
