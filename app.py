@@ -5,6 +5,7 @@ from modules.pdf_extractor import extract_text_from_pdf
 from modules.prompts import user_prompts
 from pages.mistype_cleaner import process_text_pipeline
 import re
+from modules.utils import *
 
 def clean_user_input(text):
     return re.sub(r"[^\w\s.,?!-]", "", text)
@@ -366,23 +367,33 @@ if st.button("🚀 Generate Output", key="generate_btn"):
         st.warning("⚠️ Please enter some content or upload a PDF above.")
 
     else:
-        with st.spinner(f"Generating output for: {selected_task}..."):
-            response = requests.post(
-                LLM_API_URL,
-                json={
-                    "messages": [
-                        {"role": "system", "content": user_prompt.strip()},
-                        {"role": "user", "content": full_input.strip()},
-                    ]
-                }
-            )
+        if selected_task == "Differentiate Resource":
+            with st.spinner("Generating differentiated resource..."):
+                output = differentiate_resource_chain(user_input)
+                st.markdown(f"### Raw AI Output")
+                st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
+                st.download_button("Copy/Download Output", data=output, file_name="output.txt")
+                st.markdown(f"### Prompt Sent to AI")
+                st.code(f"[Analysis Prompt]\n{analysis_prompt}\n\n[User Input]\n{user_input}\n\n"
+                        f"[Differentiation Prompt]\n{differentiation_prompt}\n\n[Combined Input]\n{combined_input}",
+                        language="markdown")
 
-            try:
-                output = response.json()["choices"][0]["message"]["content"]
-            except Exception as e:
-                st.error(f"❌ Failed to parse API response: {e}")
-                st.code(response.text)
-                output = "[No output returned]"
+        response = requests.post(
+            LLM_API_URL,
+            json={
+                "messages": [
+                    {"role": "system", "content": user_prompt.strip()},
+                    {"role": "user", "content": full_input.strip()},
+                ]
+            }
+        )
+
+        try:
+            output = response.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            st.error(f"❌ Failed to parse API response: {e}")
+            st.code(response.text)
+            output = "[No output returned]"
 
         
         if selected_task == "Reformat & Repurpose Resource" and selected_subtask == "Convert to Flashcards":
