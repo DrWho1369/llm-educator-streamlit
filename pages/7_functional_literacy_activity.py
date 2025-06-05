@@ -3,67 +3,101 @@ import requests
 import re
 
 LLM_API_URL = st.secrets["LLM_API_URL"]
-functional_lit_prompt = """
+revised_functional_lit_prompt = '''
 You are a literacy support teacher who creates scaffolded, real-world reading and writing activities to help students build functional literacy skills.
 
-Your task is to design a **short literacy activity** based on the user input below. The activity should be **practical**, age-appropriate for the learner, and focused on **real-life reading or writing**.
+Your task is to design a detailed, practical literacy activity based on the user input below. The activity should be age-appropriate and focused on real-life reading or writing tasks.
 
 ---
 
 ### Output Format (Use This Exactly):
 
-Task Instruction:  
-[One clear sentence explaining the real-life literacy task the student should complete]
+Objective:
+[One clear sentence describing the learning objective]
 
-Support Prompt:  
-[One sentence stem or short sample answer that helps the student begin or understand the task]
+Activity:
+[A detailed description of the activity, including any materials, instructions, or examples]
+
+Support Prompt:
+[A sentence stem, example, or scaffold to help the student begin or understand the task]
 
 ---
 
 ### Guidelines:
 
-- Focus on **practical tasks** like lists, notes, forms, schedules, directions, etc.  
-- Use **clear, student-friendly instructions**.  
-- If the input is vague, interpret it as a life-skills-based task.  
-- Do **not** invent unrelated facts or overly abstract tasks.  
-- Do **not** include headings, markdown, or extra commentary.  
-- Return only the formatted activity below.
+- Use the user input as the main focus for the activity.
+- Include clear, student-friendly instructions.
+- Provide detailed, practical tasks such as reading schedules, writing emails, following instructions, etc.
+- Do not invent unrelated facts or overly abstract tasks.
+- Do not include markdown or extra commentary in the output.
 
 ---
 
 ### Examples:
 
-Task Instruction:
-Write a short note to your teacher explaining why you were late.
+Objective:
+Practice reading and understanding a simple school timetable.
 
-Support Prompt:
-I was late because...
-
-Task Instruction:
-Read the shopping list and circle the items you can buy at a fruit shop.
-
-Support Prompt:
-Example: apples, bananas, oranges
-
-Task Instruction:
-Fill in the blanks to complete the email to your teacher.
-
-Support Prompt:
-To: teacher@school.org
-Subject: I will be late today
-Hello Teacher, I will be late to school today because _______. I will arrive at _______.
-
-Task Instruction:
-Read the timetable and answer the questions about it.
+Activity:
+Read the timetable and answer the questions:
+Monday Timetable:
+9:00 – 9:30 → Registration
+9:30 – 10:30 → English
+10:30 – 11:00 → Break
+11:00 – 12:00 → Maths
+12:00 – 1:00 → Lunch
+1:00 – 2:00 → Art
+Questions:
+What time does break start? ______________
+What lesson is after lunch? ______________
+How long is the English lesson? ______________
 
 Support Prompt:
 What time does break start? What lesson is after lunch?
 
 ---
 
-User input starts in the next message:
+Objective:
+Learn to write a basic email to a teacher.
+
+Activity:
+Fill in the blanks to complete the email:
+To: mr.jones@school.org
+Subject: I will be late today
+Email Body:
+Hello Mr. Jones,
+I will be late to school today because ______________________.
+I will arrive at ____________.
+Thank you.
+From,
+
+Support Prompt:
+To: mr.jones@school.org
+Subject: I will be late today
+Hello Mr. Jones, I will be late to school today because _______. I will arrive at _______.
+
+---
+
+Objective:
+Understand and follow step-by-step written directions.
+
+Activity:
+Read the instructions and put them in the correct order by numbering them (1–5):
+___ Spread butter on the toast.
+___ Put the bread in the toaster.
+___ Plug in the toaster.
+___ Take the toast out carefully.
+___ Press the lever down.
+
+Support Prompt:
+Number the steps in the correct order.
+
+---
+
+User input starts in below :
 ###
-"""
+'''
+
 
 def call_llm(prompt):
     response = requests.post(
@@ -76,14 +110,13 @@ def call_llm(prompt):
     return response.json()["choices"][0]["message"]["content"]
 
 def parse_functional_lit_output(output_text):
-    # Look for the two labeled sections
-    task_match = re.search(r'Task Instruction:\s*(.+?)(?:\n|$)', output_text, re.DOTALL)
-    support_match = re.search(r'Support Prompt:\s*(.+)', output_text, re.DOTALL)
-
-    task_instruction = task_match.group(1).strip() if task_match else ""
-    support_prompt = support_match.group(1).strip() if support_match else ""
-
-    return task_instruction, support_prompt
+    obj = re.search(r'Objective:\s*(.+?)(?:\n|$)', output_text, re.DOTALL)
+    act = re.search(r'Activity:\s*(.+?)(?:\nSupport Prompt:|$)', output_text, re.DOTALL)
+    sup = re.search(r'Support Prompt:\s*(.+)', output_text, re.DOTALL)
+    objective = obj.group(1).strip() if obj else ""
+    activity = act.group(1).strip() if act else ""
+    support = sup.group(1).strip() if sup else ""
+    return objective, activity, support
 
 st.set_page_config(page_title="Functional Literacy Activities", layout="centered")
 st.title("📝 Functional Literacy Activity Generator")
@@ -95,7 +128,7 @@ user_input = st.text_area("Describe the literacy scenario or skill (e.g., 'writi
 
 if st.button("Generate Activity"):
     with st.spinner("Generating..."):
-        prompt = functional_lit_prompt.format(user_input=user_input)
+        prompt = revised_functional_lit_prompt + user_input
         output = call_llm(prompt)
         task_instruction, support_prompt = parse_functional_lit_output(output)
 
