@@ -89,24 +89,24 @@ if st.button("Generate Reflection Sheet"):
     with st.spinner("Generating..."):
         output = call_llm(reflection_prompt.format(user_input=user_input))
         questions, strategies = parse_reflection_sheet(output)
-
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("#### Reflection Questions")
+        if questions:
+            checked = [False] * len(questions)
+            for i, q in enumerate(questions):
+                checked[i] = st.checkbox(f"{i+1}. {q}", key=f"q_{i}")
+        else:
+            st.info("No questions found.")
+    with col2:
+        st.markdown("#### Calming Strategies")
+        if strategies:
+            for i, s in enumerate(strategies):
+                st.checkbox(s, key=f"strategy_{i}")
+        else:
+            st.info("No calming strategies found.")
     st.markdown("#### Raw Reflection Sheet Output")
     st.code(output, language="markdown")
-
-    st.markdown("#### Parsed Reflection Questions")
-    if questions:
-        for i, q in enumerate(questions, 1):
-            st.write(f"{i}. {q}")
-    else:
-        st.warning("No questions detected. Please check the output or prompt.")
-
-    st.markdown("#### Parsed Calming Strategies")
-    if strategies:
-        for s in strategies:
-            st.write(f"- {s}")
-    else:
-        st.warning("No calming strategies detected. Please check the output or prompt.")
-
     # Download option
     st.download_button("Download Sheet", data=output, file_name="reflection_sheet.txt")
 
