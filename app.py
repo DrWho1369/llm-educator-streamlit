@@ -3,7 +3,7 @@ import requests
 from modules.summarizer import analyze_pdf 
 from modules.pdf_extractor import extract_text_from_pdf
 from modules.prompts import user_prompts
-
+from pages.mistype_cleaner import process_text_pipeline
 import re
 
 def clean_user_input(text):
@@ -335,7 +335,7 @@ if st.button("🚀 Generate Output", key="generate_btn"):
 
     else:
         user_input = st.session_state.get("user_input", "").strip()
-        user_input = clean_user_input(user_input)
+        user_input = process_text_pipeline(user_input)
 
     
     # --- Get extracted keywords from session ---

@@ -129,6 +129,17 @@ def spellcheck_and_correct(text, protected_names):
     
     return ''.join(corrected_tokens), corrections
 
+def process_text_pipeline(
+    user_input,
+    extract_and_protect_names,
+    clean_user_input,
+    spellcheck_and_correct
+):
+    protected_text, protected_names = extract_and_protect_names(user_input)
+    cleaned_text = clean_user_input(protected_text)
+    corrected_text, _ = spellcheck_and_correct(cleaned_text, protected_names)
+    return corrected_text
+
 # Streamlit UI
 st.title("Smart Text Processor")
 st.markdown("""
