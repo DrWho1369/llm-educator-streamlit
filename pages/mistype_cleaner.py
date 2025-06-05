@@ -158,8 +158,8 @@ Below are 10 examples to test the text cleaning, and also a paragraph containing
 - C/file/pathdirectory
 - He said, "exa,ple" is wrong
 - test.ing
-- Check this path: D:\Documents\file.txt
-- but\this backslas\h shouldn't be here
+- Check this path: D:\Documents\\file.txt
+- but\\this backslas\h shouldn't be here
 - but/this backslas/h shouldn't be here
 - Hello, world!
 - Mistyped,word with, commas inside
