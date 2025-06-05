@@ -94,7 +94,7 @@ if st.button("Generate Reflection Sheet"):
         st.markdown("#### Reflection Questions")
         if questions:
             for i, q in enumerate(questions):
-                st.markdown(f"{i+1}. {q}", key=f"question_{i}")
+                st.markdown(f"- **{i+1}. {q}**")
         else:
             st.info("No questions found.")
 
