@@ -93,11 +93,10 @@ if st.button("Generate Reflection Sheet"):
     with col1:
         st.markdown("#### Reflection Questions")
         if questions:
-            checked = [False] * len(questions)
             for i, q in enumerate(questions):
-                checked[i] = st.checkbox(f"{i+1}. {q}", key=f"q_{i}")
+                st.markdown(f"- **{i+1}. {q}**")
         else:
-            st.info("No questions found.")
+            st.info("No questions found."))
 
     with col2:
         st.markdown("#### Calming Strategies")
