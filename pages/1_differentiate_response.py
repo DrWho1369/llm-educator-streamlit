@@ -118,12 +118,13 @@ if st.button("🚀 Differentiate Resource"):
     else:
         with st.spinner("Generating differentiated versions..."):
             analysis, challenge, scaffolded, simplified = differentiate_resource_chain(user_input)
-        st.markdown("#### 🧩 **Analysis**")
-        st.code(analysis, language="markdown")
+       
         st.markdown("#### 🏆 **Challenge Version**")
         st.markdown(challenge)
+        st.markdown("---")
         st.markdown("#### 🛠️ **Scaffolded Version**")
         st.markdown(scaffolded)
+        st.markdown("---")
         st.markdown("#### 🌱 **Simplified Version**")
         st.markdown(simplified)
         # Download all versions as a text file
