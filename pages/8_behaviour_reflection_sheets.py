@@ -12,7 +12,14 @@ st.write(
 )
 
 user_input = st.text_area("Describe the situation or context (optional):", height=150)
-
+# --- Add number input widget ---
+num_sheets = st.number_input(
+    "Number of reflection sheets to generate",
+    min_value=1,
+    max_value=5,  # Limit to prevent abuse
+    value=1,
+    step=1
+)
 # --- Prompt with few-shot examples and strict format ---
 reflection_prompt = """
 You are a school counselor creating a Behavior Reflection Sheet for students. 
@@ -84,33 +91,70 @@ def parse_reflection_sheet(output_text):
 
     return questions, strategies
 
-if st.button("Generate Reflection Sheet"):
-    with st.spinner("Generating..."):
-        output = call_llm(reflection_prompt.format(user_input=user_input))
-        questions, strategies = parse_reflection_sheet(output)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("#### Reflection Questions")
-        if questions:
-            for i, q in enumerate(questions):
-                st.markdown(f"- **{i+1}. {q}**")
-        else:
-            st.info("No questions found.")
+# --- Modified generation logic ---
+if st.button("Generate Reflection Sheets"):
+    if 'generated_sheets' in st.session_state:
+        del st.session_state.generated_sheets  # Clear previous results
+    
+    st.session_state.generated_sheets = []
+    
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    for i in range(num_sheets):
+        try:
+            status_text.text(f"Generating sheet {i+1}/{num_sheets}...")
+            output = call_llm(reflection_prompt.format(user_input=user_input))
+            questions, strategies = parse_reflection_sheet(output)
+            
+            st.session_state.generated_sheets.append({
+                "raw": output,
+                "questions": questions,
+                "strategies": strategies
+            })
+            
+            progress_bar.progress((i+1)/num_sheets)
+        
+        except Exception as e:
+            st.error(f"Error generating sheet {i+1}: {str(e)}")
+            break
+    
+    progress_bar.empty()
+    status_text.empty()
 
-    with col2:
-        st.markdown("#### Calming Strategies")
-        if strategies:
-            for i, s in enumerate(strategies):
-                st.checkbox(s, key=f"strategy_{i}")
-        else:
-            st.info("No calming strategies found.")
-
-    st.markdown("#### Raw Reflection Sheet Output")
-    st.code(output, language="markdown")
-    st.download_button("Download Sheet", data=output, file_name="reflection_sheet.txt")
-
-st.markdown("---")
-st.info(
-    "Tip: Leave the context blank for a generic sheet, or specify details (e.g., 'Year 4 student, playground conflict') for a tailored version."
-)
+# --- Display generated sheets ---
+if 'generated_sheets' in st.session_state and st.session_state.generated_sheets:
+    st.markdown("---")
+    st.subheader(f"Generated Reflection Sheets ({len(st.session_state.generated_sheets)} total)")
+    
+    # Combine all raw outputs for download
+    all_outputs = []
+    
+    for idx, sheet in enumerate(st.session_state.generated_sheets, 1):
+        with st.expander(f"Reflection Sheet #{idx}", expanded=(idx==1)):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Reflection Questions")
+                if sheet['questions']:
+                    for i, q in enumerate(sheet['questions']):
+                        st.checkbox(f"{i+1}. {q}", key=f"q_{idx}_{i}")
+            
+            with col2:
+                st.markdown("#### Calming Strategies")
+                if sheet['strategies']:
+                    for i, s in enumerate(sheet['strategies']):
+                        st.checkbox(s, key=f"s_{idx}_{i}")
+            
+            st.markdown("##### Raw Output")
+            st.code(sheet['raw'], language="markdown")
+            
+            all_outputs.append(f"--- Sheet {idx} ---\n{sheet['raw']}\n")
+    
+    # Download all sheets combined
+    st.download_button(
+        label="Download All Sheets",
+        data="\n\n".join(all_outputs),
+        file_name="multiple_reflection_sheets.txt"
+    )
