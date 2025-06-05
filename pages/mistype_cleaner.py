@@ -140,12 +140,12 @@ def process_text_pipeline(
 # Streamlit UI
 st.title("Smart Text Processor")
 st.markdown("""
-| Step          | What Happens                                                                 |
-|---------------|------------------------------------------------------------------------------|
-| NER           | Finds and protects names with placeholders using Hugging Face NER transformer|
-| Cleaning      | Removes stray punctuation, protects quoted text and file paths               |
-| Spellchecking | Corrects spelling, skips protected names, uses spellchecker module           |
-| UI            | Lets user input text, shows results and corrections in a clear, structured way|
+| Step          | What Happens                                                                      |
+|---------------|-----------------------------------------------------------------------------------|
+| NER           | Finds and protects names with placeholders using Hugging Face NER transformer.    |
+| Cleaning      | Uses Regex rules to removes stray punctuation, protects quoted text and file paths|
+| Spellchecking | Corrects spelling, skips protected names, uses spellchecker module                |
+| UI            | Lets user input text, shows results and corrections in a clear, structured way.   |
 """)
 
 st.markdown("""
