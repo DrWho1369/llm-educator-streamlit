@@ -23,37 +23,56 @@ num_sheets = st.number_input(
 # --- Prompt with few-shot examples and strict format ---
 reflection_prompt = """
 You are a school counselor creating a Behavior Reflection Sheet for students. 
-Your task is to generate a list of 4–6 reflection questions and 2–3 calming strategies, formatted as shown.
+Your task is to help students reflect on their actions in a supportive, restorative, and non-judgmental way.
 
 Instructions:
 - Use age-appropriate, clear language.
 - Number each question.
 - After the questions, add a section titled "Calming Strategies" with tick-boxes.
-- Do not add extra commentary or sections.
+- Do NOT condone or encourage negative behaviors.
+- Focus on helping the student understand why the behavior was not appropriate and how to make better choices next time.
 
-Example 1:
+Example 1 (negative behavior):
 
-1. What happened?
-2. How did you feel?
-3. What could you do differently next time?
-4. Who can help you next time?
+Student details/context: Hitting another student
+
+1. What happened before you decided to hit?
+2. How did you and the other student feel?
+3. What could you have done instead of hitting?
+4. Who can help you make better choices next time?
 
 Calming Strategies:
 [ ] Take three deep breaths
-[ ] Count to ten slowly
-[ ] Talk to a teacher
+[ ] Walk away and talk to an adult
+[ ] Squeeze a stress ball
 
-Example 2:
+Example 2 (neutral behavior):
 
-1. What was your choice?
-2. How did your choice affect others?
-3. What would be a better choice next time?
-4. Who can you ask for help?
+Student details/context: Not completing homework
+
+1. What happened that made it hard to finish your homework?
+2. How did you feel about not completing it?
+3. What could you do differently next time?
+4. Who can help you stay on track?
 
 Calming Strategies:
-[ ] Take a short walk
-[ ] Draw or color quietly
-[ ] Listen to calming music
+[ ] Make a homework plan with a teacher
+[ ] Take a short break before starting homework
+[ ] Ask for help if you’re stuck
+
+Example 3 (positive behavior):
+
+Student details/context: Helping a classmate
+
+1. What did you do to help your classmate?
+2. How did your actions make you and your classmate feel?
+3. Why is it important to help others?
+4. What could you do to help someone again?
+
+Calming Strategies:
+[ ] Take three deep breaths
+[ ] Give yourself a compliment
+[ ] Share your experience with the class
 
 ---
 
@@ -62,6 +81,8 @@ Now, using the following information, generate a new reflection sheet in the sam
 Student details/context:
 {user_input}
 """
+
+
 
 # --- LLM call helper ---
 def call_llm(prompt):
