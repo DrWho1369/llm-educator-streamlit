@@ -1,69 +1,132 @@
 import streamlit as st
 import requests
-from modules.summarizer import analyze_pdf
-from modules.pdf_extractor import extract_text_from_pdf
-from modules.prompts import user_prompts
 
-# --- Set API call URL ---
+# --- API endpoint (replace with your actual endpoint) ---
 LLM_API_URL = st.secrets["LLM_API_URL"]
 
 st.set_page_config(page_title="Differentiate Resource", layout="centered")
-st.title("Differentiate Resource")
+st.title("🧠 Differentiate Resource")
+st.write(
+    "Paste lesson content, worksheet, or a question below. This tool will instantly adapt it for different ability levels: "
+    "a challenge version, a scaffolded version, and a simplified version."
+)
 
-# --- Input method selection ---
-input_method = st.radio("Choose input method:", ["Text Input", "Upload PDF"])
-user_input = ""
+# --- User input ---
+user_input = st.text_area("Paste your lesson content or resource here:", height=250)
 
-if input_method == "Upload PDF":
-    uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
-    if uploaded_file:
-        with st.spinner("Extracting text from PDF..."):
-            text = extract_text_from_pdf(uploaded_file)
-            result_data = analyze_pdf(text)
-            keywords = result_data.get("keywords", {})
-            flat_keywords = [word for group in keywords.values() for word in group]
-            user_input = "\n\n[Extracted Keywords]\n" + ", ".join(flat_keywords) if flat_keywords else text
-else:
-    user_input = st.text_area("Paste lesson content or resource:", height=250)
+# --- Prompt templates ---
+analysis_prompt = """
+Analyze the following teaching resource content. Output as:
+Subject: ...
+Topic: ...
+Complexity: ...
+If the input is vague or short, infer a likely classroom topic and scope.
 
-# --- Prompt Chaining Logic ---
-def call_llm(prompt, user_input):
+Content:
+{user_input}
+"""
+
+challenge_prompt = """
+Given the following analysis and content:
+
+{analysis}
+
+{user_input}
+
+Create a Challenge Version for high-attaining students.
+- Use academic language.
+- Encourage critical thinking or real-world application.
+- Include 2–3 stretch questions if appropriate.
+
+Format:
+### Challenge Version
+[Your content here]
+"""
+
+scaffolded_prompt = """
+Given the following analysis and content:
+
+{analysis}
+
+{user_input}
+
+Create a Scaffolded Version for students needing extra support (e.g. EAL, SEND).
+- Provide 2–3 sentence starters.
+- Include a vocabulary box with 5–10 key terms and definitions.
+- Keep the structure clear and logical.
+
+Format:
+### Scaffolded Version
+Sentence starters:
+- ...
+- ...
+Vocabulary:
+- ...
+- ...
+[Your content here]
+"""
+
+simplified_prompt = """
+Given the following analysis and content:
+
+{analysis}
+
+{user_input}
+
+Create a Simplified Version for students with low reading levels or cognitive difficulties.
+- Use simple vocabulary and short sentences.
+- Remove complex phrasing and abstract ideas.
+
+Format:
+### Simplified Version
+[Your content here]
+"""
+
+# --- LLM call helper ---
+def call_llm(prompt):
     response = requests.post(
         LLM_API_URL,
-        json={
-            "messages": [
-                {"role": "system", "content": prompt.strip()},
-                {"role": "user", "content": user_input.strip()},
-            ]
-        }
+        json={"messages": [{"role": "user", "content": prompt}]}
     )
     return response.json()["choices"][0]["message"]["content"]
 
+# --- Differentiation workflow ---
 def differentiate_resource_chain(user_input):
     # Step 1: Analysis
-    analysis_prompt = (
-        "Analyze the following teaching resource content for subject, topic, and complexity. "
-        "If the input is vague or short, infer a likely classroom topic and scope. "
-        "Output as: Subject: ...; Topic: ...; Complexity: ..."
-    )
-    analysis_output = call_llm(analysis_prompt, user_input)
+    analysis = call_llm(analysis_prompt.format(user_input=user_input))
+    # Step 2: Challenge
+    challenge = call_llm(challenge_prompt.format(analysis=analysis, user_input=user_input))
+    # Step 3: Scaffolded
+    scaffolded = call_llm(scaffolded_prompt.format(analysis=analysis, user_input=user_input))
+    # Step 4: Simplified
+    simplified = call_llm(simplified_prompt.format(analysis=analysis, user_input=user_input))
+    return analysis, challenge, scaffolded, simplified
 
-    # Step 2: Differentiation
-    combined_input = f"{analysis_output}\n\n{user_input}"
-    differentiation_prompt = user_prompts["Differentiate Resource"]
-    differentiated_output = call_llm(differentiation_prompt, combined_input)
-
-    return analysis_output, differentiated_output
-
-# --- Generate Button ---
-if st.button("🚀 Generate Differentiated Resource"):
+# --- UI: Generate button ---
+if st.button("🚀 Differentiate Resource"):
     if not user_input.strip():
-        st.warning("⚠️ Please enter some content or upload a PDF above.")
+        st.warning("Please enter some lesson content.")
     else:
-        with st.spinner("Generating differentiated resource..."):
-            analysis, output = differentiate_resource_chain(user_input)
-        st.markdown("#### 🔍 **Analysis Output**")
+        with st.spinner("Generating differentiated versions..."):
+            analysis, challenge, scaffolded, simplified = differentiate_resource_chain(user_input)
+        st.markdown("#### 🧩 **Analysis**")
         st.code(analysis, language="markdown")
-        st.markdown("#### 📝 **Differentiated Resource Output**")
-        st.markdown(f"<div class='prompt-box'>{output}</div>", unsafe_allow_html=True)
-        st.download_button("Download Output", data=output, file_name="differentiated_resource.txt")
+        st.markdown("#### 🏆 **Challenge Version**")
+        st.markdown(challenge)
+        st.markdown("#### 🛠️ **Scaffolded Version**")
+        st.markdown(scaffolded)
+        st.markdown("#### 🌱 **Simplified Version**")
+        st.markdown(simplified)
+        # Download all versions as a text file
+        all_outputs = (
+            "Analysis:\n" + analysis +
+            "\n\n" + challenge +
+            "\n\n" + scaffolded +
+            "\n\n" + simplified
+        )
+        st.download_button("Download All Versions", data=all_outputs, file_name="differentiated_resource.txt")
+
+st.markdown("---")
+st.info(
+    "Tip: Try both long lesson texts and short prompts (like 'Photosynthesis' or 'Causes of climate change') to test how the tool adapts."
+)
