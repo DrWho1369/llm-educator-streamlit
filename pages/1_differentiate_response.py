@@ -27,12 +27,6 @@ Content:
 """
 
 challenge_prompt = """
-Given the following analysis and content:
-
-{analysis}
-
-{user_input}
-
 Create a Challenge Version for high-attaining students.
 - Use academic language.
 - Encourage critical thinking or real-world application.
@@ -41,16 +35,19 @@ Create a Challenge Version for high-attaining students.
 Format:
 ### Challenge Version
 [Your content here]
-"""
 
-scaffolded_prompt = """
-Given the following analysis and content:
+---
 
+Analysis:
 {analysis}
 
+Content:
 {user_input}
+"""
 
-Create a Scaffolded Version for students needing extra support (e.g. EAL, SEND).
+
+scaffolded_prompt = """
+Create a Scaffolded Version of the provided educational content for students needing extra support (e.g., EAL, SEND).
 - Provide 2–3 sentence starters.
 - Include a vocabulary box with 5–10 key terms and definitions.
 - Keep the structure clear and logical.
@@ -63,24 +60,36 @@ Sentence starters:
 Vocabulary:
 - ...
 - ...
-[Your content here]
-"""
+[Your scaffolded content here]
 
-simplified_prompt = """
-Given the following analysis and content:
+---
 
+Analysis:
 {analysis}
 
+Content:
 {user_input}
+"""
 
-Create a Simplified Version for students with low reading levels or cognitive difficulties.
+
+simplified_prompt = """
+Create a Simplified Version of the provided educational content for students with low reading levels or cognitive difficulties.
 - Use simple vocabulary and short sentences.
 - Remove complex phrasing and abstract ideas.
 
 Format:
 ### Simplified Version
-[Your content here]
+[Your simplified content here]
+
+---
+
+Analysis:
+{analysis}
+
+Content:
+{user_input}
 """
+
 
 # --- LLM call helper ---
 def call_llm(prompt):
