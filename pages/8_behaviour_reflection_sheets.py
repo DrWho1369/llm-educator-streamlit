@@ -134,9 +134,9 @@ if st.button("Generate Reflection Sheets"):
             else:
                 prompt = (
                     reflection_prompt
-                    + f"\n---\nHere are the reflection sheets already generated:\n{previous_outputs}\n"
-                    + "Now, generate a new, different reflection sheet for the same context:\n"
+                    + "Generate a new, different reflection sheet for the same context:\n"
                     + f"Student details/context:\n{user_input}\n"
+                    + f"\n---\nHere are the reflection sheets previously generated:\n{previous_outputs}\n"
                 )
 
             output = call_llm(prompt)
