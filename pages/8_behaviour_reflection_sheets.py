@@ -134,8 +134,9 @@ if st.button("Generate Reflection Sheets"):
             else:
                 prompt = (
                     reflection_prompt
-                    + f"\n---\nHere are the reflection sheets previously generated, ensure you generate a new, different reflection sheet for the same context:\n{previous_outputs}\n"
+                    + f"\n---\nHere are the reflection sheets previously generated. Do not repeat any questions or calming strategies from previous sheets. Generate a new, different reflection sheet for the same context:\n{previous_outputs}\n"
                 )
+
 
             output = call_llm(prompt)
             questions, strategies = parse_reflection_sheet(output)
