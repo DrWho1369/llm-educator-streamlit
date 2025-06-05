@@ -32,6 +32,7 @@ Instructions:
 - Do NOT condone or encourage negative behaviors.
 - Focus on helping the student understand why the behavior was not appropriate and how to make better choices next time.
 
+---------
 Example 1 (negative behavior):
 
 Student details/context: Hitting another student
@@ -46,6 +47,7 @@ Calming Strategies:
 [ ] Walk away and talk to an adult
 [ ] Squeeze a stress ball
 
+---------
 Example 2 (neutral behavior):
 
 Student details/context: Not completing homework
@@ -60,6 +62,7 @@ Calming Strategies:
 [ ] Take a short break before starting homework
 [ ] Ask for help if you’re stuck
 
+---------
 Example 3 (positive behavior):
 
 Student details/context: Helping a classmate
@@ -74,7 +77,7 @@ Calming Strategies:
 [ ] Give yourself a compliment
 [ ] Share your experience with the class
 
----
+-------
 
 Now, using the following information, generate a new reflection sheet in the same format:
 
@@ -113,36 +116,50 @@ def parse_reflection_sheet(output_text):
     return questions, strategies
 
 
-# --- Modified generation logic ---
 if st.button("Generate Reflection Sheets"):
-    if 'generated_sheets' in st.session_state:
-        del st.session_state.generated_sheets  # Clear previous results
-    
+    # Clear previous results
     st.session_state.generated_sheets = []
-    
+    previous_outputs = ""  # Holds all previous outputs as context
+
     progress_bar = st.progress(0)
     status_text = st.empty()
-    
+
     for i in range(num_sheets):
         try:
             status_text.text(f"Generating sheet {i+1}/{num_sheets}...")
-            output = call_llm(reflection_prompt.format(user_input=user_input))
+
+            # Build a context-aware prompt for each sheet
+            if i == 0:
+                prompt = reflection_prompt.format(user_input=user_input)
+            else:
+                prompt = (
+                    reflection_prompt
+                    + f"\n---\nHere are the reflection sheets already generated:\n{previous_outputs}\n"
+                    + "Now, generate a new, different reflection sheet for the same context:\n"
+                    + f"Student details/context:\n{user_input}\n"
+                )
+
+            output = call_llm(prompt)
             questions, strategies = parse_reflection_sheet(output)
-            
+
             st.session_state.generated_sheets.append({
                 "raw": output,
                 "questions": questions,
                 "strategies": strategies
             })
-            
+
+            # Add this output to the context for the next sheet
+            previous_outputs += f"\n--- Sheet {i+1} ---\n{output}\n"
+
             progress_bar.progress((i+1)/num_sheets)
-        
+
         except Exception as e:
             st.error(f"Error generating sheet {i+1}: {str(e)}")
             break
-    
+
     progress_bar.empty()
     status_text.empty()
+
 
 # --- Display generated sheets ---
 if 'generated_sheets' in st.session_state and st.session_state.generated_sheets:
