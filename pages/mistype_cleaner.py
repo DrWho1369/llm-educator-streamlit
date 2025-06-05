@@ -131,6 +131,14 @@ def spellcheck_and_correct(text, protected_names):
 
 # Streamlit UI
 st.title("Smart Text Processor")
+st.markdown("""
+| Step          | What Happens                                                                 |
+|---------------|------------------------------------------------------------------------------|
+| NER           | Finds and protects names with placeholders                                   |
+| Cleaning      | Removes stray punctuation, protects quoted text and file paths               |
+| Spellchecking | Corrects spelling, skips protected names                                     |
+| UI            | Lets user input text, shows results and corrections in a clear, structured way|
+""")
 
 st.markdown("""
 **Test Sample:**  
