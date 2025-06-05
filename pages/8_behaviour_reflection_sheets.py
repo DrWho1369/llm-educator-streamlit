@@ -84,34 +84,17 @@ def parse_reflection_sheet(output_text):
 
     return questions, strategies
 
-# --- UI: Generate button ---
 if st.button("Generate Reflection Sheet"):
     with st.spinner("Generating..."):
         output = call_llm(reflection_prompt.format(user_input=user_input))
         questions, strategies = parse_reflection_sheet(output)
-
-    # Initialize session state for checkboxes if not already set
-    for i, s in enumerate(strategies):
-        key = f"strategy_{i}"
-        if key not in st.session_state:
-            st.session_state[key] = False
-
-    for i, q in enumerate(questions):
-        key = f"question_{i}"
-        if key not in st.session_state:
-            st.session_state[key] = False
 
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("#### Reflection Questions")
         if questions:
             for i, q in enumerate(questions):
-                # Optionally use checkboxes for questions as well
-                st.session_state[f"question_{i}"] = st.checkbox(
-                    f"{i+1}. {q}",
-                    key=f"question_{i}",
-                    value=st.session_state[f"question_{i}"]
-                )
+                st.checkbox(f"{i+1}. {q}", key=f"question_{i}")
         else:
             st.info("No questions found.")
 
@@ -119,17 +102,12 @@ if st.button("Generate Reflection Sheet"):
         st.markdown("#### Calming Strategies")
         if strategies:
             for i, s in enumerate(strategies):
-                st.session_state[f"strategy_{i}"] = st.checkbox(
-                    s,
-                    key=f"strategy_{i}",
-                    value=st.session_state[f"strategy_{i}"]
-                )
+                st.checkbox(s, key=f"strategy_{i}")
         else:
             st.info("No calming strategies found.")
 
     st.markdown("#### Raw Reflection Sheet Output")
     st.code(output, language="markdown")
-    # Download option
     st.download_button("Download Sheet", data=output, file_name="reflection_sheet.txt")
 
 st.markdown("---")
