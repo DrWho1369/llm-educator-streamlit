@@ -8,7 +8,7 @@ Your task is to transform the user’s educational content into **three differen
 
 Follow these steps **exactly**:
 
-1. **Analyze** the user input for subject, topic, and complexity.
+1. Use the provided subject, topic, and complexity information to guide your differentiation.
 2. If the input is vague or extremely short, **infer a likely classroom topic and scope** (e.g., “Volcanoes” → types, causes, effects). Clearly state your inference in that case.
 3. Create all three differentiated versions using the following structure. **Use this exact format. Do not include explanations, headers, or commentary.**
 
