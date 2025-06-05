@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
-from summarizer import analyze_pdf 
-from pdf_extractor import extract_text_from_pdf
-from prompts import user_prompts
+from modules.summarizer import analyze_pdf 
+from modules.pdf_extractor import extract_text_from_pdf
+from modules.prompts import user_prompts
 
 import re
 
