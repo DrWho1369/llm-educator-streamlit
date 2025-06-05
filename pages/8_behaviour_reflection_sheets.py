@@ -177,7 +177,7 @@ if 'generated_sheets' in st.session_state and st.session_state.generated_sheets:
                 st.markdown("#### Reflection Questions")
                 if sheet['questions']:
                     for i, q in enumerate(sheet['questions']):
-                        st.checkbox(f"{i+1}. {q}", key=f"q_{idx}_{i}")
+                        st.markdown(f"{i+1}. {q}")
             
             with col2:
                 st.markdown("#### Calming Strategies")
