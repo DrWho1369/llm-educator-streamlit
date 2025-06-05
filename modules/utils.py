@@ -1,5 +1,5 @@
 import requests
-from prompts import user_prompts
+from modules.prompts import user_prompts
 
 def call_llm(prompt, user_input):
     response = requests.post(
